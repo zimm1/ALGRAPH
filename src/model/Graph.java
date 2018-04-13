@@ -85,7 +85,7 @@ public class Graph {
         }
 
         adjacencies.get(edge.getN1()).add(edge);
-        if (oriented) {
+        if (!oriented) {
             adjacencies.get(edge.getN2()).add(edge);
         }
 
@@ -106,10 +106,15 @@ public class Graph {
         }
 
         adjacencies.get(edge.getN1()).remove(edge);
-        if (oriented) {
+        if (!oriented) {
             adjacencies.get(edge.getN2()).remove(edge);
         }
 
         return true;
     }
+
+    public Set<Edge> getNodeAdjacencies(Node node){
+        return adjacencies.get(node);
+    }
+
 }
