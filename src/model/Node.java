@@ -1,5 +1,7 @@
 package model;
 
+import ui.NodeUI;
+
 import java.util.Objects;
 
 public class Node {
@@ -7,12 +9,15 @@ public class Node {
 
     private String label;
 
+    private final NodeUI ui;
+
     public Node() {
         this(DEFAULT_LABEL);
     }
 
     public Node(String label) {
         setLabel(label);
+        this.ui = new NodeUI(this);
     }
 
     public String getLabel() {
@@ -21,6 +26,10 @@ public class Node {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public NodeUI getUi() {
+        return ui;
     }
 
     @Override

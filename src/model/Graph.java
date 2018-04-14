@@ -1,9 +1,7 @@
 package model;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
     public static final int MAX_NODES = 20;
@@ -35,6 +33,10 @@ public class Graph {
         return edges;
     }
 
+    public Map<Node, Set<Edge>> getAdjacencies() {
+        return adjacencies;
+    }
+
     public boolean isOriented() {
         return oriented;
     }
@@ -43,18 +45,18 @@ public class Graph {
         this.oriented = oriented;
     }
 
-    public boolean addNode(String label) {
+    public Node addNode(String label) {
         return addNode(new Node(label));
     }
 
-    public boolean addNode(Node node) {
+    public Node addNode(Node node) {
         if (!nodes.add(node)) {
-            return false;
+            return null;
         }
 
         adjacencies.put(node, new HashSet<>());
 
-        return true;
+        return node;
     }
 
     public boolean removeNode(String label) {
@@ -66,13 +68,30 @@ public class Graph {
             return false;
         }
 
-        adjacencies.remove(node);
+        Set<Edge> toRemove = new HashSet<>();
+
+        for (Edge e : edges) {
+            if (e.getN1().equals(node) || e.getN2().equals(node)) {
+                toRemove.add(e);
+            }
+        }
+
+        for (Edge e : toRemove) {
+            removeEdge(e);
+        }
 
         return true;
     }
 
     public boolean addEdge(String label1, String label2) {
-        return addEdge(new Node(label1), new Node(label2));
+        Optional<Node> node1 = this.nodes.stream().filter(n -> n.getLabel().equals(label1)).findAny();
+        Optional<Node> node2 = this.nodes.stream().filter(n -> n.getLabel().equals(label2)).findAny();
+
+        if (!(node1.isPresent() && node2.isPresent())) {
+            return false;
+        }
+
+        return addEdge(node1.get(), node2.get());
     }
 
     public boolean addEdge(Node n1, Node n2) {
@@ -85,7 +104,7 @@ public class Graph {
         }
 
         adjacencies.get(edge.getN1()).add(edge);
-        if (oriented) {
+        if (!oriented) {
             adjacencies.get(edge.getN2()).add(edge);
         }
 
@@ -106,7 +125,7 @@ public class Graph {
         }
 
         adjacencies.get(edge.getN1()).remove(edge);
-        if (oriented) {
+        if (!oriented) {
             adjacencies.get(edge.getN2()).remove(edge);
         }
 

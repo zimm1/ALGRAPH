@@ -8,9 +8,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("./view/GraphView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("layout/GraphLayout.fxml"));
         primaryStage.setTitle("ALGRAPH");
-        primaryStage.setScene(new Scene(root, 300, 300));
+        primaryStage.setScene(new Scene(root, 1024, 768));
         primaryStage.show();
     }
 
