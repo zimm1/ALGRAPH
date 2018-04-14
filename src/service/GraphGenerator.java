@@ -73,6 +73,10 @@ public class GraphGenerator {
             Node node = new Node(Integer.toString(numNode1));
             Node node1 = new Node(Integer.toString(numNode2));
             Edge newEdge = new Edge(node,node1);
+            if(oriented){
+                int weight = random.nextInt((maxWeight - minWeight) + 1) + minWeight;
+                newEdge.setWeight(weight);
+            }
             boolean existEdge = false;
             for(Edge item:graph.getNodeAdjacencies(node)){
                 if(item.equals(newEdge)){
@@ -90,10 +94,6 @@ public class GraphGenerator {
             }
 
             if(!existEdge){
-                if(oriented){
-                    int weight = random.nextInt((maxWeight - minWeight) + 1) + minWeight;
-                    newEdge.setWeight(weight);
-                }
                 graph.addEdge(newEdge);
                 i++;
             }
