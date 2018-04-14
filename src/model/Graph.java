@@ -1,28 +1,23 @@
 package model;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Graph {
-    public static final int MAX_NODES = 20;
-
     private Set<Node> nodes;
     private Set<Edge> edges;
     private Map<Node, Set<Edge>> adjacencies;
 
-    private boolean oriented;
+    private final boolean directed;
 
 
     public Graph() {
         this(true);
     }
 
-    public Graph(boolean oriented) {
+    public Graph(boolean directed) {
         this.nodes = new HashSet<>();
         this.edges = new HashSet<>();
-        setOriented(oriented);
+        this.directed = directed;
 
         this.adjacencies = new HashMap<>();
     }
@@ -35,26 +30,26 @@ public class Graph {
         return edges;
     }
 
-    public boolean isOriented() {
-        return oriented;
+    public Map<Node, Set<Edge>> getAdjacencies() {
+        return adjacencies;
     }
 
-    public void setOriented(boolean oriented) {
-        this.oriented = oriented;
+    public boolean isDirected() {
+        return directed;
     }
 
-    public boolean addNode(String label) {
+    public Node addNode(String label) {
         return addNode(new Node(label));
     }
 
-    public boolean addNode(Node node) {
+    public Node addNode(Node node) {
         if (!nodes.add(node)) {
-            return false;
+            return null;
         }
 
         adjacencies.put(node, new HashSet<>());
 
-        return true;
+        return node;
     }
 
     public boolean removeNode(String label) {
@@ -66,30 +61,50 @@ public class Graph {
             return false;
         }
 
-        adjacencies.remove(node);
+        Set<Edge> toRemove = new HashSet<>();
+
+        for (Edge e : edges) {
+            if (e.getN1().equals(node) || (directed && e.getN2().equals(node))) {
+                toRemove.add(e);
+            }
+        }
+
+        for (Edge e : toRemove) {
+            removeEdge(e);
+        }
 
         return true;
     }
 
-    public boolean addEdge(String label1, String label2) {
-        return addEdge(new Node(label1), new Node(label2));
+    public Edge addEdge(String label1, String label2) {
+        Optional<Node> node1 = this.nodes.stream().filter(n -> n.getLabel().equals(label1)).findAny();
+        Optional<Node> node2 = this.nodes.stream().filter(n -> n.getLabel().equals(label2)).findAny();
+
+        if (!(node1.isPresent() && node2.isPresent())) {
+            return null;
+        }
+
+        return addEdge(node1.get(), node2.get());
     }
 
-    public boolean addEdge(Node n1, Node n2) {
+    public Edge addEdge(Node n1, Node n2) {
         return addEdge(new Edge(n1, n2));
     }
 
-    public boolean addEdge(Edge edge) {
+    public Edge addEdge(Edge edge) {
         if (!edges.add(edge)) {
-            return false;
+            return null;
+        }
+        if (!directed && !edges.add(edge.getInverted())) {
+            return null;
         }
 
         adjacencies.get(edge.getN1()).add(edge);
-        if (!oriented) {
-            adjacencies.get(edge.getN2()).add(edge);
+        if (!directed) {
+            adjacencies.get(edge.getN2()).add(edge.getInverted());
         }
 
-        return true;
+        return edge;
     }
 
     public boolean removeEdge(String label1, String label2) {
@@ -101,20 +116,18 @@ public class Graph {
     }
 
     public boolean removeEdge(Edge edge) {
+        if (!directed && !edges.remove(edge.getInverted())) {
+            return false;
+        }
         if (!edges.remove(edge)) {
             return false;
         }
 
         adjacencies.get(edge.getN1()).remove(edge);
-        if (!oriented) {
-            adjacencies.get(edge.getN2()).remove(edge);
+        if (!directed) {
+            adjacencies.get(edge.getN2()).remove(edge.getInverted());
         }
 
         return true;
     }
-
-    public Set<Edge> getNodeAdjacencies(Node node){
-        return adjacencies.get(node);
-    }
-
 }
