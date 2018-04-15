@@ -4,7 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import java.util.Optional;
 
-public class DialogUtils {
+public abstract class DialogUtils {
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
             throws Exception {
         TextInputDialog dialog = new TextInputDialog(defaultValue);

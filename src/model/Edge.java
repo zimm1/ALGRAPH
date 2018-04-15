@@ -1,6 +1,7 @@
 package model;
 
 import ui.EdgeUI;
+import utils.Strings;
 
 import java.util.Objects;
 
@@ -20,7 +21,7 @@ public class Edge {
     public Edge(Node n1, Node n2, int weight) {
         this.n1 = n1;
         this.n2 = n2;
-        setWeight(weight);
+        this.weight = weight;
 
         this.ui = new EdgeUI(this);
     }
@@ -39,6 +40,7 @@ public class Edge {
 
     public void setWeight(int weight) {
         this.weight = weight;
+        this.ui.setWeight(weight);
     }
 
     public EdgeUI getUi() {

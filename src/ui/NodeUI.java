@@ -42,8 +42,7 @@ public class NodeUI extends Group {
         label.prefHeightProperty().bind(circle.radiusProperty().multiply(2));
         label.setLabelFor(this);
 
-        this.getChildren().add(circle);
-        this.getChildren().add(label);
+        this.getChildren().addAll(circle, label);
 
         this.setCursor(Cursor.HAND);
     }

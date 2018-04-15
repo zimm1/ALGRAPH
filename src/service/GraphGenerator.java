@@ -6,11 +6,9 @@ import model.Node;
 
 import java.util.*;
 
-public class GraphGenerator {
-    private static final int MAX_NODES = 20;
+public abstract class GraphGenerator {
     private static final int MIN_NODES = 3;
-
-    private GraphGenerator(){}
+    private static final int MAX_NODES = 20;
 
     public static Graph generateGraph(int numNodes) {
         return generateGraph(numNodes,0,0);
@@ -53,15 +51,13 @@ public class GraphGenerator {
                 rand2 = random.nextInt(numNodes);
             }
 
-            Node[] nodes = graph.getNodes().toArray(new Node[0]);
+            Node[] nodes = graph.getAdjacencies().keySet().toArray(new Node[0]);
             Node n1 = nodes[rand1];
             Node n2 = nodes[rand2];
 
             Edge newEdge = new Edge(n1, n2);
-            if (directed) {
-                int weight = random.nextInt(maxWeight - minWeight + 1) + minWeight;
-                newEdge.setWeight(weight);
-            }
+            int weight = random.nextInt(maxWeight - minWeight + 1) + minWeight;
+            newEdge.setWeight(weight);
 
             if (graph.addEdge(newEdge) != null) {
                 i++;

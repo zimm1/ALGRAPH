@@ -1,23 +1,30 @@
 package ui;
 
 import javafx.beans.InvalidationListener;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import model.Edge;
 
 
 public class EdgeUI extends Group {
 
     private static final Color DEFAULT_LINE_COLOR = Color.BLACK;
+    private static final Color DEFAULT_LABEL_COLOR = Color.BLACK;
     private static final double DEFAULT_ARROW_LENGTH = 10;
     private static final double DEFAULT_ARROW_WIDTH = 7;
+    private static final double DEFAULT_LABEL_DISTANCE = 15;
+    private static final double DEFAULT_FONT_SIZE = 20;
 
     private final Edge edge;
 
     private Line line;
     private Line arrowLeft;
     private Line arrowRight;
+    private Label label;
 
     public EdgeUI(Edge edge) {
         super();
@@ -34,14 +41,23 @@ public class EdgeUI extends Group {
         arrowLeft = new Line();
         arrowRight = new Line();
 
+        label = new Label(String.valueOf(edge.getWeight()));
+        label.setTextFill(DEFAULT_LABEL_COLOR);
+        label.setAlignment(Pos.CENTER);
+        label.setLabelFor(this);
+        label.setFont(new Font(DEFAULT_FONT_SIZE));
+
         line.startXProperty().addListener(updater);
         line.startYProperty().addListener(updater);
         line.endXProperty().addListener(updater);
         line.endYProperty().addListener(updater);
 
+        label.widthProperty().addListener(updater);
+        label.heightProperty().addListener(updater);
+
         updater.invalidated(null);
 
-        this.getChildren().addAll(line, arrowLeft, arrowRight);
+        this.getChildren().addAll(line, arrowLeft, arrowRight, label);
     }
 
     public Edge getEdge() {
@@ -52,8 +68,12 @@ public class EdgeUI extends Group {
         return line;
     }
 
+    public Label getLabel() {
+        return label;
+    }
+
     private InvalidationListener updater = o -> {
-        double margin = getEdge().getN1().getUi().getCircle().getRadius();
+        double margin = getEdge().getN2().getUi().getCircle().getRadius();
 
         double
                 sx = line.getStartX(),
@@ -61,39 +81,52 @@ public class EdgeUI extends Group {
                 ex = line.getEndX(),
                 ey = line.getEndY();
 
-        double distance = Math.sqrt(Math.pow((ex - sx), 2) + Math.pow((ey - sy), 2));
+        double distance = Math.hypot(ex - sx, ey - sy);
         double t = (distance - margin) / distance;
 
-        ex = (1 - t) * sx + t * ex;
-        ey = (1 - t) * sy + t * ey;
+        double arrowsEx = (1 - t) * sx + t * ex;
+        double arrowsEy = (1 - t) * sy + t * ey;
 
-        arrowLeft.setEndX(ex);
-        arrowLeft.setEndY(ey);
-        arrowRight.setEndX(ex);
-        arrowRight.setEndY(ey);
+        arrowLeft.setEndX(arrowsEx);
+        arrowLeft.setEndY(arrowsEy);
+        arrowRight.setEndX(arrowsEx);
+        arrowRight.setEndY(arrowsEy);
 
-        if (ex == sx && ey == sy) {
-            // arrow parts of length 0
-            arrowLeft.setStartX(ex);
-            arrowLeft.setStartY(ey);
-            arrowRight.setStartX(ex);
-            arrowRight.setStartY(ey);
-        } else {
-            double factor = DEFAULT_ARROW_LENGTH / Math.hypot(sx-ex, sy-ey);
-            double factorO = DEFAULT_ARROW_WIDTH / Math.hypot(sx-ex, sy-ey);
+        double parallelComponent = DEFAULT_ARROW_LENGTH / (distance - margin);
+        double orthogonalComponent = DEFAULT_ARROW_WIDTH / (distance - margin);
 
-            // part in direction of main line
-            double dx = (sx - ex) * factor;
-            double dy = (sy - ey) * factor;
+        // part in direction of main line
+        double dx = (sx - arrowsEx) * parallelComponent;
+        double dy = (sy - arrowsEy) * parallelComponent;
 
-            // part orthogonal to main line
-            double ox = (sx - ex) * factorO;
-            double oy = (sy - ey) * factorO;
+        // part orthogonal to main line
+        double ox = (sx - arrowsEx) * orthogonalComponent;
+        double oy = (sy - arrowsEy) * orthogonalComponent;
 
-            arrowLeft.setStartX(ex + dx - oy);
-            arrowLeft.setStartY(ey + dy + ox);
-            arrowRight.setStartX(ex + dx + oy);
-            arrowRight.setStartY(ey + dy - ox);
-        }
+        arrowLeft.setStartX(arrowsEx + dx - oy);
+        arrowLeft.setStartY(arrowsEy + dy + ox);
+        arrowRight.setStartX(arrowsEx + dx + oy);
+        arrowRight.setStartY(arrowsEy + dy - ox);
+
+        dx = sx - ex;
+        dy = sy - ey;
+
+        double dist = Math.hypot(dx, dy);
+
+        dx /= dist;
+        dy /= dist;
+
+        double middleX = (sx + ex) / 2;
+        double middleY = (sy + ey) / 2;
+
+        double labelX = middleX + (DEFAULT_LABEL_DISTANCE) * dy - label.getWidth() / 2;
+        double labelY = middleY - (DEFAULT_LABEL_DISTANCE) * dx - label.getHeight() / 2;
+
+        label.setTranslateX(labelX);
+        label.setTranslateY(labelY);
     };
+
+    public void setWeight(int weight) {
+        label.setText(String.valueOf(weight));
+    }
 }
