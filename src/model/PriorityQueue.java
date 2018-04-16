@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PriorityQueue<T> {
 
@@ -16,18 +18,65 @@ public class PriorityQueue<T> {
     }
 
     public PriorityItem pop(){
-        PriorityItem min = searchMin();
-        this.list.remove(min);
+        PriorityItem<T> min = searchMin();
+        remove(min);
         return searchMin();
+    }
+
+    public PriorityItem<T> read(T item,int priority){
+        PriorityItem<T> priorityItem = new PriorityItem<>(item,priority);
+        return searchItem(priorityItem);
+    }
+
+    public PriorityItem<T> read(T item){
+        PriorityItem<T> priorityItem = new PriorityItem<>(item);
+        return searchItem(priorityItem);
+    }
+
+    public boolean existItem(T item){
+        PriorityItem<T> priorityItem = new PriorityItem<>(item);
+        return searchItem(priorityItem) != null;
+    }
+
+    public void remove(PriorityItem<T> priorityItem){
+        if(priorityItem != null){
+            this.list.remove(priorityItem);
+        }
+    }
+
+    public void remove(T item){
+        PriorityItem<T> deleteItem = read(item);
+        if(deleteItem != null){
+            this.list.remove(deleteItem);
+        }
     }
 
     public boolean isEmpty(){
         return this.list.isEmpty();
     }
 
-    private PriorityItem searchMin(){
-        PriorityItem min = null;
-        for(PriorityItem item:this.list){
+    public void decrease(PriorityItem<T> item,int newPriority){
+        int i = searchPosItem(item);
+        if(i != -1){
+            this.list.get(i).setPriority(newPriority);
+        }
+    }
+
+    public void decrease(T item,int priority){
+        PriorityItem<T> newItem = new PriorityItem<>(item);
+        int i = searchPosItem(newItem);
+        if(i != -1){
+            this.list.get(i).setPriority(priority);
+        }
+    }
+
+    public Set<PriorityItem<T>> getAll(){
+        return new HashSet<>(this.list);
+    }
+
+    private PriorityItem<T> searchMin(){
+        PriorityItem<T> min = null;
+        for(PriorityItem<T> item:this.list){
             if(min == null){
                 min = item;
             }
@@ -38,5 +87,23 @@ public class PriorityQueue<T> {
         return min;
     }
 
+    private PriorityItem<T> searchItem(PriorityItem<T> priorityItem){
+        PriorityItem<T> searched = null;
+        for(PriorityItem<T> item:this.list){
+            if(priorityItem.equals(item)){
+                searched = item;
+            }
+        }
+        return searched;
+    }
+
+    private int searchPosItem(PriorityItem<T> priorityItem){
+        for(int i = 0; i < this.list.size(); i++){
+            if(list.get(i).equals(priorityItem)){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 }
