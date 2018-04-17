@@ -1,10 +1,12 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
 import model.Node;
 import model.PriorityItem;
 import model.PriorityQueue;
+import ui.PriorityItemUI;
 
 import java.util.stream.Collectors;
 
@@ -13,47 +15,47 @@ public class PriorityQueueController {
     private PriorityQueue<Node> priorityQueue;
 
     @FXML
-    Pane priorityQueueLayout;
+    ScrollPane scrollPane;
+    @FXML
+    HBox priorityQueueLayout;
+    @FXML
+    PriorityItemUI selectedNode;
 
     @FXML
     public void initialize(){
         priorityQueue = new PriorityQueue<>();
 
-        Node node = new Node("A");
-        Node node1 = new Node("B");
-        Node node2 = new Node("C");
-
-        priorityQueue.push(node,6);
-        //priorityQueue.push(node1,7);
-        /*priorityQueue.decrease(node2,1);
-        priorityQueue.remove(priorityQueue.read(node));
-
-        PriorityItem priorityItem = null;
-        priorityItem = priorityQueue.read(node);
-        if(priorityItem != null){
-            System.out.println(priorityItem.getItem() + " " + priorityItem.getPriority());
-        }*/
-
-        initEventHandlers();
-        updatePriorityItemUI();
-
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
     }
 
-    private void initEventHandlers(){
-
-    }
-
-    public void addNode(Node node,int priority){
+    public void push(Node node,int priority){
         if(!priorityQueue.existItem(node)){
-            this.priorityQueue.push(node,priority);
+            priorityQueue.push(node,priority);
+            updatePriorityItemUI();
         }
+    }
+
+    public void removeNode(Node node){
+        priorityQueue.remove(node);
+        updatePriorityItemUI();
+    }
+
+    public PriorityItem pop(){
+        PriorityItem itemPopped = priorityQueue.pop();
+        if(itemPopped != null){
+            selectedNode = itemPopped.getPriorityItemUI();
+            updatePriorityItemUI();
+        }
+        return itemPopped;
     }
 
     private void updatePriorityItemUI(){
         priorityQueueLayout.getChildren().clear();
 
-        priorityQueueLayout.getChildren().addAll(priorityQueue.getAll().stream().map(PriorityItem::getPriorityItemUI).collect(Collectors.toSet()));
+        priorityQueueLayout.getChildren().add(selectedNode);
 
+        priorityQueueLayout.getChildren().addAll(priorityQueue.getAll().stream().map(PriorityItem::getPriorityItemUI).collect(Collectors.toList()));
     }
 
 }

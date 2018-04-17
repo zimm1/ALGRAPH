@@ -20,7 +20,7 @@ public class PriorityQueue<T> {
     public PriorityItem pop(){
         PriorityItem<T> min = searchMin();
         remove(min);
-        return searchMin();
+        return min;
     }
 
     public PriorityItem<T> read(T item,int priority){
@@ -70,8 +70,8 @@ public class PriorityQueue<T> {
         }
     }
 
-    public Set<PriorityItem<T>> getAll(){
-        return new HashSet<>(this.list);
+    public ArrayList<PriorityItem<T>> getAll(){
+        return this.list;
     }
 
     private PriorityItem<T> searchMin(){
@@ -79,8 +79,7 @@ public class PriorityQueue<T> {
         for(PriorityItem<T> item:this.list){
             if(min == null){
                 min = item;
-            }
-            else if(item.getPriority() < min.getPriority()){
+            } else if(item.getPriority() < min.getPriority()){
                 min = item;
             }
         }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.ScrollPane?>
 
-<Pane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controller.PriorityQueueController"
-            fx:id="priorityQueueLayout">
-</Pane>
+<?import ui.PriorityItemUI?>
+
+<ScrollPane fx:id="scrollPane" fx:controller="controller.PriorityQueueController" xmlns:fx="http://javafx.com/fxml">
+    <PriorityItemUI fx:id="selectedNode"/>
+    <HBox xmlns="http://javafx.com/javafx" fx:id="priorityQueueLayout" spacing="5"/>
+</ScrollPane>

@@ -8,6 +8,10 @@ public class PriorityItem<T> {
     private int priority;
     private PriorityItemUI<T> priorityItemUI;
 
+    public PriorityItem(){
+        priorityItemUI = new PriorityItemUI<>();
+    }
+
     public PriorityItem(T object,int priority){
         setItem(object);
         setPriority(priority);
