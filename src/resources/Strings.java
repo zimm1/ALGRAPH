@@ -28,5 +28,6 @@ public abstract class Strings {
             execute_step = "Esegui un Passo",
             execute_all = "Esegui",
             execute_reset = "Reset",
-            execution = "Esecuzione";
+            execution = "Esecuzione",
+            emptyQueue = "Empty";
 }

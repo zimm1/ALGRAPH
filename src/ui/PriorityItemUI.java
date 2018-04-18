@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import model.Node;
 import model.PriorityItem;
+import resources.Strings;
 
 public class PriorityItemUI<T> extends Group {
 
@@ -26,8 +27,7 @@ public class PriorityItemUI<T> extends Group {
     private static final Color rectangleStrokeColor = Color.RED;
 
     public PriorityItemUI(){
-        this.rectangle = createRectangle();
-        this.getChildren().add(rectangle);
+        this(null);
     }
 
     public PriorityItemUI(PriorityItem<T> priorityItem){
@@ -52,7 +52,7 @@ public class PriorityItemUI<T> extends Group {
 
     private Label createNodeLabel(){
         Node node = getNode();
-        nodeLabel = new Label(node.getLabel());
+        nodeLabel = new Label((node != null) ? node.getLabel() : getEmptyQueueText());
         nodeLabel.setLabelFor(this);
         nodeLabel.setAlignment(nodeLabelPos);
         nodeLabel.setTextFill(defaultLabelColor);
@@ -64,7 +64,7 @@ public class PriorityItemUI<T> extends Group {
     }
 
     private Label createPriorityLabel(){
-        priorityLabel = new Label(Integer.toString(priorityItem.getPriority()));
+        priorityLabel = new Label((priorityItem != null) ? (Integer.toString(priorityItem.getPriority())) : "");
         priorityLabel.setAlignment(priorityLabelPos);
         priorityLabel.setTextFill(defaultLabelColor);
         priorityLabel.setPrefWidth(rectangle.getWidth());
@@ -74,17 +74,32 @@ public class PriorityItemUI<T> extends Group {
     }
 
     private Node getNode(){
-        if (priorityItem.getItem() instanceof Node) {
-            return (Node) priorityItem.getItem();
+        if(priorityItem != null){
+            if (priorityItem.getItem() instanceof Node) {
+                return (Node) priorityItem.getItem();
+            }
         }
-
-        return new Node("");
-
+        return null;
     }
 
     public PriorityItem<T> getPriorityItem() {
         return priorityItem;
     }
 
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    private String getEmptyQueueText(){
+        return Strings.emptyQueue;
+    }
 
 }
