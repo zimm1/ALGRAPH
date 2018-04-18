@@ -1,27 +1,26 @@
 package controller;
 
-import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import model.Edge;
 import model.Graph;
 import model.Node;
-import service.GraphGenerator;
 import ui.EdgeUI;
 import ui.NodeUI;
 import utils.DialogUtils;
-import utils.Strings;
+import resources.Strings;
 
 import java.util.stream.Collectors;
 
-public class GraphController {
-    @FXML
-    private Pane container;
+public class GraphController implements ControllerInterface, ControllerEventListener {
+    private Pane root;
 
     private Graph graph;
 
@@ -33,17 +32,30 @@ public class GraphController {
     private boolean creatingEdge;
     private Edge tempEdge;
 
-    @FXML
-    private void initialize() {
-        //createTestGraph();
-        graph = GraphGenerator.generateGraph(3, 0, 20, true);
+    public GraphController() {
+        root = new Pane();
+
+        graph = new Graph();
 
         initEventHandlers();
+    }
+
+    @Override
+    public Pane get() {
+        return root;
+    }
+
+    public Graph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
         initGraphUi();
     }
 
     private void initEventHandlers() {
-        container.setOnContextMenuRequested(event -> {
+        root.setOnContextMenuRequested(event -> {
             if (creatingEdge) {
                 stopEdgeCreation(null);
                 return;
@@ -70,8 +82,7 @@ public class GraphController {
             showContextMenu(createMainContextMenu(), event);
         });
 
-        container.setOnMousePressed(event -> {
-
+        root.setOnMousePressed(event -> {
             hideContextMenu();
 
             Parent parent = event.getPickResult().getIntersectedNode().getParent();
@@ -99,9 +110,13 @@ public class GraphController {
 
                 parent = parent.getParent();
             }
+
+            if (creatingEdge) {
+                stopEdgeCreation(null);
+            }
         });
 
-        container.setOnMouseDragged(event -> {
+        root.setOnMouseDragged(event -> {
             if (movingNode == null) {
                 return;
             }
@@ -115,7 +130,7 @@ public class GraphController {
             source.setCenterY(translateY);
         });
 
-        container.setOnMouseReleased(event -> {
+        root.setOnMouseReleased(event -> {
             if (movingNode == null) {
                 return;
             }
@@ -144,10 +159,16 @@ public class GraphController {
         MenuItem item1 = new MenuItem(Strings.change_weight);
         item1.setOnAction(event -> changeWeight(edge));
 
-        MenuItem item2 = new MenuItem(Strings.remove_edge);
-        item2.setOnAction(event -> removeEdge(edge));
+        MenuItem item2 = new MenuItem(Strings.change_direction);
+        item2.setOnAction(event -> changeDirection(edge));
+        if (!graph.isDirected() || graph.getEdges().contains(edge.getInverted())) {
+            item2.setDisable(true);
+        }
 
-        edgeContextMenu.getItems().addAll(item1, item2);
+        MenuItem item3 = new MenuItem(Strings.remove_edge);
+        item3.setOnAction(event -> removeEdge(edge));
+
+        edgeContextMenu.getItems().addAll(item1, item2, item3);
         return edgeContextMenu;
     }
 
@@ -176,29 +197,12 @@ public class GraphController {
         }
     }
 
-    // TODO Change for graph import/generation
-    private void createTestGraph() {
-        graph = new Graph();
-
-        for (char c = 'A'; c <= 'F'; ++c) {
-            graph.addNode(String.valueOf(c));
-        }
-
-        graph.addEdge("A", "D");
-        graph.addEdge("A", "E");
-        graph.addEdge("A", "F");
-        graph.addEdge("B", "D");
-        graph.addEdge("B", "E");
-        graph.addEdge("B", "F");
-        graph.addEdge("C", "D");
-        graph.addEdge("C", "E");
-        graph.addEdge("C", "F");
-
-        System.out.println(graph.getAdjacencies());
-    }
-
     // TODO Change for a real display algorithm
     private void initGraphUi() {
+        if (graph == null) {
+            return;
+        }
+
         int count = 0;
         int startX = 50;
         int startY = 50;
@@ -215,10 +219,10 @@ public class GraphController {
     }
 
     private void updateGraphUI() {
-        container.getChildren().clear();
+        root.getChildren().clear();
 
-        container.getChildren().addAll(graph.getEdges().stream().map(Edge::getUi).collect(Collectors.toSet()));
-        container.getChildren().addAll(graph.getNodes().stream().map(Node::getUi).collect(Collectors.toSet()));
+        root.getChildren().addAll(graph.getEdges().stream().map(Edge::getUi).collect(Collectors.toSet()));
+        root.getChildren().addAll(graph.getNodes().stream().map(Node::getUi).collect(Collectors.toSet()));
     }
 
     private void addNode() {
@@ -258,7 +262,10 @@ public class GraphController {
             int weight = Integer.valueOf(DialogUtils.showTextInputDialog(
                     Strings.change_weight, null, Strings.weight, String.valueOf(edge.getWeight())));
 
-            edge.setWeight(weight);
+            if (!edge.setWeight(weight)) {
+                DialogUtils.showErrorDialog(
+                        Strings.error, Strings.change_weight, Strings.error_min_weight + Edge.MIN_WEIGHT);
+            }
         } catch (Exception e) {
             if (e instanceof NumberFormatException) {
                 DialogUtils.showErrorDialog(
@@ -268,26 +275,28 @@ public class GraphController {
     }
 
     private void startEdgeCreation(Node node) {
-
         creatingEdge = true;
 
         Node tempNode = new Node();
         tempNode.getUi().getCircle().setRadius(0);
 
-        container.setOnMouseMoved(event -> {
-            tempNode.getUi().getCircle().setCenterX(event.getSceneX());
-            tempNode.getUi().getCircle().setCenterY(event.getSceneY());
+        tempNode.getUi().getCircle().setCenterX(node.getUi().getCircle().getCenterX());
+        tempNode.getUi().getCircle().setCenterY(node.getUi().getCircle().getCenterY());
+
+        root.setOnMouseMoved(event -> {
+            tempNode.getUi().getCircle().setCenterX(event.getX());
+            tempNode.getUi().getCircle().setCenterY(event.getY());
         });
 
         tempEdge = new Edge(node, tempNode);
         tempEdge.getUi().getLabel().setVisible(false);
 
-        container.getChildren().add(0, tempEdge.getUi());
+        root.getChildren().add(0, tempEdge.getUi());
     }
 
     private void stopEdgeCreation(Node node) {
-        container.setOnMouseMoved(null);
-        container.getChildren().remove(tempEdge.getUi());
+        root.setOnMouseMoved(null);
+        root.getChildren().remove(tempEdge.getUi());
 
         creatingEdge = false;
 
@@ -309,4 +318,31 @@ public class GraphController {
 
         updateGraphUI();
     }
+
+    private void changeDirection(Edge edge) {
+        graph.removeEdge(edge);
+        graph.addEdge(edge.getInverted());
+        updateGraphUI();
+    }
+
+    @Override
+    public void onKeyPressed(KeyEvent event) {
+        if (creatingEdge && event.getCode() == KeyCode.ESCAPE) {
+            event.consume();
+            stopEdgeCreation(null);
+        }
+    }
+
+    public void highlight(Node node, Node parent) {
+        node.getUi().highlight();
+
+        if (parent == null) {
+            return;
+        }
+
+        graph.getAdjacencies().get(parent).stream()
+                .filter(e -> e.getN2().equals(node))
+                .findAny()
+                .ifPresent(e -> e.getUi().highlight());
+}
 }

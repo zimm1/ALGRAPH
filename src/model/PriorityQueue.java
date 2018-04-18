@@ -17,7 +17,7 @@ public class PriorityQueue<T> {
         this.list.add(priorityItem);
     }
 
-    public PriorityItem pop(){
+    public PriorityItem<T> pop(){
         PriorityItem<T> min = searchMin();
         remove(min);
         return min;
@@ -55,14 +55,14 @@ public class PriorityQueue<T> {
         return this.list.isEmpty();
     }
 
-    public void decrease(PriorityItem<T> item,int newPriority){
+    public void update(PriorityItem<T> item, int newPriority){
         int i = searchPosItem(item);
         if(i != -1){
             this.list.get(i).setPriority(newPriority);
         }
     }
 
-    public void decrease(T item,int priority){
+    public void update(T item, int priority){
         PriorityItem<T> newItem = new PriorityItem<>(item);
         int i = searchPosItem(newItem);
         if(i != -1){
@@ -74,12 +74,14 @@ public class PriorityQueue<T> {
         return this.list;
     }
 
+    public void clear() {
+        list.clear();
+    }
+
     private PriorityItem<T> searchMin(){
         PriorityItem<T> min = null;
-        for(PriorityItem<T> item:this.list){
-            if(min == null){
-                min = item;
-            } else if(item.getPriority() < min.getPriority()){
+        for(PriorityItem<T> item : list){
+            if (min == null || item.getPriority() < min.getPriority()){
                 min = item;
             }
         }

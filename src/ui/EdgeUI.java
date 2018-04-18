@@ -14,6 +14,7 @@ public class EdgeUI extends Group {
 
     private static final Color DEFAULT_LINE_COLOR = Color.BLACK;
     private static final Color DEFAULT_LABEL_COLOR = Color.BLACK;
+    private static final Color DEFAULT_COLOR_HIGHLIGHT = Color.RED;
     private static final double DEFAULT_ARROW_LENGTH = 10;
     private static final double DEFAULT_ARROW_WIDTH = 7;
     private static final double DEFAULT_LABEL_DISTANCE = 15;
@@ -128,5 +129,11 @@ public class EdgeUI extends Group {
 
     public void setWeight(int weight) {
         label.setText(String.valueOf(weight));
+    }
+
+    public void highlight() {
+        line.setStroke(DEFAULT_COLOR_HIGHLIGHT);
+        arrowLeft.setStroke(DEFAULT_COLOR_HIGHLIGHT);
+        arrowRight.setStroke(DEFAULT_COLOR_HIGHLIGHT);
     }
 }

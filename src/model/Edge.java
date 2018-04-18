@@ -1,12 +1,12 @@
 package model;
 
 import ui.EdgeUI;
-import utils.Strings;
 
 import java.util.Objects;
 
 public class Edge {
-    private static final int DEFAULT_WEIGHT = 0;
+    private static final int DEFAULT_WEIGHT = 1;
+    public static final int MIN_WEIGHT = 0;
 
     private final Node n1;
     private final Node n2;
@@ -38,9 +38,17 @@ public class Edge {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public boolean setWeight(int weight) {
+        if (weight < MIN_WEIGHT) {
+            return false;
+        }
+
         this.weight = weight;
-        this.ui.setWeight(weight);
+        if (ui != null) {
+            this.ui.setWeight(weight);
+        }
+
+        return true;
     }
 
     public EdgeUI getUi() {
@@ -48,7 +56,7 @@ public class Edge {
     }
 
     public Edge getInverted() {
-        return new Edge(n2, n1);
+        return new Edge(n2, n1, weight);
     }
 
     @Override

@@ -9,9 +9,10 @@ import java.util.*;
 public abstract class GraphGenerator {
     private static final int MIN_NODES = 3;
     private static final int MAX_NODES = 20;
+    private static final int DEFAULT_WEIGHT = 1;
 
     public static Graph generateGraph(int numNodes) {
-        return generateGraph(numNodes,0,0);
+        return generateGraph(numNodes,DEFAULT_WEIGHT,DEFAULT_WEIGHT);
     }
 
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) {

@@ -40,6 +40,10 @@ public class PriorityItemUI<T> extends Group {
         this.getChildren().addAll(rectangle,nodeLabel,priorityLabel);
     }
 
+    public void updatePriorityLabel() {
+        this.priorityLabel.setText(Integer.toString(priorityItem.getPriority()));
+    }
+
     private Rectangle createRectangle(){
         rectangle = new Rectangle(width,height,defaultRectangleColor);
         rectangle.setStroke(rectangleStrokeColor);
@@ -70,7 +74,7 @@ public class PriorityItemUI<T> extends Group {
     }
 
     private Node getNode(){
-        if(priorityItem.getItem() instanceof Node){
+        if (priorityItem.getItem() instanceof Node) {
             return (Node) priorityItem.getItem();
         }
 

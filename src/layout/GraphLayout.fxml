@@ -1,5 +1,0 @@
-<?import javafx.scene.layout.Pane?>
-
-<Pane fx:controller="controller.GraphController" fx:id="container"
-      xmlns:fx="http://javafx.com/fxml">
-</Pane>

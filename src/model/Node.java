@@ -25,7 +25,7 @@ public class Node {
     }
 
     public void setLabel(String label) {
-        this.label = label;
+        this.label = label.replace(" ", "_");
     }
 
     public NodeUI getUi() {

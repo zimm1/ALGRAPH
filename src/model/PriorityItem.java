@@ -14,7 +14,7 @@ public class PriorityItem<T> {
 
     public PriorityItem(T object,int priority){
         setItem(object);
-        setPriority(priority);
+        this.priority = priority;
         priorityItemUI = new PriorityItemUI<>(this);
     }
 
@@ -36,6 +36,7 @@ public class PriorityItem<T> {
 
     public void setPriority(int priority) {
         this.priority = priority;
+        this.priorityItemUI.updatePriorityLabel();
     }
 
     public PriorityItemUI<T> getPriorityItemUI(){

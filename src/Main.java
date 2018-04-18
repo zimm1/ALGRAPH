@@ -1,17 +1,26 @@
+import controller.MainController;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import utils.Strings;
+import resources.Strings;
+import utils.CssUtils;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 public class Main extends Application {
-
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("layout/GraphLayout.fxml"));
+    public void start(Stage primaryStage) {
         primaryStage.setTitle(Strings.program_title);
-        primaryStage.setScene(new Scene(root, 1024, 768));
+
+        Scene mainScene = new Scene(new MainController().get(), 1024, 768);
+        try {
+            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this, "menu"));
+        } catch (NullPointerException e) {
+            //
+        }
+
+        primaryStage.setScene(mainScene);
         primaryStage.show();
     }
 

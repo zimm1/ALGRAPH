@@ -16,6 +16,7 @@ public class NodeUI extends Group {
     private static final double DEFAULT_RADIUS = 20;
     private static final Color DEFAULT_CIRCLE_COLOR = Color.BLACK;
     private static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
+    private static final Color DEFAULT_COLOR_HIGHLIGHT = Color.RED;
 
     private final Node node;
 
@@ -57,5 +58,9 @@ public class NodeUI extends Group {
 
     public Label getLabel() {
         return label;
+    }
+
+    public void highlight() {
+        circle.setFill(DEFAULT_COLOR_HIGHLIGHT);
     }
 }

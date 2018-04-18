@@ -41,6 +41,15 @@ public class Graph {
         return directed;
     }
 
+    public Node getNode(String label) {
+        return getNode(new Node(label));
+    }
+
+    public Node getNode(Node node) {
+        Optional<Node> optionalNode = getNodes().stream().filter(n -> n.equals(node)).findAny();
+        return optionalNode.orElse(null);
+    }
+
     public Node addNode(String label) {
         return addNode(new Node(label));
     }
@@ -74,14 +83,14 @@ public class Graph {
     }
 
     public Edge addEdge(String label1, String label2) {
-        Optional<Node> node1 = this.adjacencies.keySet().stream().filter(n -> n.getLabel().equals(label1)).findAny();
-        Optional<Node> node2 = this.adjacencies.keySet().stream().filter(n -> n.getLabel().equals(label2)).findAny();
+        Node node1 = getNode(label1);
+        Node node2 = getNode(label2);
 
-        if (!(node1.isPresent() && node2.isPresent())) {
+        if (node1 == null || node2 == null) {
             return null;
         }
 
-        return addEdge(node1.get(), node2.get());
+        return addEdge(node1, node2);
     }
 
     public Edge addEdge(Node n1, Node n2) {
