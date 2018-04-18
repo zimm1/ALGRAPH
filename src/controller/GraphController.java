@@ -197,22 +197,23 @@ public class GraphController implements ControllerInterface, ControllerEventList
         }
     }
 
-    // TODO Change for a real display algorithm
     private void initGraphUi() {
         if (graph == null) {
             return;
         }
 
-        int count = 0;
-        int startX = 50;
-        int startY = 50;
+        int k = 0;
+        double startX = root.getWidth() / 2;
+        double startY = root.getHeight() / 2;
+        double radius = Math.min(startX, startY) - NodeUI.DEFAULT_RADIUS - 10;
+        int n = graph.getNodes().size();
 
-        for (Node n : graph.getAdjacencies().keySet()) {
-            NodeUI ui = n.getUi();
-            ui.getCircle().setCenterX(startX + startX * 3 * (count % 3));
-            ui.getCircle().setCenterY(startY + startY * 3 * (count / 3));
+        for (Node node : graph.getNodes()) {
+            NodeUI ui = node.getUi();
+            ui.getCircle().setCenterX(startX + radius * Math.cos(k * 2 * Math.PI / n - Math.PI / 2));
+            ui.getCircle().setCenterY(startY + radius * Math.sin(k * 2 * Math.PI / n - Math.PI / 2));
 
-            count++;
+            k++;
         }
 
         updateGraphUI();
@@ -223,6 +224,11 @@ public class GraphController implements ControllerInterface, ControllerEventList
 
         root.getChildren().addAll(graph.getEdges().stream().map(Edge::getUi).collect(Collectors.toSet()));
         root.getChildren().addAll(graph.getNodes().stream().map(Node::getUi).collect(Collectors.toSet()));
+    }
+
+    public void resetGraphUI() {
+        graph.getNodes().forEach(n -> n.getUi().highlight(false));
+        graph.getEdges().forEach(n -> n.getUi().highlight(false));
     }
 
     private void addNode() {
@@ -334,7 +340,7 @@ public class GraphController implements ControllerInterface, ControllerEventList
     }
 
     public void highlight(Node node, Node parent) {
-        node.getUi().highlight();
+        node.getUi().highlight(true);
 
         if (parent == null) {
             return;
@@ -343,6 +349,6 @@ public class GraphController implements ControllerInterface, ControllerEventList
         graph.getAdjacencies().get(parent).stream()
                 .filter(e -> e.getN2().equals(node))
                 .findAny()
-                .ifPresent(e -> e.getUi().highlight());
+                .ifPresent(e -> e.getUi().highlight(true));
 }
 }

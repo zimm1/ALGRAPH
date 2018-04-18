@@ -13,7 +13,7 @@ public class NodeUI extends Group {
 
     private static final double DEFAULT_CENTER_X = 0;
     private static final double DEFAULT_CENTER_Y = 0;
-    private static final double DEFAULT_RADIUS = 20;
+    public static final double DEFAULT_RADIUS = 20;
     private static final Color DEFAULT_CIRCLE_COLOR = Color.BLACK;
     private static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
     private static final Color DEFAULT_COLOR_HIGHLIGHT = Color.RED;
@@ -60,7 +60,7 @@ public class NodeUI extends Group {
         return label;
     }
 
-    public void highlight() {
-        circle.setFill(DEFAULT_COLOR_HIGHLIGHT);
+    public void highlight(boolean highlight) {
+        circle.setFill(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_CIRCLE_COLOR);
     }
 }

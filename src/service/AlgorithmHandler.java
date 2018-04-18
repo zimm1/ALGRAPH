@@ -28,30 +28,34 @@ public class AlgorithmHandler {
     private Node v;
     private int w;
 
-    public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController) {
-        this(graphController, priorityQueueController, null);
-    }
 
-    public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController, Node startNode) {
+    public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController) {
         this.graphController = graphController;
         this.priorityQueueController = priorityQueueController;
 
-        restartAlgorithm(startNode);
+        restartAlgorithm();
+    }
+
+    public void restartAlgorithm() {
+        restartAlgorithm(null);
     }
 
     public void restartAlgorithm(Node startNode) {
+        if (startNode != null) {
+            this.startNode = startNode;
+        }
+
         programCounter = 0;
         resultDistance = graphController.getGraph().getNodes()
                 .stream().collect(Collectors.toMap(n -> n, n -> n.equals(startNode) ? 0 : Integer.MAX_VALUE));
         resultParent = new HashMap<>();
 
         priorityQueueController.clear();
-        this.startNode = startNode;
         adjacencies = null;
     }
 
     public void executeStep() {
-        if (startNode == null) {
+        if (startNode == null || programCounter > PROGRAM_COUNTER_END) {
             return;
         }
 
@@ -118,13 +122,16 @@ public class AlgorithmHandler {
                 resultParent.put(v, u);
                 programCounter = 4;
                 return;
+            case 10:
+                priorityQueueController.clear();
+                break;
         }
 
         programCounter++;
     }
 
     public void executeAll() {
-        while (programCounter < PROGRAM_COUNTER_END) {
+        while (programCounter <= PROGRAM_COUNTER_END) {
             executeStep();
         }
     }

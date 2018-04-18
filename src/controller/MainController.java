@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import model.Node;
 import resources.Strings;
 import service.AlgorithmHandler;
 import service.GraphGenerator;
@@ -122,7 +123,7 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.execute_reset, Strings.execute_reset,
                 "/resources/images/ic_replay_black_24dp_1x.png",
-                null), 2, 0);
+                event -> resetExecution()), 2, 0);
 
         Label label = new Label(Strings.execution);
         //TODO
@@ -173,9 +174,8 @@ public class MainController implements ControllerInterface {
     }
 
     private void generateGraph() {
-        graphController.setGraph(GraphGenerator.generateGraph(5, 0, 20, true));
-        // TODO Remove
-        algorithmHandler.restartAlgorithm(graphController.getGraph().getNode("1"));
+        graphController.setGraph(GraphGenerator.generateGraph(7, 0, 20, true));
+        graphController.getGraph().getNodes().stream().findAny().ifPresent(this::resetExecution);
     }
 
     private void executeStep() {
@@ -184,5 +184,14 @@ public class MainController implements ControllerInterface {
 
     private void executeAll() {
         algorithmHandler.executeAll();
+    }
+
+    private void resetExecution() {
+        resetExecution(null);
+    }
+
+    private void resetExecution(Node startNode) {
+        algorithmHandler.restartAlgorithm(startNode);
+        graphController.resetGraphUI();
     }
 }

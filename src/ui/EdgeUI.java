@@ -131,9 +131,9 @@ public class EdgeUI extends Group {
         label.setText(String.valueOf(weight));
     }
 
-    public void highlight() {
-        line.setStroke(DEFAULT_COLOR_HIGHLIGHT);
-        arrowLeft.setStroke(DEFAULT_COLOR_HIGHLIGHT);
-        arrowRight.setStroke(DEFAULT_COLOR_HIGHLIGHT);
+    public void highlight(boolean highlight) {
+        line.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
+        arrowLeft.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
+        arrowRight.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
     }
 }
