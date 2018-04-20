@@ -227,7 +227,10 @@ public class GraphController implements ControllerInterface, ControllerEventList
     }
 
     public void resetGraphUI() {
-        graph.getNodes().forEach(n -> n.getUi().highlight(false));
+        graph.getNodes().forEach(n -> {
+            n.getUi().highlight(false);
+            n.getUi().getDistanceLabel().setText("");
+        });
         graph.getEdges().forEach(n -> n.getUi().highlight(false));
     }
 

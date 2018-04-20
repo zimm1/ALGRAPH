@@ -1,5 +1,6 @@
 package service;
 
+import controller.CodeController;
 import controller.GraphController;
 import controller.PriorityQueueController;
 import model.Edge;
@@ -17,6 +18,7 @@ public class AlgorithmHandler {
 
     private GraphController graphController;
     private PriorityQueueController priorityQueueController;
+    private CodeController codeController;
     private int programCounter;
     private Node startNode;
 
@@ -29,9 +31,11 @@ public class AlgorithmHandler {
     private int w;
 
 
-    public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController) {
+    public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController,
+                            CodeController codeController) {
         this.graphController = graphController;
         this.priorityQueueController = priorityQueueController;
+        this.codeController = codeController;
 
         restartAlgorithm();
     }
@@ -47,7 +51,7 @@ public class AlgorithmHandler {
 
         programCounter = 0;
         resultDistance = graphController.getGraph().getNodes()
-                .stream().collect(Collectors.toMap(n -> n, n -> n.equals(startNode) ? 0 : Integer.MAX_VALUE));
+                .stream().collect(Collectors.toMap(n -> n, n -> n.equals(this.startNode) ? 0 : Integer.MAX_VALUE));
         resultParent = new HashMap<>();
 
         priorityQueueController.clear();
@@ -59,7 +63,7 @@ public class AlgorithmHandler {
             return;
         }
 
-        uiStep();
+        codeController.selectLine(programCounter == 10 ? -1 : programCounter);
 
         switch (programCounter) {
             // S.add(r)
@@ -77,9 +81,12 @@ public class AlgorithmHandler {
             case 2:
                 PriorityItem<Node> priorityItem = priorityQueueController.pop();
                 u = priorityItem.getItem();
+
+                graphController.highlight(u, resultParent.get(u));
+                u.getUi().getDistanceLabel().setText(String.valueOf(resultDistance.get(u)));
                 break;
             // foreach v belonging to G.adj(u) do
-            case 4:
+            case 3:
                 if (adjacencies == null) {
                     adjacencies = graphController.getGraph().getAdjacencies().get(u).iterator();
                 }
@@ -93,34 +100,36 @@ public class AlgorithmHandler {
                 w = e.getWeight();
                 break;
             // if d[u] + w(u, v) < d[v] then
-            case 5:
+            case 4:
                if (resultDistance.get(u) + w >= resultDistance.get(v)) {
-                    programCounter = 4;
+                    programCounter = 3;
                     return;
                }
                break;
            // if not b[v] then
-            case 6:
+            case 5:
                 if (priorityQueueController.getQueue().existItem(v)) {
-                    programCounter = 8;
+                    programCounter = 7;
                     return;
                 }
                 break;
             // S.insert(v, d[u] + w(u, v))
-            case 7:
+            case 6:
                 priorityQueueController.push(v, resultDistance.get(u) + w);
-                programCounter = 9;
+                programCounter = 8;
                 return;
             // else s.update(v, d[u] + w(u, v))
-            case 8:
+            case 7:
                 priorityQueueController.update(v, resultDistance.get(u) + w);
                 break;
             // d[v] <- d[u] + w(u, v)
+            case 8:
+                resultDistance.put(v, resultDistance.get(u) + w);
+                break;
             // T[v] <- u
             case 9:
-                resultDistance.put(v, resultDistance.get(u) + w);
                 resultParent.put(v, u);
-                programCounter = 4;
+                programCounter = 3;
                 return;
             case 10:
                 priorityQueueController.clear();
@@ -131,16 +140,12 @@ public class AlgorithmHandler {
     }
 
     public void executeAll() {
+        if (startNode == null || programCounter > PROGRAM_COUNTER_END) {
+            return;
+        }
+
         while (programCounter <= PROGRAM_COUNTER_END) {
             executeStep();
-        }
-    }
-
-    private void uiStep() {
-        switch (programCounter - 1) {
-            case 2:
-                graphController.highlight(u, resultParent.get(u));
-                break;
         }
     }
 }

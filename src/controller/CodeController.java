@@ -18,6 +18,8 @@ public class CodeController implements ControllerInterface{
 
     private ArrayList<CodeUI> listCodeUI;
 
+    private int currentSelected = -1;
+
     public CodeController(){
 
         listCodeUI = new ArrayList<>();
@@ -34,14 +36,14 @@ public class CodeController implements ControllerInterface{
     }
 
     public void selectLine(int numLine){
-        if(numLine >= 0 && numLine<listCodeUI.size()){
-            listCodeUI.get(numLine).setSelectedLabelStyle();
-        }
-    }
-
-    public void deselectLine(int numLine){
-        if(numLine >= 0 && numLine<listCodeUI.size()){
-            listCodeUI.get(numLine).setDefaultLabelStyle();
+        if(numLine >= -1 && numLine < listCodeUI.size()){
+            if (currentSelected != -1) {
+                listCodeUI.get(currentSelected).setDefaultLabelStyle();
+            }
+            if (numLine != -1) {
+                listCodeUI.get(numLine).setSelectedLabelStyle();
+            }
+            currentSelected = numLine;
         }
     }
 
@@ -53,7 +55,6 @@ public class CodeController implements ControllerInterface{
     }
 
     private void setListCodeUI(){
-
         listCodeUI.add(new CodeUI(Strings.pseudoCodeAddRootInPriorityQueue));
         listCodeUI.add(new CodeUI(Strings.pseudoCodeWhile));
         listCodeUI.add(new CodeUI(Strings.pseudoCodePopItem));

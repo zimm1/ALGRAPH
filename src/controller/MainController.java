@@ -22,17 +22,19 @@ public class MainController implements ControllerInterface {
 
     private GraphController graphController;
     private PriorityQueueController priorityQueueController;
+    private CodeController codeController;
 
     private AlgorithmHandler algorithmHandler;
 
     public MainController() {
         root = new BorderPane();
 
-        root.setCenter(initGraph());
-        root.setBottom(initPriorityQueue());
         root.setTop(initMenu());
+        root.setCenter(initGraph());
+        root.setRight(initCode());
+        root.setBottom(initPriorityQueue());
 
-        algorithmHandler = new AlgorithmHandler(graphController, priorityQueueController);
+        algorithmHandler = new AlgorithmHandler(graphController, priorityQueueController, codeController);
 
         root.addEventFilter(KeyEvent.KEY_PRESSED, event -> graphController.onKeyPressed(event));
     }
@@ -46,6 +48,12 @@ public class MainController implements ControllerInterface {
         graphController = new GraphController();
 
         return graphController.get();
+    }
+
+    private Pane initCode() {
+        codeController = new CodeController();
+
+        return codeController.get();
     }
 
     private Pane initPriorityQueue() {
@@ -193,5 +201,6 @@ public class MainController implements ControllerInterface {
     private void resetExecution(Node startNode) {
         algorithmHandler.restartAlgorithm(startNode);
         graphController.resetGraphUI();
+        codeController.selectLine(-1);
     }
 }
