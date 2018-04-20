@@ -1,12 +1,8 @@
 package ui;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import model.Node;
 import model.PriorityItem;
 import resources.Strings;
@@ -17,14 +13,14 @@ public class PriorityItemUI<T> extends Group {
     private Rectangle rectangle;
     private Label nodeLabel;
     private Label priorityLabel;
+    private Label emptyLabel;
     private static final int height = 100;
     private static final int width = 100;
-    private static final Pos nodeLabelPos = Pos.TOP_CENTER;
-    private static final Pos priorityLabelPos = Pos.BOTTOM_CENTER;
-    private static final int fontSize = 15;
-    private static final Color defaultRectangleColor = Color.BLACK;
-    private static final Color defaultLabelColor = Color.WHITE;
-    private static final Color rectangleStrokeColor = Color.RED;
+    private static final String cssLabelStyle = "labelStyle";
+    private static final String cssNodeLabelStyle = "nodeLabelStyle";
+    private static final String cssPriorityStyle = "priorityLabelStyle";
+    private static final String cssRectangleStyle = "rectangleStyle";
+    private static final String cssEmptyLabelStyle = "emptyLabelStyle";
 
     public PriorityItemUI(){
         this(null);
@@ -33,44 +29,57 @@ public class PriorityItemUI<T> extends Group {
     public PriorityItemUI(PriorityItem<T> priorityItem){
 
         this.priorityItem = priorityItem;
-        this.rectangle = createRectangle();
-        this.nodeLabel = createNodeLabel();
-        this.priorityLabel = createPriorityLabel();
+        initRectangle();
+        initNodeLabel();
+        initPriorityLabel();
+
+        if(getNode() == null){
+            initEmptyLabel();
+        }
 
         this.getChildren().addAll(rectangle,nodeLabel,priorityLabel);
+
+        if(emptyLabel != null){
+            this.getChildren().add(emptyLabel);
+        }
+
     }
 
     public void updatePriorityLabel() {
         this.priorityLabel.setText(Integer.toString(priorityItem.getPriority()));
     }
 
-    private Rectangle createRectangle(){
-        rectangle = new Rectangle(width,height,defaultRectangleColor);
-        rectangle.setStroke(rectangleStrokeColor);
-        return rectangle;
+    private void initRectangle(){
+        rectangle = new Rectangle(width,height);
+        rectangle.getStyleClass().add(cssRectangleStyle);
     }
 
-    private Label createNodeLabel(){
+    private void initNodeLabel(){
         Node node = getNode();
-        nodeLabel = new Label((node != null) ? node.getLabel() : getEmptyQueueText());
+        nodeLabel = new Label((node != null) ? node.getLabel() : "");
         nodeLabel.setLabelFor(this);
-        nodeLabel.setAlignment(nodeLabelPos);
-        nodeLabel.setTextFill(defaultLabelColor);
-        nodeLabel.setFont(new Font("Arial",fontSize));
+        nodeLabel.getStyleClass().add(cssLabelStyle);
+        nodeLabel.getStyleClass().add(cssNodeLabelStyle);
         nodeLabel.setPrefWidth(rectangle.getWidth());
         nodeLabel.setPrefHeight(rectangle.getHeight());
-        nodeLabel.setPadding(new Insets(20,0,0,0));
-        return nodeLabel;
     }
 
-    private Label createPriorityLabel(){
+    private void initPriorityLabel(){
         priorityLabel = new Label((priorityItem != null) ? (Integer.toString(priorityItem.getPriority())) : "");
-        priorityLabel.setAlignment(priorityLabelPos);
-        priorityLabel.setTextFill(defaultLabelColor);
+        priorityLabel.setLabelFor(this);
+        priorityLabel.getStyleClass().add(cssLabelStyle);
+        priorityLabel.getStyleClass().add(cssPriorityStyle);
         priorityLabel.setPrefWidth(rectangle.getWidth());
         priorityLabel.setPrefHeight(rectangle.getHeight());
-        priorityLabel.setPadding(new Insets(0,0,20,0));
-        return priorityLabel;
+    }
+
+    private void initEmptyLabel(){
+        emptyLabel = new Label(getEmptyQueueText());
+        priorityLabel.setLabelFor(this);
+        emptyLabel.setPrefHeight(rectangle.getHeight());
+        emptyLabel.setPrefWidth(rectangle.getWidth());
+        emptyLabel.getStyleClass().add(cssLabelStyle);
+        emptyLabel.getStyleClass().add(cssEmptyLabelStyle);
     }
 
     private Node getNode(){

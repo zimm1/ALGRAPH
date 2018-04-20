@@ -29,5 +29,17 @@ public abstract class Strings {
             execute_all = "Esegui",
             execute_reset = "Reset",
             execution = "Esecuzione",
-            emptyQueue = "Empty";
+            emptyQueue = "Empty",
+            pseudoCodeAddRootInPriorityQueue = "S.add(r)",
+            pseudoCodeWhile = "while not S.isEmpty() do",
+            //u2190 left arrow
+            pseudoCodePopItem = "\tu \u2190 S.pop()",
+            //u2208 element of
+            pseudoCodeForeach = "\tforeach v \u2208 to G.adj(u) do",
+            pseudoCodeCondition = "\t\tif d[u] + w(u, v) < d[v] then",
+            pseudoCodeExistItemInPriorityQueueCondition = "\t\t\tif not b[v] then",
+            pseudoCodeInsertItemInQueue = "\t\t\t\tS.insert(v, d[u] + w(u, v))",
+            pseudoCodeUpdatePriority = "\t\t\telse S.update(v, d[u] + w(u, v))",
+            pseudoCodeUpdateDistanceArray = "\t\t\td[v] \u2190 d[u] + w(u, v)",
+            pseudoCodeUpdateTree = "\t\t\tT[v] \u2190 u";
 }

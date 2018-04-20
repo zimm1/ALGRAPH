@@ -5,9 +5,6 @@ import javafx.stage.Stage;
 import resources.Strings;
 import utils.CssUtils;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
@@ -17,6 +14,7 @@ public class Main extends Application {
         try {
             mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this, "menu"));
             mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"priorityQueueStyle"));
+            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"labelStyleSheet"));
         } catch (NullPointerException e) {
             //
         }
@@ -24,7 +22,6 @@ public class Main extends Application {
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);
