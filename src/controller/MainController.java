@@ -11,10 +11,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+
 import model.Node;
+import model.Graph;
+
 import resources.Strings;
 import service.AlgorithmHandler;
+import service.FileHandler;
 import service.GraphGenerator;
+
+import java.io.IOException;
 
 
 public class MainController implements ControllerInterface {
@@ -87,11 +93,11 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.open, Strings.open_file,
                 "/resources/images/ic_folder_open_black_24dp_1x.png",
-                null), 1, 0);
+                event -> loadGraphFromFile("")), 1, 0);
         menuPane.add(buildButton(
                 Strings.save, Strings.save_file,
                 "/resources/images/ic_save_black_24dp_1x.png",
-                null), 2, 0);
+                event -> saveGraphToFile(graphController.getGraph(), "")), 2, 0);
 
         Label label = new Label(Strings.graph);
         // TODO
@@ -181,9 +187,32 @@ public class MainController implements ControllerInterface {
         return button;
     }
 
+    private void loadGraph() {
+        graphController.getGraph().getNodes().stream().findAny().ifPresent(this::resetExecution);
+    }
+
     private void generateGraph() {
         graphController.setGraph(GraphGenerator.generateGraph(7, 0, 20, true));
-        graphController.getGraph().getNodes().stream().findAny().ifPresent(this::resetExecution);
+        loadGraph();
+    }
+
+    private void loadGraphFromFile(String path) {
+        try {
+            Graph graphFromFile = FileHandler.FileReader(path);
+            graphController.setGraph(graphFromFile);
+            loadGraph();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveGraphToFile(Graph graph, String path) {
+        try {
+            FileHandler.FileWriter(graph, path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeStep() {
