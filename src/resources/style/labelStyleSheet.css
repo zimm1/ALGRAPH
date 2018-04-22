@@ -2,14 +2,21 @@
     -fx-font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
     -fx-font-size: large;
     -fx-font-weight: bold;
-    -fx-background-color: yellow;
-    -fx-text-fill: red;
+    -fx-background-color: red;
+    -fx-text-fill: white;
 }
 
 .unselectedItem{
     -fx-font-family: "Arial Black";
     -fx-font-size: medium;
     -fx-font-weight: normal;
-    -fx-background-color: gray;
     -fx-text-fill: black;
+}
+
+.titleStyle{
+    -fx-font-family: 'DejaVu Sans Mono', monospace;
+    -fx-font-size: xx-large;
+    -fx-font-weight: bolder;
+    -fx-text-fill: red;
+    -fx-alignment: center;
 }

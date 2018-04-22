@@ -41,5 +41,6 @@ public abstract class Strings {
             pseudoCodeInsertItemInQueue = "\t\t\t\tS.insert(v, d[u] + w(u, v))",
             pseudoCodeUpdatePriority = "\t\t\telse S.update(v, d[u] + w(u, v))",
             pseudoCodeUpdateDistanceArray = "\t\t\td[v] \u2190 d[u] + w(u, v)",
-            pseudoCodeUpdateTree = "\t\t\tT[v] \u2190 u";
+            pseudoCodeUpdateTree = "\t\t\tT[v] \u2190 u",
+            pseudoCodeTitle = "Algoritmo di Dijkstra";
 }
