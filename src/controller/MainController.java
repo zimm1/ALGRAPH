@@ -11,9 +11,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import model.Graph;
 import resources.Strings;
 import service.AlgorithmHandler;
+import service.FileHandler;
 import service.GraphGenerator;
+
+import java.io.IOException;
 
 
 public class MainController implements ControllerInterface {
@@ -78,11 +82,11 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.open, Strings.open_file,
                 "/resources/images/ic_folder_open_black_24dp_1x.png",
-                null), 1, 0);
+                event -> loadGraph("C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\graph")), 1, 0);
         menuPane.add(buildButton(
                 Strings.save, Strings.save_file,
                 "/resources/images/ic_save_black_24dp_1x.png",
-                null), 2, 0);
+                event -> saveGraph(graphController.getGraph(), "C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\graph")), 2, 0);
 
         Label label = new Label(Strings.graph);
         // TODO
@@ -173,9 +177,27 @@ public class MainController implements ControllerInterface {
     }
 
     private void generateGraph() {
-        graphController.setGraph(GraphGenerator.generateGraph(5, 0, 20, true));
+        graphController.setGraph(GraphGenerator.generateGraph(3, 0, 20, true));
         // TODO Remove
         algorithmHandler.restartAlgorithm(graphController.getGraph().getNode("1"));
+    }
+
+    private void loadGraph(String path) {
+        try {
+            Graph graphFromFile = FileHandler.FileReader(path);
+            graphController.setGraph(graphFromFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveGraph(Graph graph, String path) {
+        try {
+            FileHandler.FileWriter(graph, path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeStep() {
