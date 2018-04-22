@@ -7,26 +7,33 @@ import model.Node;
 import java.util.*;
 
 public abstract class GraphGenerator {
+
+    public static final int DEFAULT_NUM_NODES = 7;
+    public static final int DEFAULT_MIN_WEIGHT = 1;
+    public static final int DEFAULT_MAX_WEIGHT = 20;
+
     private static final int MIN_NODES = 3;
     private static final int MAX_NODES = 20;
-    private static final int DEFAULT_WEIGHT = 1;
 
-    public static Graph generateGraph(int numNodes) {
-        return generateGraph(numNodes,DEFAULT_WEIGHT,DEFAULT_WEIGHT);
+    public static Graph generateGraph() throws Exception {
+        return generateGraph(DEFAULT_NUM_NODES);
     }
 
-    public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) {
+    public static Graph generateGraph(int numNodes) throws Exception {
+        return generateGraph(numNodes, DEFAULT_MIN_WEIGHT, DEFAULT_MAX_WEIGHT);
+    }
+
+    public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) throws Exception {
         return generateGraph(numNodes, minWeight, maxWeight,true);
     }
 
-    public static Graph generateGraph(int numNodes, int minWeight, int maxWeight, boolean directed){
-
+    public static Graph generateGraph(int numNodes, int minWeight, int maxWeight, boolean directed) throws Exception {
         if (numNodes > MAX_NODES || numNodes < MIN_NODES) {
-            return null;
+            throw new Exception();
         }
 
         if (maxWeight < minWeight || maxWeight < 0 || minWeight < 0) {
-            return null;
+            throw new Exception();
         }
 
         Random random = new Random();

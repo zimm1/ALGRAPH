@@ -29,7 +29,7 @@ public abstract class Strings {
             execute_all = "Esegui",
             execute_reset = "Reset",
             execution = "Esecuzione",
-            emptyQueue = "Empty",
+            emptyQueue = "Vuoto",
             pseudoCodeAddRootInPriorityQueue = "S.add(r)",
             pseudoCodeWhile = "while not S.isEmpty() do",
             //u2190 left arrow
@@ -42,5 +42,14 @@ public abstract class Strings {
             pseudoCodeUpdatePriority = "\t\t\telse S.update(v, d[u] + w(u, v))",
             pseudoCodeUpdateDistanceArray = "\t\t\td[v] \u2190 d[u] + w(u, v)",
             pseudoCodeUpdateTree = "\t\t\tT[v] \u2190 u",
-            pseudoCodeTitle = "Algoritmo di Dijkstra";
+            pseudoCodeTitle = "Algoritmo di Dijkstra",
+            program_files = "ALGR file",
+            program_extension = "algr",
+            all_files = "Tutti i file",
+            untitled = "Senza titolo",
+            num_nodes = "Numero nodi:",
+            min_weight = "Peso minimo:",
+            max_weight = "Peso massimo:",
+            error_generate = "Impossibile generare grafo",
+            directed = "Orientato:";
 }

@@ -4,10 +4,7 @@ import model.Edge;
 import model.Graph;
 import model.Node;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,25 +12,19 @@ import java.util.Set;
 
 public abstract class FileHandler {
 
-    private static int c = 0;
-    private static ArrayList labels = new ArrayList();
-    private static ArrayList edges = new ArrayList();
-    private static ArrayList N1 = new ArrayList();
-    private static ArrayList N2 = new ArrayList();
-    private static ArrayList weight = new ArrayList();
-    private static int cNode, cEdges, cN1, cN2, cWeght;
+    private static File currentFile = null;
 
-    public static void writeWS(FileWriter fileOut, String s) {
-        try {
-            fileOut.write(s);
-            fileOut.write(" ");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static File getCurrentFile() {
+        return currentFile;
     }
 
-    public static void FileWriter(Graph graph, String path) throws IOException {
-        FileWriter fileout = new FileWriter(path + ".txt");
+    public static void saveGraph(Graph graph, File file) throws IOException {
+        if (file == null) {
+            throw new IOException();
+        }
+        currentFile = file;
+
+        FileWriter fileout = new FileWriter(file);
 
         writeWS(fileout, graph.isDirected() ? "1" : "0");
         fileout.write("\r\n");
@@ -41,35 +32,36 @@ public abstract class FileHandler {
         for (Node n : graph.getNodes()) {
             writeWS(fileout, n.getLabel());
         }
-
         fileout.write("\r\n");
-
 
         for (Edge e : graph.getEdges()) {
             writeWS(fileout, e.getN1().getLabel());
             writeWS(fileout, e.getN2().getLabel());
             writeWS(fileout, String.valueOf(e.getWeight()));
             fileout.write("\r\n");
-
         }
 
-
         fileout.close(); // chiude il file
-
     }
 
-    public static Graph FileReader(String path) throws IOException {
+    public static Graph loadGraph(File file) throws IOException {
+        if (file == null) {
+            throw new IOException();
+        }
+        currentFile = file;
 
-        BufferedReader filein = new BufferedReader(new FileReader(path + ".txt"));
+        BufferedReader filein = new BufferedReader(new FileReader(file));
+
         String line;
+
         if ((line = filein.readLine()) == null) {
             throw new IOException();
         }
         Graph graph = new Graph(line.split(" ")[0].equals("1"));
+
         if ((line = filein.readLine()) == null) {
             throw new IOException();
         }
-
         for (String label : line.split(" ")) {
             graph.addNode(label);
         }
@@ -83,8 +75,15 @@ public abstract class FileHandler {
         }
 
         return graph;
-
     }
 
+    private static void writeWS(FileWriter fileOut, String s) {
+        try {
+            fileOut.write(s);
+            fileOut.write(" ");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

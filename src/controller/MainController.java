@@ -13,13 +13,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 
 import model.Node;
-import model.Graph;
 
 import resources.Strings;
 import service.AlgorithmHandler;
 import service.FileHandler;
 import service.GraphGenerator;
+import utils.DialogUtils;
+import utils.WindowUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -93,11 +95,11 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.open, Strings.open_file,
                 "/resources/images/ic_folder_open_black_24dp_1x.png",
-                event -> loadGraphFromFile("")), 1, 0);
+                event -> loadGraphFromFile()), 1, 0);
         menuPane.add(buildButton(
                 Strings.save, Strings.save_file,
                 "/resources/images/ic_save_black_24dp_1x.png",
-                event -> saveGraphToFile(graphController.getGraph(), "")), 2, 0);
+                event -> saveGraphToFile()), 2, 0);
 
         Label label = new Label(Strings.graph);
         // TODO
@@ -192,14 +194,35 @@ public class MainController implements ControllerInterface {
     }
 
     private void generateGraph() {
-        graphController.setGraph(GraphGenerator.generateGraph(7, 0, 20, true));
-        loadGraph();
+        try {
+            DialogUtils.GraphGeneratorDialogResult result =
+                    DialogUtils.showGraphGeneratorDialog();
+
+            if (result == null) {
+                return;
+            }
+
+            graphController.setGraph(GraphGenerator.generateGraph(
+                    result.getNumNodes(),
+                    result.getMinWeight(),
+                    result.getMaxWeight(),
+                    result.isDirected()
+            ));
+            loadGraph();
+        } catch (Exception e) {
+            DialogUtils.showErrorDialog(Strings.error, Strings.generate_graph, Strings.error_generate);
+        }
     }
 
-    private void loadGraphFromFile(String path) {
+    private void loadGraphFromFile() {
         try {
-            Graph graphFromFile = FileHandler.FileReader(path);
-            graphController.setGraph(graphFromFile);
+            File file = DialogUtils.showFileChooserDialog(false);
+            if (file == null) {
+                return;
+            }
+
+            graphController.setGraph(FileHandler.loadGraph(file));
+            WindowUtils.setWindowTitle(root, file.getName());
             loadGraph();
         } catch (IOException e) {
             e.printStackTrace();
@@ -207,9 +230,15 @@ public class MainController implements ControllerInterface {
 
     }
 
-    private void saveGraphToFile(Graph graph, String path) {
+    private void saveGraphToFile() {
         try {
-            FileHandler.FileWriter(graph, path);
+            File file = DialogUtils.showFileChooserDialog(true);
+            if (file == null) {
+                return;
+            }
+
+            FileHandler.saveGraph(graphController.getGraph(), file);
+            WindowUtils.setWindowTitle(root, file.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
