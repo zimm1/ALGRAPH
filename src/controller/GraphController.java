@@ -12,11 +12,13 @@ import javafx.scene.shape.Circle;
 import model.Edge;
 import model.Graph;
 import model.Node;
+import service.AlgorithmHandler;
 import ui.EdgeUI;
 import ui.NodeUI;
 import utils.DialogUtils;
 import resources.Strings;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GraphController implements ControllerInterface, ControllerEventListener {
@@ -32,10 +34,14 @@ public class GraphController implements ControllerInterface, ControllerEventList
     private boolean creatingEdge;
     private Edge tempEdge;
 
-    public GraphController() {
+    private MainController mainController;
+
+    public GraphController(MainController mainController) {
         root = new Pane();
 
         graph = new Graph();
+
+        this.mainController = mainController;
 
         initEventHandlers();
     }
@@ -183,8 +189,12 @@ public class GraphController implements ControllerInterface, ControllerEventList
     }
 
     private void showContextMenu(ContextMenu contextMenu, ContextMenuEvent event) {
+        for(MenuItem item:contextMenu.getItems()){
+            item.setDisable(mainController.isAlgoritmHandlerStarted());
+        }
         contextMenuX = event.getSceneX();
         contextMenuY = event.getSceneY();
+
 
         this.contextMenu = contextMenu;
         this.contextMenu.show((Pane) event.getSource(), event.getScreenX(), event.getScreenY());
@@ -353,5 +363,5 @@ public class GraphController implements ControllerInterface, ControllerEventList
                 .filter(e -> e.getN2().equals(node))
                 .findAny()
                 .ifPresent(e -> e.getUi().highlight(true));
-}
+    }
 }

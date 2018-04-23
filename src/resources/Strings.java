@@ -51,5 +51,11 @@ public abstract class Strings {
             min_weight = "Peso minimo:",
             max_weight = "Peso massimo:",
             error_generate = "Impossibile generare grafo",
-            directed = "Orientato:";
+            directed = "Orientato:",
+            chooseRootTitle = "Radice",
+            chooseRootHeader = "Selezionare la radice di partenza",
+            chooseRootContent = "Inserire il nodo di partenza: ",
+            chooseRootErrorTitle = "Errore",
+            chooseRootErrorHeader = "Nodo inesistente",
+            chooseRootErrorContent = "Inserire un nodo presente nel grafo";
 }

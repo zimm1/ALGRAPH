@@ -16,6 +16,8 @@ public class AlgorithmHandler {
 
     private static final int PROGRAM_COUNTER_END = 10;
 
+    private boolean started = false;
+
     private GraphController graphController;
     private PriorityQueueController priorityQueueController;
     private CodeController codeController;
@@ -41,7 +43,9 @@ public class AlgorithmHandler {
     }
 
     public void restartAlgorithm() {
-        restartAlgorithm(null);
+        //restartAlgorithm(null);
+        this.startNode = null;
+        this.started = false;
     }
 
     public void restartAlgorithm(Node startNode) {
@@ -49,6 +53,7 @@ public class AlgorithmHandler {
             this.startNode = startNode;
         }
 
+        started = false;
         programCounter = 0;
         resultDistance = graphController.getGraph().getNodes()
                 .stream().collect(Collectors.toMap(n -> n, n -> n.equals(this.startNode) ? 0 : Integer.MAX_VALUE));
@@ -137,6 +142,7 @@ public class AlgorithmHandler {
         }
 
         programCounter++;
+        started = programCounter <= 10;
     }
 
     public void executeAll() {
@@ -148,4 +154,13 @@ public class AlgorithmHandler {
             executeStep();
         }
     }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public boolean existRootNode(){
+        return startNode != null;
+    }
+
 }

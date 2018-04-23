@@ -10,9 +10,24 @@ import service.FileHandler;
 import service.GraphGenerator;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class DialogUtils {
+
+    public static String showTextSpinnerDialog(String title, String header, String content, List<String> value)
+        throws Exception{
+        Collections.sort(value);
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(value.get(0), value);
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(content);
+
+        Optional<String> result = dialog.showAndWait();
+
+        return result.orElse(null);
+    }
 
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
             throws Exception {

@@ -23,6 +23,8 @@ import utils.WindowUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 public class MainController implements ControllerInterface {
@@ -53,7 +55,7 @@ public class MainController implements ControllerInterface {
     }
 
     private Pane initGraph() {
-        graphController = new GraphController();
+        graphController = new GraphController(this);
 
         return graphController.get();
     }
@@ -189,10 +191,6 @@ public class MainController implements ControllerInterface {
         return button;
     }
 
-    private void loadGraph() {
-        graphController.getGraph().getNodes().stream().findAny().ifPresent(this::resetExecution);
-    }
-
     private void generateGraph() {
         try {
             DialogUtils.GraphGeneratorDialogResult result =
@@ -208,7 +206,9 @@ public class MainController implements ControllerInterface {
                     result.getMaxWeight(),
                     result.isDirected()
             ));
-            loadGraph();
+
+            resetExecution();
+
         } catch (Exception e) {
             DialogUtils.showErrorDialog(Strings.error, Strings.generate_graph, Strings.error_generate);
         }
@@ -223,7 +223,9 @@ public class MainController implements ControllerInterface {
 
             graphController.setGraph(FileHandler.loadGraph(file));
             WindowUtils.setWindowTitle(root, file.getName());
-            loadGraph();
+
+            resetExecution();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -245,11 +247,35 @@ public class MainController implements ControllerInterface {
     }
 
     private void executeStep() {
+        if(graphController.getGraph().getAdjacencies().size() == 0){
+            return;
+        }
+
+        if(!algorithmHandler.existRootNode()){
+            selectRootNode();
+        }
         algorithmHandler.executeStep();
+        /*if(algorithmHandler.existRootNode()){
+            algorithmHandler.executeStep();
+        } else {
+            selectRootNode();
+        }*/
     }
 
     private void executeAll() {
+        if(graphController.getGraph().getAdjacencies().size() == 0){
+            return;
+        }
+
+        if(!algorithmHandler.existRootNode()){
+            selectRootNode();
+        }
         algorithmHandler.executeAll();
+        /*if(algorithmHandler.existRootNode()){
+            algorithmHandler.executeAll();
+        } else {
+            selectRootNode();
+        }*/
     }
 
     private void resetExecution() {
@@ -257,8 +283,38 @@ public class MainController implements ControllerInterface {
     }
 
     private void resetExecution(Node startNode) {
-        algorithmHandler.restartAlgorithm(startNode);
+        if(startNode != null){
+            algorithmHandler.restartAlgorithm(startNode);
+        } else {
+            algorithmHandler.restartAlgorithm();
+        }
         graphController.resetGraphUI();
         codeController.selectLine(-1);
     }
+
+    private Node getStartNode(){
+        String input = null;
+        try {
+            input = DialogUtils.showTextSpinnerDialog(Strings.chooseRootTitle,Strings.chooseRootHeader,Strings.chooseRootContent,
+                    graphController.getGraph().getNodes().stream().map(Node::getLabel).collect(Collectors.toList()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (input != null) ? graphController.getGraph().getNode(input) : null;
+    }
+
+    private void selectRootNode(){
+        Node node = getStartNode();
+        if(graphController.getGraph().getNode(node) != null){
+            resetExecution(node);
+        } else {
+            DialogUtils.showErrorDialog(Strings.chooseRootErrorTitle,Strings.chooseRootErrorHeader,Strings.chooseRootErrorContent);
+            resetExecution();
+        }
+    }
+
+    public boolean isAlgoritmHandlerStarted(){
+        return algorithmHandler.isStarted();
+    }
+
 }
