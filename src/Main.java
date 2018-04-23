@@ -14,9 +14,11 @@ public class Main extends Application {
 
         Scene mainScene = new Scene(new MainController().get(), 1024, 768);
         try {
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this, "menu"));
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"priorityQueueStyle"));
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"labelStyleSheet"));
+            CssUtils.loadFont("Product Sans");
+            CssUtils.loadCss(mainScene, "mainStyle");
+            CssUtils.loadCss(mainScene, "menuStyle");
+            CssUtils.loadCss(mainScene, "priorityQueueStyle");
+            CssUtils.loadCss(mainScene, "labelStyleSheet");
         } catch (NullPointerException e) {
             //
         }
