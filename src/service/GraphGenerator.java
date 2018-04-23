@@ -13,7 +13,7 @@ public abstract class GraphGenerator {
     public static final int DEFAULT_MAX_WEIGHT = 20;
 
     private static final int MIN_NODES = 3;
-    private static final int MAX_NODES = 20;
+    private static final int MAX_NODES = 15;
 
     public static Graph generateGraph() throws Exception {
         return generateGraph(DEFAULT_NUM_NODES);

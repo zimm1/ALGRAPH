@@ -1,6 +1,6 @@
 .selectedItem{
     -fx-font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
-    -fx-font-size: large;
+    -fx-font-size: x-large;
     -fx-font-weight: bold;
     -fx-background-color: red;
     -fx-text-fill: white;
@@ -8,7 +8,7 @@
 
 .unselectedItem{
     -fx-font-family: "Arial Black";
-    -fx-font-size: medium;
+    -fx-font-size: x-large;
     -fx-font-weight: normal;
     -fx-text-fill: black;
 }
