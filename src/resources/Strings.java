@@ -57,5 +57,15 @@ public abstract class Strings {
             chooseRootContent = "Inserire il nodo di partenza: ",
             chooseRootErrorTitle = "Errore",
             chooseRootErrorHeader = "Nodo inesistente",
-            chooseRootErrorContent = "Inserire un nodo presente nel grafo";
+            chooseRootErrorContent = "Inserire un nodo presente nel grafo",
+            algorithmInfoTitle = "Info",
+            algorithmInfoDescription = "L'algoritmo di Dijkstra viene usato per trovare il percorso minimo tra due nodi a e b.\n" +
+                    "L'algoritmo aggiunge alla coda i nodi ancora non scoperti, calcola la distanza dei nodi adiacenti (non scoperti) e se minore aggiorna" +
+                    " la distanza del nodo.\nMarca il nodo di rosso quando ha esaurito le adiacenze.",
+            algorithmInfoHypothesis = "Tutti i pesi sono positivi",
+            algorithmInfoHypothesis1 = "Ogni nodo viene estratto una e una sola volta",
+            algorithmInfoHypothesis2 = "Al momento dell'estrazione la sua distanza è minima",
+            algorithmInfoDataStructureTitle = "Struttura di dati",
+            algorithmInfoDataStructureDescription = "Coda con priorità, realizzata tramite vettore/lista non ordinati",
+            algorithmInfoHypothesisTitle = "Ipotesi";
 }

@@ -25,8 +25,12 @@ public abstract class DialogUtils {
         dialog.setContentText(content);
 
         Optional<String> result = dialog.showAndWait();
+        if(result.isPresent()){
+            return result.get();
+        }
 
-        return result.orElse(null);
+        throw new Exception();
+
     }
 
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
