@@ -19,6 +19,7 @@ import resources.Strings;
 import service.AlgorithmHandler;
 import service.FileHandler;
 import service.GraphGenerator;
+import utils.DialogUtils;
 
 import java.io.IOException;
 
@@ -93,11 +94,11 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.open, Strings.open_file,
                 "/resources/images/ic_folder_open_black_24dp_1x.png",
-                event -> loadGraphFromFile("")), 1, 0);
+                event -> loadGraphFromFile("C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\algr")), 1, 0);
         menuPane.add(buildButton(
                 Strings.save, Strings.save_file,
                 "/resources/images/ic_save_black_24dp_1x.png",
-                event -> saveGraphToFile(graphController.getGraph(), "")), 2, 0);
+                event -> saveGraphToFile(graphController.getGraph(), "C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\algr")), 2, 0);
 
         Label label = new Label(Strings.graph);
         // TODO
@@ -199,8 +200,12 @@ public class MainController implements ControllerInterface {
     private void loadGraphFromFile(String path) {
         try {
             Graph graphFromFile = FileHandler.FileReader(path);
-            graphController.setGraph(graphFromFile);
-            loadGraph();
+            if (graphFromFile != null) {
+                graphController.setGraph(graphFromFile);
+                loadGraph();
+            } else {
+                DialogUtils.showErrorDialog("The File does not exist", "", "The file you are trying to load does not exist.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,7 +214,13 @@ public class MainController implements ControllerInterface {
 
     private void saveGraphToFile(Graph graph, String path) {
         try {
-            FileHandler.FileWriter(graph, path);
+            if (graph.getAdjacencies().size() != 0) {
+                FileHandler.FileWriter(graph, path);
+                DialogUtils.showSaveMessage("File saved successfully", "", "The file has been saved in the 'file' folder.");
+            } else {
+                DialogUtils.showErrorDialog("Error while saving process", "", "The file has not been saved.");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

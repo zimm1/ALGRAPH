@@ -3,11 +3,9 @@ package service;
 import model.Edge;
 import model.Graph;
 import model.Node;
+import utils.DialogUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,8 +33,10 @@ public abstract class FileHandler {
     public static void FileWriter(Graph graph, String path) throws IOException {
         FileWriter fileout = new FileWriter(path + ".txt");
 
-        writeWS(fileout, graph.isDirected() ? "1" : "0");
-        fileout.write("\r\n");
+        if (graph.getAdjacencies().size() != 0) {
+            writeWS(fileout, graph.isDirected() ? "1" : "0");
+            fileout.write("\r\n");
+        }
 
         for (Node n : graph.getNodes()) {
             writeWS(fileout, n.getLabel());
@@ -60,30 +60,45 @@ public abstract class FileHandler {
 
     public static Graph FileReader(String path) throws IOException {
 
-        BufferedReader filein = new BufferedReader(new FileReader(path + ".txt"));
-        String line;
-        if ((line = filein.readLine()) == null) {
-            throw new IOException();
-        }
-        Graph graph = new Graph(line.split(" ")[0].equals("1"));
-        if ((line = filein.readLine()) == null) {
-            throw new IOException();
-        }
+        if (isFile(path)) {
 
-        for (String label : line.split(" ")) {
-            graph.addNode(label);
-        }
-
-        while ((line = filein.readLine()) != null) {
-            String[] parts = line.split(" ");
-            Edge edge = graph.addEdge(parts[0], parts[1]);
-            if (edge != null) {
-                edge.setWeight(Integer.parseInt(parts[2]));
+            BufferedReader filein = new BufferedReader(new FileReader(path + ".txt"));
+            String line;
+            if ((line = filein.readLine()) == null) {
+                throw new IOException();
             }
+            Graph graph = new Graph(line.split(" ")[0].equals("1"));
+            if ((line = filein.readLine()) == null) {
+                throw new IOException();
+            }
+
+            for (String label : line.split(" ")) {
+                graph.addNode(label);
+            }
+
+            while ((line = filein.readLine()) != null) {
+                String[] parts = line.split(" ");
+                Edge edge = graph.addEdge(parts[0], parts[1]);
+                if (edge != null) {
+                    edge.setWeight(Integer.parseInt(parts[2]));
+                }
+            }
+
+            return graph;
+        } else {
+            return null;
         }
 
-        return graph;
+    }
 
+    public static boolean isFile(String path) {
+        File f = new File(path + ".txt");
+
+        if (f.exists() && !f.isDirectory()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
