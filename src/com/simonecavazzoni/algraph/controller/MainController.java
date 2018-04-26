@@ -1,0 +1,460 @@
+package com.simonecavazzoni.algraph.controller;
+
+import com.simonecavazzoni.algraph.ui.AlgorithmInfoUI;
+import com.simonecavazzoni.algraph.utils.AsyncUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.*;
+
+import com.simonecavazzoni.algraph.model.Node;
+
+import com.simonecavazzoni.algraph.resources.Strings;
+import com.simonecavazzoni.algraph.service.AlgorithmHandler;
+import com.simonecavazzoni.algraph.service.FileHandler;
+import com.simonecavazzoni.algraph.service.GraphGenerator;
+import com.simonecavazzoni.algraph.utils.DialogUtils;
+import com.simonecavazzoni.algraph.utils.WindowUtils;
+import javafx.stage.WindowEvent;
+import javafx.util.StringConverter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.stream.Collectors;
+
+
+public class MainController extends Controller {
+    private final static int MAX_EXECUTION_TIME = 2000;
+    private final static int MAX_SPEED_SLIDER = 20;
+
+    private GraphController graphController;
+    private PriorityQueueController priorityQueueController;
+    private CodeController codeController;
+
+    private AlgorithmHandler algorithmHandler;
+
+    private Button generateButton;
+    private Button openButton;
+    private Button saveButton;
+    private Button stepButton;
+    private Button executeButton;
+    private Button pauseButton;
+    private Slider executionSpeedSlider;
+    private Button resetButton;
+    private Button infoButton;
+
+    private boolean executionPaused;
+    private boolean pendingExecution;
+
+
+    public MainController() {
+        root = new BorderPane();
+
+        ((BorderPane)root).setTop(initMenu());
+        ((BorderPane)root).setCenter(initGraph());
+        ((BorderPane)root).setRight(initCode());
+        ((BorderPane)root).setBottom(initPriorityQueue());
+
+        algorithmHandler = new AlgorithmHandler(graphController, priorityQueueController, codeController);
+
+        root.addEventFilter(KeyEvent.KEY_PRESSED, event -> graphController.onKeyPressed(event));
+    }
+
+    private Pane initGraph() {
+        graphController = new GraphController(this);
+        return graphController.get();
+    }
+
+    private Pane initPriorityQueue() {
+        priorityQueueController = new PriorityQueueController();
+        return priorityQueueController.get();
+    }
+
+    private Pane initCode() {
+        codeController = new CodeController();
+        return codeController.get();
+    }
+
+    private Pane initMenu() {
+        HBox menuContainer = new HBox();
+
+        menuContainer.setId("menu");
+        menuContainer.setPrefHeight(90);
+        menuContainer.setSpacing(5);
+
+        menuContainer.getChildren().addAll(buildGraphSection(), buildExecuteSection(), buildHelpSection());
+        return menuContainer;
+    }
+
+    private Pane buildGraphSection() {
+        VBox root = new VBox();
+
+        GridPane menuPane = new GridPane();
+        menuPane.setGridLinesVisible(false);
+        menuPane.setHgap(5);
+
+        menuPane.add(generateButton = buildButton(
+                Strings.generate, Strings.generate_graph,
+                "/com/simonecavazzoni/algraph/resources/images/ic_note_add_black_24dp_1x.png",
+                event -> generateGraph()), 0, 0);
+        menuPane.add(openButton = buildButton(
+                Strings.open, Strings.open_file,
+                "/com/simonecavazzoni/algraph/resources/images/ic_folder_open_black_24dp_1x.png",
+                event -> loadGraphFromFile()), 1, 0);
+        menuPane.add(saveButton = buildButton(
+                Strings.save, Strings.save_file,
+                "/com/simonecavazzoni/algraph/resources/images/ic_save_black_24dp_1x.png",
+                event -> saveGraphToFile()), 2, 0);
+
+        Label label = new Label(Strings.graph);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(label);
+        VBox.setVgrow(label, Priority.ALWAYS);
+        vbox.setAlignment(Pos.BOTTOM_CENTER);
+        vbox.setStyle("-fx-padding: 5 0 0 0");
+
+        menuPane.add(vbox, 0, 1, 3, 1);
+
+        root.setAlignment(Pos.CENTER);
+        root.getStyleClass().add("menuSection");
+        root.getChildren().add(menuPane);
+
+        return root;
+    }
+
+    private Pane buildExecuteSection() {
+        VBox root = new VBox();
+
+        GridPane menuPane = new GridPane();
+        menuPane.setGridLinesVisible(false);
+        menuPane.setHgap(5);
+
+        menuPane.add(stepButton = buildButton(
+                Strings.step, Strings.execute_step,
+                "/com/simonecavazzoni/algraph/resources/images/ic_skip_next_black_24dp_1x.png",
+                event -> executeStep()), 0, 0);
+        menuPane.add(executeButton = buildButton(
+                Strings.execute_all, Strings.execute_all,
+                "/com/simonecavazzoni/algraph/resources/images/ic_play_arrow_black_24dp_1x.png",
+                event -> executeAll()), 1, 0);
+        menuPane.add(pauseButton = buildButton(
+                Strings.execute_pause, Strings.execute_pause,
+                "/com/simonecavazzoni/algraph/resources/images/ic_pause_black_24dp_1x.png",
+                event -> pauseExecution()), 2, 0);
+        menuPane.add(resetButton = buildButton(
+                Strings.execute_reset, Strings.execute_reset,
+                "/com/simonecavazzoni/algraph/resources/images/ic_replay_black_24dp_1x.png",
+                event -> resetExecution(null)), 4, 0);
+
+        executionSpeedSlider = new Slider();
+        executionSpeedSlider.setMin(1);
+        executionSpeedSlider.setMax(MAX_SPEED_SLIDER);
+        executionSpeedSlider.setValue(2);
+        executionSpeedSlider.setBlockIncrement(1);
+        executionSpeedSlider.setPrefWidth(100);
+        executionSpeedSlider.setShowTickLabels(true);
+        executionSpeedSlider.setShowTickMarks(true);
+        executionSpeedSlider.setLabelFormatter(new StringConverter<Double>() {
+            @Override
+            public String toString(Double n) {
+                switch ((int)Math.floor(n)) {
+                    case 1:
+                        return Strings.slow;
+                    case MAX_SPEED_SLIDER:
+                        return Strings.instant;
+                    default:
+                        return "";
+                }
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return null;
+            }
+        });
+        executionSpeedSlider.setPadding(new Insets(0, 10, 0, 10));
+        menuPane.add(executionSpeedSlider, 3, 0);
+
+        pauseButton.setDisable(true);
+        resetButton.setDisable(true);
+
+        Label label = new Label(Strings.execution);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(label);
+        VBox.setVgrow(label, Priority.ALWAYS);
+        vbox.setAlignment(Pos.BOTTOM_CENTER);
+        vbox.setStyle("-fx-padding: 5 0 0 0");
+
+        menuPane.add(vbox, 0, 1, 5, 1);
+
+        root.setAlignment(Pos.CENTER);
+        root.getStyleClass().add("menuSection");
+        root.getChildren().add(menuPane);
+
+        return root;
+    }
+
+    private Pane buildHelpSection() {
+        VBox root = new VBox();
+
+        GridPane menuPane = new GridPane();
+        menuPane.setGridLinesVisible(false);
+        menuPane.setHgap(5);
+
+        menuPane.add(infoButton = buildButton(
+                Strings.algorithm_info_title, Strings.algorithm_info_title,
+                "/com/simonecavazzoni/algraph/resources/images/ic_info_black_24dp_1x.png",
+                event -> openInfo()), 0, 0);
+        Label label = new Label(Strings.algorithm_info_title);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(label);
+        VBox.setVgrow(label, Priority.ALWAYS);
+        vbox.setAlignment(Pos.BOTTOM_CENTER);
+        vbox.setStyle("-fx-padding: 5 0 0 0");
+
+        menuPane.add(vbox, 0, 1);
+
+        root.setAlignment(Pos.CENTER);
+        root.getStyleClass().add("menuSection");
+        root.getChildren().add(menuPane);
+
+        return root;
+    }
+
+    private Button buildButton(String title, String tooltip, String imagePath, EventHandler<ActionEvent> onAction) {
+
+        Button button = new Button(title);
+        button.setContentDisplay(ContentDisplay.TOP);
+
+        Image image = new Image(this.getClass().getResourceAsStream(imagePath),
+                24.0, 24.0, true, true);
+        ImageView imageView = new ImageView(image);
+        button.setGraphic(imageView);
+        button.setTooltip(new Tooltip(tooltip));
+        button.setOnAction(onAction);
+
+        return button;
+    }
+
+    private void generateGraph() {
+        try {
+            DialogUtils.GraphGeneratorDialogResult result =
+                    DialogUtils.showGraphGeneratorDialog();
+
+            if (result == null) {
+                return;
+            }
+
+            graphController.setGraph(GraphGenerator.generateGraph(
+                    result.getNumNodes(),
+                    result.getMinWeight(),
+                    result.getMaxWeight(),
+                    result.isDirected()
+            ));
+
+            resetExecution(null);
+
+        } catch (Exception e) {
+            DialogUtils.showErrorDialog(Strings.error, Strings.generate_graph, Strings.error_generate);
+        }
+    }
+
+    private void loadGraphFromFile() {
+        try {
+            File file = DialogUtils.showFileChooserDialog(false);
+            if (file == null) {
+                return;
+            }
+
+            graphController.setGraph(FileHandler.loadGraph(file));
+            WindowUtils.setWindowTitle(root, file.getName());
+
+            resetExecution(null);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void saveGraphToFile() {
+        try {
+            File file = DialogUtils.showFileChooserDialog(true);
+            if (file == null) {
+                return;
+            }
+
+            FileHandler.saveGraph(graphController.getGraph(), file);
+            WindowUtils.setWindowTitle(root, file.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void executeStep() {
+        if (graphController.getGraph().getAdjacencies().size() == 0) {
+            return;
+        }
+
+        if (!algorithmHandler.existRootNode()) {
+            selectRootNode();
+        }
+
+        algorithmHandler.executeStep();
+
+        resetButton.setDisable(!algorithmHandler.isStarted());
+    }
+
+    private void executeAll() {
+        pendingExecution = false;
+
+        if(graphController.getGraph().getAdjacencies().size() == 0){
+            return;
+        }
+
+        if(!algorithmHandler.existRootNode()){
+            selectRootNode();
+        }
+
+        int speed = (int)Math.floor(executionSpeedSlider.getValue());
+        if (speed == MAX_SPEED_SLIDER) {
+            algorithmHandler.executeAll();
+            resetButton.setDisable(false);
+            pauseButton.setDisable(true);
+            stepButton.setDisable(true);
+            executeButton.setDisable(true);
+            resetButton.setDisable(!algorithmHandler.isStarted());
+            return;
+        }
+
+        stepButton.setDisable(true);
+        executeButton.setDisable(true);
+        pauseButton.setDisable(false);
+
+        pendingExecution = true;
+
+        int delay = MAX_EXECUTION_TIME / speed;
+        AsyncUtils.setTimeout(() -> {
+            if (executionPaused) {
+                executionPaused = false;
+                pendingExecution = false;
+
+                stepButton.setDisable(false);
+                executeButton.setDisable(false);
+                return;
+            }
+
+            pendingExecution = true;
+            algorithmHandler.executeStep();
+        }, delay, new AsyncUtils.AsyncCallback() {
+            @Override
+            public void onComplete() {
+                if (algorithmHandler.isFinished()) {
+                    endExecutionUI();
+                    pendingExecution = false;
+                    return;
+                }
+
+                if (executionPaused) {
+                    pauseExecutionUI();
+                    executionPaused = false;
+                    pendingExecution = false;
+                    return;
+                }
+
+                continueExecutionUI();
+                pendingExecution = true;
+
+                executeAll();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void continueExecutionUI() {
+        pauseButton.setDisable(false);
+        resetButton.setDisable(false);
+    }
+
+    private void endExecutionUI() {
+        resetButton.setDisable(false);
+        pauseButton.setDisable(true);
+        stepButton.setDisable(true);
+        executeButton.setDisable(true);
+    }
+
+    private void resetExecution(Node startNode) {
+        if (pendingExecution) {
+            executionPaused = true;
+        }
+
+        algorithmHandler.restartAlgorithm(startNode);
+
+        graphController.resetGraphUI();
+        codeController.selectLine(-1);
+
+        resetExecutionUI();
+    }
+
+    private void resetExecutionUI() {
+        resetButton.setDisable(true);
+        pauseButton.setDisable(true);
+        stepButton.setDisable(false);
+        executeButton.setDisable(false);
+    }
+
+    private void pauseExecution() {
+        pauseButton.setDisable(true);
+        if (pendingExecution) {
+            executionPaused = true;
+        }
+    }
+
+    private void pauseExecutionUI() {
+        stepButton.setDisable(false);
+        executeButton.setDisable(false);
+    }
+
+    private Node getStartNode(){
+        String input = null;
+        try {
+            input = DialogUtils.showTextSpinnerDialog(Strings.choose_root_title,Strings.choose_root_header,Strings.choose_root_content,
+                    graphController.getGraph().getNodes().stream().map(Node::getLabel).collect(Collectors.toList()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (input != null) ? graphController.getGraph().getNode(input) : null;
+    }
+
+    private void selectRootNode(){
+        Node node = getStartNode();
+        if (graphController.getGraph().getNode(node) != null) {
+            resetExecution(node);
+        } else {
+            DialogUtils.showErrorDialog(Strings.error,Strings.choose_root_error_header,Strings.choose_root_error_content);
+            resetExecution(null);
+        }
+    }
+
+    public boolean isGraphEditable(){
+        return !algorithmHandler.isStarted() || algorithmHandler.isFinished();
+    }
+
+    private void openInfo() {
+        infoButton.setDisable(true);
+        WindowUtils.openNewWindow(Strings.pseudo_code_title, new AlgorithmInfoUI(), event ->
+                infoButton.setDisable(false), "AlgorithmInfoStyle");
+    }
+}
