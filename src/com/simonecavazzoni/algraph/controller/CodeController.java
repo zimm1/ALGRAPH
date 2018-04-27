@@ -1,13 +1,14 @@
 package com.simonecavazzoni.algraph.controller;
 
 import com.simonecavazzoni.algraph.model.Node;
+import com.simonecavazzoni.algraph.res.Colors;
+import com.simonecavazzoni.algraph.res.Strings;
+import com.simonecavazzoni.algraph.ui.CodeUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import com.simonecavazzoni.algraph.resources.Strings;
-import com.simonecavazzoni.algraph.ui.CodeUI;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -36,7 +37,7 @@ public class CodeController extends Controller {
     private int currentSelected = -1;
 
 
-    public CodeController(MainController mainController){
+    public CodeController(MainController mainController) {
 
         this.mainController = mainController;
 
@@ -44,23 +45,24 @@ public class CodeController extends Controller {
         listCodeUI = new ArrayList<>();
         uNode = new Label();
         uNode.getStyleClass().add(CSS_QUEUE_LABEL);
-        uNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH/2);
+        uNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH / 2);
         uNode.setPadding(new Insets(10, 0, 10, 0));
 
         vNode = new Label();
         vNode.getStyleClass().add(CSS_QUEUE_LABEL);
-        vNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH/2);
+        vNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH / 2);
         vNode.setPadding(new Insets(10, 0, 10, 0));
 
         title = new Label(Strings.pseudo_code_title);
         title.getStyleClass().add(CSS_TITLE_STYLE);
+        title.setTextFill(Colors.PRIMARY_COLOR);
         setTitleDimension();
 
         container = new HBox(10);
         container.setAlignment(DEFAULT_POSITION);
 
         variableValue = new TextFlow();
-        variableValue.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH/2);
+        variableValue.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH / 2);
         variableValue.getStyleClass().addAll(CSS_TEXT_ALIGNMENT, CSS_QUEUE_LABEL);
 
         setRootStyle();
@@ -68,8 +70,8 @@ public class CodeController extends Controller {
         initializeControllerUI();
     }
 
-    public void selectLine(int numLine){
-        if(numLine >= -1 && numLine < listCodeUI.size()){
+    public void selectLine(int numLine) {
+        if (numLine >= -1 && numLine < listCodeUI.size()) {
             if (currentSelected != -1) {
                 listCodeUI.get(currentSelected).setDefaultLabelStyle();
             }
@@ -83,20 +85,20 @@ public class CodeController extends Controller {
 
     }
 
-    private void updateVariableUI(){
+    private void updateVariableUI() {
         container.getChildren().clear();
         variableValue.getChildren().clear();
 
         root.getChildren().remove(container);
         root.getChildren().remove(variableValue);
 
-        uNode.setText(getString( (currentSelected != -1) ? mainController.getU() : null,true));
-        vNode.setText(getString((currentSelected != -1) ? mainController.getV() : null,false));
+        uNode.setText(getString((currentSelected != -1) ? mainController.getU() : null, true));
+        vNode.setText(getString((currentSelected != -1) ? mainController.getV() : null, false));
 
-        container.getChildren().addAll(uNode,vNode);
+        container.getChildren().addAll(uNode, vNode);
         root.getChildren().add(container);
 
-        if(currentSelected == 4){
+        if (currentSelected == 4) {
             mainController.selectQueueItem(mainController.getV());
             initTextFlow();
             root.getChildren().add(variableValue);
@@ -105,22 +107,22 @@ public class CodeController extends Controller {
         }
     }
 
-    private void setRootStyle(){
-        ((VBox)this.root).setAlignment(DEFAULT_POSITION);
+    private void setRootStyle() {
+        ((VBox) this.root).setAlignment(DEFAULT_POSITION);
         setRootDimension();
     }
 
-    private void setRootDimension(){
+    private void setRootDimension() {
         root.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
         root.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
     }
 
-    private void setTitleDimension(){
+    private void setTitleDimension() {
         title.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
         title.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
     }
 
-    private void setListCodeUI(){
+    private void setListCodeUI() {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_add_root));
         listCodeUI.add(new CodeUI(Strings.pseudo_code_while));
         listCodeUI.add(new CodeUI(Strings.pseudo_code_pop_item));
@@ -133,7 +135,7 @@ public class CodeController extends Controller {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_update_tree));
     }
 
-    private void initializeControllerUI(){
+    private void initializeControllerUI() {
         root.getChildren().clear();
 
         setListCodeUI();
@@ -143,11 +145,11 @@ public class CodeController extends Controller {
         root.getChildren().add(uNode);
     }
 
-    private String getString(Node node, boolean isV){
+    private String getString(Node node, boolean isV) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((isV) ? 'v' : 'u');
         stringBuilder.append('\u2190');
-        if(node == null){
+        if (node == null) {
             stringBuilder.append('\u2205');
         } else {
             stringBuilder.append(node.toString());
@@ -155,7 +157,7 @@ public class CodeController extends Controller {
         return stringBuilder.toString();
     }
 
-    private void initTextFlow(){
+    private void initTextFlow() {
         Integer vValue = mainController.getResultDistance(mainController.getV());
         Integer uValue = mainController.getResultDistance(mainController.getU());
         Integer weight = mainController.getWeight();
@@ -167,10 +169,10 @@ public class CodeController extends Controller {
         Text text4 = new Text(" < ");
         Text text5 = new Text((vValue != Integer.MAX_VALUE) ? Integer.toString(vValue) : "\u221e");
 
-        text5.getStyleClass().add("distanceV");
-        text1.getStyleClass().add("distanceU");
+        text5.setFill(Colors.OTHER_COLOR_1);
+        text1.setFill(Colors.OTHER_COLOR_2);
 
-        variableValue.getChildren().addAll(text,text1,text2,text3,text4,text5);
+        variableValue.getChildren().addAll(text, text1, text2, text3, text4, text5);
     }
 
 }

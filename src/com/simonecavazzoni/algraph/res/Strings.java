@@ -1,6 +1,6 @@
-package com.simonecavazzoni.algraph.resources;
+package com.simonecavazzoni.algraph.res;
 
-public abstract class Strings {
+public final class Strings {
     public static final String
             program_title = "ALGRAPH",
             remove_node = "Rimuovi nodo",
@@ -51,7 +51,7 @@ public abstract class Strings {
             min_weight = "Peso minimo:",
             max_weight = "Peso massimo:",
             error_generate = "Impossibile generare grafo",
-            directed = "Orientato:",
+            directed_input = "Orientato:",
             choose_root_title = "Radice",
             choose_root_header = "Selezionare la radice di partenza",
             choose_root_content = "Nodo di partenza:",
@@ -69,5 +69,12 @@ public abstract class Strings {
             algorithm_info_hypothesis_title = "Ipotesi",
             slow = "Lento",
             instant = "Veloce",
-            execute_pause = "Pausa";
+            execute_pause = "Pausa",
+            help = "Aiuto",
+            graph_type = "Tipo di grafo",
+            graph_type_choice = "Scegli il tipo di grafo",
+            type = "Tipo:",
+            directed = "Orientato",
+            undirected = "Non Orientato",
+            graph_type_error = "Impossibile impostare il tipo di grafo";
 }

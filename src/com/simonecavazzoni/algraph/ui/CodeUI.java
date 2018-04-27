@@ -1,8 +1,11 @@
 package com.simonecavazzoni.algraph.ui;
 
+import com.simonecavazzoni.algraph.res.Colors;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 
 public class CodeUI extends Group {
 
@@ -35,10 +38,14 @@ public class CodeUI extends Group {
     public void setSelectedLabelStyle(){
         this.lineCode.getStyleClass().remove(cssUnselectedItem);
         this.lineCode.getStyleClass().add(cssSelectedItem);
+        this.lineCode.setTextFill(Colors.LIGHT_TEXT_COLOR);
+        this.lineCode.setBackground(new Background(new BackgroundFill(Colors.PRIMARY_COLOR, null, null)));
     }
 
     public void setDefaultLabelStyle(){
         this.lineCode.getStyleClass().remove(cssSelectedItem);
         this.lineCode.getStyleClass().add(cssUnselectedItem);
+        this.lineCode.setTextFill(Colors.DEFAULT_COLOR);
+        this.lineCode.setBackground(new Background(new BackgroundFill(null, null, null)));
     }
 }

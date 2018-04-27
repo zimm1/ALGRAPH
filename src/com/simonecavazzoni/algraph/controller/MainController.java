@@ -14,17 +14,17 @@ import javafx.scene.layout.*;
 
 import com.simonecavazzoni.algraph.model.Node;
 
-import com.simonecavazzoni.algraph.resources.Strings;
+import com.simonecavazzoni.algraph.res.Strings;
 import com.simonecavazzoni.algraph.service.AlgorithmHandler;
 import com.simonecavazzoni.algraph.service.FileHandler;
 import com.simonecavazzoni.algraph.service.GraphGenerator;
 import com.simonecavazzoni.algraph.utils.DialogUtils;
 import com.simonecavazzoni.algraph.utils.WindowUtils;
-import javafx.stage.WindowEvent;
 import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
@@ -100,15 +100,15 @@ public class MainController extends Controller {
 
         menuPane.add(generateButton = buildButton(
                 Strings.generate, Strings.generate_graph,
-                "/com/simonecavazzoni/algraph/resources/images/ic_note_add_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_note_add_black_24dp_1x.png",
                 event -> generateGraph()), 0, 0);
         menuPane.add(openButton = buildButton(
                 Strings.open, Strings.open_file,
-                "/com/simonecavazzoni/algraph/resources/images/ic_folder_open_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_folder_open_black_24dp_1x.png",
                 event -> loadGraphFromFile()), 1, 0);
         menuPane.add(saveButton = buildButton(
                 Strings.save, Strings.save_file,
-                "/com/simonecavazzoni/algraph/resources/images/ic_save_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_save_black_24dp_1x.png",
                 event -> saveGraphToFile()), 2, 0);
 
         Label label = new Label(Strings.graph);
@@ -137,19 +137,19 @@ public class MainController extends Controller {
 
         menuPane.add(stepButton = buildButton(
                 Strings.step, Strings.execute_step,
-                "/com/simonecavazzoni/algraph/resources/images/ic_skip_next_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_skip_next_black_24dp_1x.png",
                 event -> executeStep()), 0, 0);
         menuPane.add(executeButton = buildButton(
                 Strings.execute_all, Strings.execute_all,
-                "/com/simonecavazzoni/algraph/resources/images/ic_play_arrow_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_play_arrow_black_24dp_1x.png",
                 event -> executeAll()), 1, 0);
         menuPane.add(pauseButton = buildButton(
                 Strings.execute_pause, Strings.execute_pause,
-                "/com/simonecavazzoni/algraph/resources/images/ic_pause_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_pause_black_24dp_1x.png",
                 event -> pauseExecution()), 2, 0);
         menuPane.add(resetButton = buildButton(
                 Strings.execute_reset, Strings.execute_reset,
-                "/com/simonecavazzoni/algraph/resources/images/ic_replay_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_replay_black_24dp_1x.png",
                 event -> resetExecution(null)), 4, 0);
 
         executionSpeedSlider = new Slider();
@@ -210,9 +210,9 @@ public class MainController extends Controller {
 
         menuPane.add(infoButton = buildButton(
                 Strings.algorithm_info_title, Strings.algorithm_info_title,
-                "/com/simonecavazzoni/algraph/resources/images/ic_info_black_24dp_1x.png",
+                "/com/simonecavazzoni/algraph/res/images/menu/ic_info_black_24dp_1x.png",
                 event -> openInfo()), 0, 0);
-        Label label = new Label(Strings.algorithm_info_title);
+        Label label = new Label(Strings.help);
 
         VBox vbox = new VBox();
         vbox.getChildren().add(label);
@@ -430,8 +430,13 @@ public class MainController extends Controller {
     private Node getStartNode(){
         String input = null;
         try {
-            input = DialogUtils.showTextSpinnerDialog(Strings.choose_root_title,Strings.choose_root_header,Strings.choose_root_content,
-                    graphController.getGraph().getNodes().stream().map(Node::getLabel).collect(Collectors.toList()));
+            input = DialogUtils.showTextSpinnerDialog(
+                    Strings.choose_root_title,
+                    Strings.choose_root_header,
+                    Strings.choose_root_content,
+                    graphController.getGraph().getNodes().stream().map(Node::getLabel)
+                            .sorted(String::compareTo).toArray(String[]::new)
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -455,7 +460,7 @@ public class MainController extends Controller {
     private void openInfo() {
         infoButton.setDisable(true);
         WindowUtils.openNewWindow(Strings.pseudo_code_title, new AlgorithmInfoUI(), event ->
-                infoButton.setDisable(false), "AlgorithmInfoStyle");
+                infoButton.setDisable(false), "algorithm_info_style");
     }
 
     public Node getU(){

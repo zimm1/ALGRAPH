@@ -1,5 +1,12 @@
 package com.simonecavazzoni.algraph.controller;
 
+import com.simonecavazzoni.algraph.model.Edge;
+import com.simonecavazzoni.algraph.model.Graph;
+import com.simonecavazzoni.algraph.model.Node;
+import com.simonecavazzoni.algraph.res.Strings;
+import com.simonecavazzoni.algraph.ui.EdgeUI;
+import com.simonecavazzoni.algraph.ui.NodeUI;
+import com.simonecavazzoni.algraph.utils.DialogUtils;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.ContextMenu;
@@ -9,14 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import com.simonecavazzoni.algraph.model.Edge;
-import com.simonecavazzoni.algraph.model.Graph;
-import com.simonecavazzoni.algraph.model.Node;
-import com.simonecavazzoni.algraph.ui.EdgeUI;
-import com.simonecavazzoni.algraph.ui.NodeUI;
-import com.simonecavazzoni.algraph.utils.DialogUtils;
-import com.simonecavazzoni.algraph.resources.Strings;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class GraphController extends Controller implements ControllerEventListener {
@@ -62,13 +63,13 @@ public class GraphController extends Controller implements ControllerEventListen
 
             while (parent != null) {
                 if (parent instanceof NodeUI) {
-                    NodeUI nodeUI = (NodeUI)parent;
+                    NodeUI nodeUI = (NodeUI) parent;
                     showContextMenu(GraphController.this.createNodeContextMenu(nodeUI.getNode()), event);
                     return;
                 }
 
                 if (parent instanceof EdgeUI) {
-                    EdgeUI edgeUI = (EdgeUI)parent;
+                    EdgeUI edgeUI = (EdgeUI) parent;
                     showContextMenu(GraphController.this.createEdgeContextMenu(edgeUI.getEdge()), event);
                     return;
                 }
@@ -87,7 +88,7 @@ public class GraphController extends Controller implements ControllerEventListen
             while (parent != null) {
                 if (parent instanceof NodeUI) {
                     if (creatingEdge) {
-                        stopEdgeCreation(((NodeUI)parent).getNode());
+                        stopEdgeCreation(((NodeUI) parent).getNode());
                         return;
                     }
 
@@ -118,13 +119,14 @@ public class GraphController extends Controller implements ControllerEventListen
                 return;
             }
 
-            Circle source = movingNode.getCircle();
-
             Double translateX = eventTranslateX + event.getSceneX() - eventSceneX;
             Double translateY = eventTranslateY + event.getSceneY() - eventSceneY;
 
+            Circle source = movingNode.getCircle();
             source.setCenterX(translateX);
             source.setCenterY(translateY);
+
+            restrictNodePosition(movingNode);
         });
 
         root.setOnMouseReleased(event -> {
@@ -135,6 +137,9 @@ public class GraphController extends Controller implements ControllerEventListen
             movingNode.setCursor(Cursor.HAND);
             movingNode = null;
         });
+
+        root.widthProperty().addListener((observable, oldValue, newValue) -> restrictNodesPosition());
+        root.heightProperty().addListener((observable, oldValue, newValue) -> restrictNodesPosition());
     }
 
     private ContextMenu createNodeContextMenu(Node node) {
@@ -180,8 +185,10 @@ public class GraphController extends Controller implements ControllerEventListen
     }
 
     private void showContextMenu(ContextMenu contextMenu, ContextMenuEvent event) {
-        for(MenuItem item:contextMenu.getItems()){
-            item.setDisable(!mainController.isGraphEditable());
+        for (MenuItem item : contextMenu.getItems()) {
+            if (!mainController.isGraphEditable()) {
+                item.setDisable(false);
+            }
         }
         contextMenuX = event.getSceneX();
         contextMenuY = event.getSceneY();
@@ -272,15 +279,13 @@ public class GraphController extends Controller implements ControllerEventListen
             int weight = Integer.valueOf(DialogUtils.showTextInputDialog(
                     Strings.change_weight, null, Strings.weight, String.valueOf(edge.getWeight())));
 
-            if (!edge.setWeight(weight)) {
+            if (!edge.setWeight(weight) || (!graph.isDirected() && !graph.getInvertedEdge(edge).setWeight(weight))) {
                 DialogUtils.showErrorDialog(
                         Strings.error, Strings.change_weight, Strings.error_min_weight + Edge.MIN_WEIGHT);
             }
         } catch (Exception e) {
-            if (e instanceof NumberFormatException) {
-                DialogUtils.showErrorDialog(
-                        Strings.error, Strings.change_weight, Strings.error_change_weight);
-            }
+            DialogUtils.showErrorDialog(
+                    Strings.error, Strings.change_weight, Strings.error_change_weight);
         }
     }
 
@@ -298,7 +303,7 @@ public class GraphController extends Controller implements ControllerEventListen
             tempNode.getUi().getCircle().setCenterY(event.getY());
         });
 
-        tempEdge = new Edge(node, tempNode);
+        tempEdge = new Edge(node, tempNode, Edge.MIN_WEIGHT, false);
         tempEdge.getUi().getLabel().setVisible(false);
 
         root.getChildren().add(0, tempEdge.getUi());
@@ -311,10 +316,29 @@ public class GraphController extends Controller implements ControllerEventListen
         creatingEdge = false;
 
         if (node != null) {
-            addEdge(new Edge(tempEdge.getN1(), node));
+            setGraphDirected();
+            addEdge(new Edge(tempEdge.getN1(), node, Edge.MIN_WEIGHT, graph.isDirected()));
         }
 
         tempEdge = null;
+    }
+
+    private void setGraphDirected() {
+        if (!graph.getEdges().isEmpty()) {
+            return;
+        }
+
+        try {
+            graph.setDirected(
+                    DialogUtils.showTextSpinnerDialog(
+                            Strings.graph_type,
+                            Strings.graph_type_choice,
+                            Strings.type,
+                            Strings.directed, Strings.undirected
+                    ).equals(Strings.directed));
+        } catch (Exception e) {
+            DialogUtils.showErrorDialog(Strings.graph_type, Strings.graph_type_choice, Strings.graph_type_error);
+        }
     }
 
     private void addEdge(Edge edge) {
@@ -354,5 +378,35 @@ public class GraphController extends Controller implements ControllerEventListen
                 .filter(e -> e.getN2().equals(node))
                 .findAny()
                 .ifPresent(e -> e.getUi().highlight(true));
+
+        if (!graph.isDirected()) {
+            graph.getAdjacencies().get(node).stream()
+                    .filter(e -> e.getN2().equals(parent))
+                    .findAny()
+                    .ifPresent(e -> e.getUi().highlight(true));
+        }
+    }
+
+    private void restrictNodePosition(NodeUI node) {
+        Circle c = node.getCircle();
+
+        double margin = NodeUI.DEFAULT_RADIUS + 10;
+
+        if (c.getCenterX() > root.getWidth() - margin) {
+            c.setCenterX(root.getWidth() - margin);
+        }
+        if (c.getCenterX() < root.getTranslateX() + margin) {
+            c.setCenterX(root.getTranslateX() + margin);
+        }
+        if (c.getCenterY() > root.getHeight() - margin) {
+            c.setCenterY(root.getHeight() - margin);
+        }
+        if (c.getCenterY() < root.getTranslateY() + margin) {
+            c.setCenterY(root.getTranslateY() + margin);
+        }
+    }
+
+    private void restrictNodesPosition() {
+        graph.getNodes().forEach(n -> restrictNodePosition(n.getUi()));
     }
 }

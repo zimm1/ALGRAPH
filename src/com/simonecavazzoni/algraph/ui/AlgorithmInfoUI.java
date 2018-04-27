@@ -1,6 +1,7 @@
 package com.simonecavazzoni.algraph.ui;
 
-import com.simonecavazzoni.algraph.resources.Strings;
+import com.simonecavazzoni.algraph.res.Colors;
+import com.simonecavazzoni.algraph.res.Strings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -11,14 +12,12 @@ import javafx.scene.layout.VBox;
 
 public class AlgorithmInfoUI extends Group {
 
-    private static final int width = 500;
-    private static final int height = 550;
     private static final String CSS_ALGORITHM_INFO_TITLE = "algorithmInfoTitle";
     private static final String CSS_ALGORITHM_INFO_MAIN_TITLE = "algorithmInfoMainTitle";
     private static final String CSS_ALGORITHM_INFO_DESCRIPTION = "algorithmInfoDescription";
     private static final String ALGORITHM_INFO_TEXT_LARGE = "algorithmInfoTextLarge";
 
-    private static final String pathImage = "/com/simonecavazzoni/algraph/resources/images/Dijkstra_Animation.gif";
+    private static final String IMAGE_PATH = "/com/simonecavazzoni/algraph/res/images/dijkstra_animation.gif";
 
     private VBox root;
 
@@ -37,7 +36,7 @@ public class AlgorithmInfoUI extends Group {
         description.setWrapText(true);
         description.setPrefWidth(300);
 
-        ImageView imageView = new ImageView(pathImage);
+        ImageView imageView = new ImageView(IMAGE_PATH);
 
         Label hypothesisTitle = createLabel(Strings.algorithm_info_hypothesis_title,false);
 
@@ -66,6 +65,7 @@ public class AlgorithmInfoUI extends Group {
     private Label createLabel(String message, boolean isMainTitle){
         Label label = new Label(message);
         label.getStyleClass().add(CSS_ALGORITHM_INFO_TITLE);
+        label.setTextFill(Colors.PRIMARY_COLOR);
         label.setId(isMainTitle ? CSS_ALGORITHM_INFO_MAIN_TITLE : "");
         return label;
     }
@@ -73,6 +73,7 @@ public class AlgorithmInfoUI extends Group {
     private Label createLabelDescription(String message){
         Label label = new Label(message);
         label.getStyleClass().add(CSS_ALGORITHM_INFO_DESCRIPTION);
+        label.setTextFill(Colors.DEFAULT_COLOR);
         return label;
     }
 }

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class Graph {
     private Map<Node, Set<Edge>> adjacencies;
 
-    private final boolean directed;
+    private boolean directed;
 
 
     public Graph() {
@@ -37,8 +37,25 @@ public class Graph {
         return setList.stream().collect(() -> new HashSet<>(setList.get(0)), Set::addAll, Set::addAll);
     }
 
+    /**
+     * Returns current graph mode
+     * @return Current directed_input value
+     */
     public boolean isDirected() {
         return directed;
+    }
+
+    /**
+     * Sets current graph mode.
+     * Does nothing if graph already contains at least one edge.
+     * @param directed New directed_input value
+     */
+    public void setDirected(boolean directed) {
+        if (!getEdges().isEmpty()) {
+            return;
+        }
+
+        this.directed = directed;
     }
 
     public Node getNode(String label) {
@@ -82,6 +99,11 @@ public class Graph {
         return true;
     }
 
+    public Edge getInvertedEdge(Edge edge) {
+        return getAdjacencies().get(edge.getN2()).stream()
+                .filter(e -> e.getN2().equals(edge.getN1())).findAny().orElse(null);
+    }
+
     public Edge addEdge(String label1, String label2) {
         Node node1 = getNode(label1);
         Node node2 = getNode(label2);
@@ -94,10 +116,13 @@ public class Graph {
     }
 
     public Edge addEdge(Node n1, Node n2) {
-        return addEdge(new Edge(n1, n2));
+        return addEdge(new Edge(n1, n2, Edge.MIN_WEIGHT, isDirected()));
     }
 
     public Edge addEdge(Edge edge) {
+        if (edge.isDirected() != isDirected()) {
+            return null;
+        }
         if (!adjacencies.get(edge.getN1()).add(edge)) {
             return null;
         }

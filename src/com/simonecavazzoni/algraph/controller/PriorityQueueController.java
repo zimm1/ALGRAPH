@@ -145,7 +145,7 @@ public class PriorityQueueController extends Controller {
 
     private void deselectItem(){
         priorityQueue.getAll().forEach(priorityItem -> priorityItem.getPriorityItemUI()
-                .setUnselectedItem(true));
-        selectedNode.setUnselectedItem(false);
+                .setUnselectedItem());
+        selectedNode.setUnselectedItem();
     }
 }

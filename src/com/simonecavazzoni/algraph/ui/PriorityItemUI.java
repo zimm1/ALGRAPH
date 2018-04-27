@@ -1,12 +1,13 @@
 package com.simonecavazzoni.algraph.ui;
 
+import com.simonecavazzoni.algraph.res.Colors;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
-import com.simonecavazzoni.algraph.resources.Strings;
+import com.simonecavazzoni.algraph.res.Strings;
 
 public class PriorityItemUI<T> extends Group {
 
@@ -20,7 +21,6 @@ public class PriorityItemUI<T> extends Group {
     private static final String cssLabelStyle = "labelStyle";
     private static final String cssNodeLabelStyle = "nodeLabelStyle";
     private static final String cssPriorityStyle = "priorityLabelStyle";
-    private static final String cssRectangleStyle = "rectangleStyle";
     private static final String cssEmptyLabelStyle = "emptyLabelStyle";
 
     public PriorityItemUI(){
@@ -52,7 +52,8 @@ public class PriorityItemUI<T> extends Group {
 
     private void initRectangle(){
         rectangle = new Rectangle(width,height);
-        rectangle.getStyleClass().add(cssRectangleStyle);
+        rectangle.setStroke(Colors.PRIMARY_COLOR);
+        rectangle.setFill(Colors.DEFAULT_COLOR);
     }
 
     private void initNodeLabel(){
@@ -61,6 +62,7 @@ public class PriorityItemUI<T> extends Group {
         nodeLabel.setLabelFor(this);
         nodeLabel.getStyleClass().add(cssLabelStyle);
         nodeLabel.getStyleClass().add(cssNodeLabelStyle);
+        nodeLabel.setTextFill(Colors.LIGHT_TEXT_COLOR);
         nodeLabel.setPrefWidth(rectangle.getWidth());
         nodeLabel.setPrefHeight(rectangle.getHeight());
     }
@@ -70,6 +72,7 @@ public class PriorityItemUI<T> extends Group {
         priorityLabel.setLabelFor(this);
         priorityLabel.getStyleClass().add(cssLabelStyle);
         priorityLabel.getStyleClass().add(cssPriorityStyle);
+        priorityLabel.setTextFill(Colors.LIGHT_TEXT_COLOR);
         priorityLabel.setPrefWidth(rectangle.getWidth());
         priorityLabel.setPrefHeight(rectangle.getHeight());
     }
@@ -81,6 +84,7 @@ public class PriorityItemUI<T> extends Group {
         emptyLabel.setPrefWidth(rectangle.getWidth());
         emptyLabel.getStyleClass().add(cssLabelStyle);
         emptyLabel.getStyleClass().add(cssEmptyLabelStyle);
+        emptyLabel.setTextFill(Colors.LIGHT_TEXT_COLOR);
     }
 
     private Node getNode(){
@@ -113,10 +117,10 @@ public class PriorityItemUI<T> extends Group {
     }
 
     public void setSelectedItem(boolean isV){
-        priorityLabel.getStyleClass().add( isV ? "distanceV" : "distanceU");
+        priorityLabel.setTextFill(isV ? Colors.OTHER_COLOR_1 : Colors.OTHER_COLOR_2);
     }
 
-    public void setUnselectedItem(boolean isV){
-        priorityLabel.getStyleClass().remove(isV ? "distanceV" : "distanceU");
+    public void setUnselectedItem(){
+        priorityLabel.setTextFill(Colors.LIGHT_TEXT_COLOR);
     }
 }

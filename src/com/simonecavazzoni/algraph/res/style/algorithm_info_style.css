@@ -1,14 +1,12 @@
 .algorithmInfoTitle{
     -fx-alignment: CENTER;
     -fx-font-size: x-large;
-    -fx-text-fill: red;
 }
 
 .algorithmInfoDescription{
     -fx-alignment: CENTER_LEFT;
     -fx-wrap-text: true;
     -fx-font-size: large;
-    -fx-text-fill: black;
 }
 
 #algorithmInfoMainTitle{

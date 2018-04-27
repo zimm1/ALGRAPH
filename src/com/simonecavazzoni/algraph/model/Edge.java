@@ -7,10 +7,12 @@ import java.util.Objects;
 public class Edge {
     private static final int DEFAULT_WEIGHT = 1;
     public static final int MIN_WEIGHT = 0;
+    public static final boolean DEFAULT_DIRECTED = true;
 
     private final Node n1;
     private final Node n2;
     private int weight;
+    private final boolean directed;
 
     private final EdgeUI ui;
 
@@ -19,9 +21,14 @@ public class Edge {
     }
 
     public Edge(Node n1, Node n2, int weight) {
+        this(n1, n2, weight, DEFAULT_DIRECTED);
+    }
+
+    public Edge(Node n1, Node n2, int weight, boolean directed) {
         this.n1 = n1;
         this.n2 = n2;
         this.weight = weight;
+        this.directed = directed;
 
         this.ui = new EdgeUI(this);
     }
@@ -51,12 +58,16 @@ public class Edge {
         return true;
     }
 
+    public boolean isDirected() {
+        return directed;
+    }
+
     public EdgeUI getUi() {
         return ui;
     }
 
     public Edge getInverted() {
-        return new Edge(n2, n1, weight);
+        return new Edge(n2, n1, weight, directed);
     }
 
     @Override

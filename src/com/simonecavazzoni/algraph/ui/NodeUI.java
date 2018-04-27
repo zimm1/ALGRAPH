@@ -1,5 +1,6 @@
 package com.simonecavazzoni.algraph.ui;
 
+import com.simonecavazzoni.algraph.res.Colors;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -14,9 +15,6 @@ public class NodeUI extends Group {
     private static final double DEFAULT_CENTER_X = 0;
     private static final double DEFAULT_CENTER_Y = 0;
     public static final double DEFAULT_RADIUS = 20;
-    private static final Color DEFAULT_CIRCLE_COLOR = Color.BLACK;
-    private static final Color DEFAULT_LABEL_COLOR = Color.WHITE;
-    private static final Color DEFAULT_COLOR_HIGHLIGHT = Color.RED;
 
     private final Node node;
 
@@ -33,10 +31,10 @@ public class NodeUI extends Group {
 
         this.node = node;
 
-        circle = new Circle(centerX, centerY, radius, DEFAULT_CIRCLE_COLOR);
+        circle = new Circle(centerX, centerY, radius, Colors.DEFAULT_COLOR);
 
         label = new Label(node.getLabel());
-        label.setTextFill(DEFAULT_LABEL_COLOR);
+        label.setTextFill(Colors.LIGHT_TEXT_COLOR);
         label.setAlignment(Pos.CENTER);
         label.translateXProperty().bind(circle.centerXProperty().subtract(circle.radiusProperty()));
         label.translateYProperty().bind(circle.centerYProperty().subtract(circle.radiusProperty()));
@@ -45,7 +43,7 @@ public class NodeUI extends Group {
         label.setLabelFor(this);
 
         distanceLabel = new Label();
-        distanceLabel.setTextFill(DEFAULT_LABEL_COLOR);
+        distanceLabel.setTextFill(Colors.LIGHT_TEXT_COLOR);
         distanceLabel.setAlignment(Pos.CENTER);
         distanceLabel.translateXProperty().bind(circle.centerXProperty().subtract(circle.radiusProperty()));
         distanceLabel.translateYProperty().bind(circle.centerYProperty());
@@ -71,7 +69,7 @@ public class NodeUI extends Group {
     }
 
     public void highlight(boolean highlight) {
-        circle.setFill(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_CIRCLE_COLOR);
+        circle.setFill(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
     }
 
     public Label getDistanceLabel() {

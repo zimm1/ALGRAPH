@@ -63,7 +63,7 @@ public abstract class GraphGenerator {
             Node n1 = nodes[rand1];
             Node n2 = nodes[rand2];
 
-            Edge newEdge = new Edge(n1, n2);
+            Edge newEdge = new Edge(n1, n2, Edge.MIN_WEIGHT, directed);
             int weight = random.nextInt(maxWeight - minWeight + 1) + minWeight;
             newEdge.setWeight(weight);
 

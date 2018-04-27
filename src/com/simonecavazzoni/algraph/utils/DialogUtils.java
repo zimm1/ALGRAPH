@@ -4,7 +4,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
-import com.simonecavazzoni.algraph.resources.Strings;
+import com.simonecavazzoni.algraph.res.Strings;
 import com.simonecavazzoni.algraph.service.FileHandler;
 import com.simonecavazzoni.algraph.service.GraphGenerator;
 
@@ -15,10 +15,10 @@ import java.util.Optional;
 
 public abstract class DialogUtils {
 
-    public static String showTextSpinnerDialog(String title, String header, String content, List<String> value)
-        throws Exception{
-        Collections.sort(value);
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(value.get(0), value);
+    public static String showTextSpinnerDialog(String title, String header, String content, String... value)
+            throws Exception {
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(value[0], value);
         dialog.setTitle(title);
         dialog.setHeaderText(header);
         dialog.setContentText(content);
@@ -101,7 +101,7 @@ public abstract class DialogUtils {
         grid.add(minWeight, 1, 1);
         grid.add(new Label(Strings.max_weight), 0,2);
         grid.add(maxWeight, 1, 2);
-        grid.add(new Label(Strings.directed), 0, 3);
+        grid.add(new Label(Strings.directed_input), 0, 3);
         grid.add(directed, 1, 3);
 
         dialog.getDialogPane().setContent(grid);

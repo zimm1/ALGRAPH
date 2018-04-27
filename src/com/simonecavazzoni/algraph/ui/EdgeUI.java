@@ -1,5 +1,6 @@
 package com.simonecavazzoni.algraph.ui;
 
+import com.simonecavazzoni.algraph.res.Colors;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -12,9 +13,6 @@ import com.simonecavazzoni.algraph.model.Edge;
 
 public class EdgeUI extends Group {
 
-    private static final Color DEFAULT_LINE_COLOR = Color.BLACK;
-    private static final Color DEFAULT_LABEL_COLOR = Color.BLACK;
-    private static final Color DEFAULT_COLOR_HIGHLIGHT = Color.RED;
     private static final double DEFAULT_ARROW_LENGTH = 10;
     private static final double DEFAULT_ARROW_WIDTH = 7;
     private static final double DEFAULT_LABEL_DISTANCE = 10;
@@ -27,35 +25,45 @@ public class EdgeUI extends Group {
     private Line arrowLeft;
     private Line arrowRight;
     private Label label;
+    private boolean disabled = false;
 
     public EdgeUI(Edge edge) {
         super();
 
         this.edge = edge;
 
-        line = new Line();
-        line.setStroke(DEFAULT_LINE_COLOR);
+        if (edge.isDirected() || edge.getN1().getLabel().compareTo(edge.getN2().getLabel()) > 0) {
+            line = new Line();
+            line.setStroke(Colors.DEFAULT_COLOR);
 
-        arrowLeft = new Line();
-        arrowRight = new Line();
+            if (edge.isDirected()) {
+                arrowLeft = new Line();
+                arrowRight = new Line();
+            }
 
-        label = new Label(String.valueOf(edge.getWeight()));
-        label.setTextFill(DEFAULT_LABEL_COLOR);
-        label.setAlignment(Pos.CENTER);
-        label.setLabelFor(this);
-        label.setFont(new Font(DEFAULT_FONT_SIZE));
+            label = new Label(String.valueOf(edge.getWeight()));
+            label.setTextFill(Colors.DEFAULT_COLOR);
+            label.setAlignment(Pos.CENTER);
+            label.setLabelFor(this);
+            label.setFont(new Font(DEFAULT_FONT_SIZE));
 
-        edge.getN1().getUi().getCircle().centerXProperty().addListener(updater);
-        edge.getN1().getUi().getCircle().centerYProperty().addListener(updater);
-        edge.getN2().getUi().getCircle().centerXProperty().addListener(updater);
-        edge.getN2().getUi().getCircle().centerYProperty().addListener(updater);
+            edge.getN1().getUi().getCircle().centerXProperty().addListener(updater);
+            edge.getN1().getUi().getCircle().centerYProperty().addListener(updater);
+            edge.getN2().getUi().getCircle().centerXProperty().addListener(updater);
+            edge.getN2().getUi().getCircle().centerYProperty().addListener(updater);
 
-        label.widthProperty().addListener(updater);
-        label.heightProperty().addListener(updater);
+            label.widthProperty().addListener(updater);
+            label.heightProperty().addListener(updater);
 
-        updater.invalidated(null);
+            updater.invalidated(null);
 
-        this.getChildren().addAll(line, arrowLeft, arrowRight, label);
+            this.getChildren().addAll(line, label);
+            if (edge.isDirected()) {
+                this.getChildren().addAll(arrowLeft, arrowRight);
+            }
+        } else {
+            disabled = true;
+        }
     }
 
     public Edge getEdge() {
@@ -86,10 +94,13 @@ public class EdgeUI extends Group {
         dx /= dist;
         dy /= dist;
 
-        sx = sx + DEFAULT_LINE_DISTANCE * dy;
-        sy = sy - DEFAULT_LINE_DISTANCE * dx;
-        ex = ex + DEFAULT_LINE_DISTANCE * dy;
-        ey = ey - DEFAULT_LINE_DISTANCE * dx;
+        if (edge.isDirected()) {
+            sx = sx + DEFAULT_LINE_DISTANCE * dy;
+            sy = sy - DEFAULT_LINE_DISTANCE * dx;
+            ex = ex + DEFAULT_LINE_DISTANCE * dy;
+            ey = ey - DEFAULT_LINE_DISTANCE * dx;
+
+        }
 
         line.setStartX(sx);
         line.setStartY(sy);
@@ -104,42 +115,55 @@ public class EdgeUI extends Group {
         label.setTranslateX(labelX);
         label.setTranslateY(labelY);
 
-        double distance = Math.hypot(ex - sx, ey - sy);
-        double t = (distance - margin + 1) / distance;
+        if (edge.isDirected()) {
+            double distance = Math.hypot(ex - sx, ey - sy);
+            double t = (distance - margin + 1) / distance;
 
-        double arrowsEx = (1 - t) * sx + t * ex;
-        double arrowsEy = (1 - t) * sy + t * ey;
+            double arrowsEx = (1 - t) * sx + t * ex;
+            double arrowsEy = (1 - t) * sy + t * ey;
 
-        arrowLeft.setEndX(arrowsEx);
-        arrowLeft.setEndY(arrowsEy);
-        arrowRight.setEndX(arrowsEx);
-        arrowRight.setEndY(arrowsEy);
+            arrowLeft.setEndX(arrowsEx);
+            arrowLeft.setEndY(arrowsEy);
+            arrowRight.setEndX(arrowsEx);
+            arrowRight.setEndY(arrowsEy);
 
-        double parallelComponent = DEFAULT_ARROW_LENGTH / (distance - margin);
-        double orthogonalComponent = DEFAULT_ARROW_WIDTH / (distance - margin);
+            double parallelComponent = DEFAULT_ARROW_LENGTH / (distance - margin);
+            double orthogonalComponent = DEFAULT_ARROW_WIDTH / (distance - margin);
 
-        // part in direction of main line
-        dx = (sx - arrowsEx) * parallelComponent;
-        dy = (sy - arrowsEy) * parallelComponent;
+            // part in direction of main line
+            dx = (sx - arrowsEx) * parallelComponent;
+            dy = (sy - arrowsEy) * parallelComponent;
 
-        // part orthogonal to main line
-        double ox = (sx - arrowsEx) * orthogonalComponent;
-        double oy = (sy - arrowsEy) * orthogonalComponent;
+            // part orthogonal to main line
+            double ox = (sx - arrowsEx) * orthogonalComponent;
+            double oy = (sy - arrowsEy) * orthogonalComponent;
 
-        arrowLeft.setStartX(arrowsEx + dx - oy);
-        arrowLeft.setStartY(arrowsEy + dy + ox);
-        arrowRight.setStartX(arrowsEx + dx + oy);
-        arrowRight.setStartY(arrowsEy + dy - ox);
+            arrowLeft.setStartX(arrowsEx + dx - oy);
+            arrowLeft.setStartY(arrowsEy + dy + ox);
+            arrowRight.setStartX(arrowsEx + dx + oy);
+            arrowRight.setStartY(arrowsEy + dy - ox);
+        }
     };
 
     public void setWeight(int weight) {
+        if (disabled) {
+            return;
+        }
+
         label.setText(String.valueOf(weight));
     }
 
     public void highlight(boolean highlight) {
-        line.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
-        arrowLeft.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
-        arrowRight.setStroke(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
-        label.setTextFill(highlight ? DEFAULT_COLOR_HIGHLIGHT : DEFAULT_LINE_COLOR);
+        if (disabled) {
+            return;
+        }
+
+        line.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+        label.setTextFill(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+
+        if (edge.isDirected()) {
+            arrowLeft.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+            arrowRight.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+        }
     }
 }
