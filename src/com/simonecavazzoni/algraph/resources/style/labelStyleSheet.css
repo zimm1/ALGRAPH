@@ -20,3 +20,14 @@
     -fx-text-fill: red;
     -fx-alignment: center;
 }
+
+.queueLabel{
+    -fx-font-size: xx-large;
+    -fx-font-weight: bolder;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+}
+
+.textAlignment{
+    -fx-text-alignment: center;
+}

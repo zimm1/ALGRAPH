@@ -2,6 +2,7 @@ package com.simonecavazzoni.algraph.ui;
 
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
@@ -111,4 +112,11 @@ public class PriorityItemUI<T> extends Group {
         return Strings.emptyQueue;
     }
 
+    public void setSelectedItem(boolean isV){
+        priorityLabel.getStyleClass().add( isV ? "distanceV" : "distanceU");
+    }
+
+    public void setUnselectedItem(boolean isV){
+        priorityLabel.getStyleClass().remove(isV ? "distanceV" : "distanceU");
+    }
 }

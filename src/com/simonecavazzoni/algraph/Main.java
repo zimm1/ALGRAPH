@@ -21,6 +21,7 @@ public class Main extends Application {
             CssUtils.loadCss(mainScene, "menuStyle");
             CssUtils.loadCss(mainScene, "priorityQueueStyle");
             CssUtils.loadCss(mainScene, "labelStyleSheet");
+            CssUtils.loadCss(mainScene, "itemStyleSheet");
         } catch (NullPointerException e) {
             //
         }

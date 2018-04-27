@@ -76,7 +76,7 @@ public class MainController extends Controller {
     }
 
     private Pane initCode() {
-        codeController = new CodeController();
+        codeController = new CodeController(this);
         return codeController.get();
     }
 
@@ -457,4 +457,25 @@ public class MainController extends Controller {
         WindowUtils.openNewWindow(Strings.pseudo_code_title, new AlgorithmInfoUI(), event ->
                 infoButton.setDisable(false), "AlgorithmInfoStyle");
     }
+
+    public Node getU(){
+        return algorithmHandler.getU();
+    }
+
+    public Node getV(){
+        return algorithmHandler.getV();
+    }
+
+    public Integer getResultDistance(Node node){
+        return algorithmHandler.getResultDistance(node);
+    }
+
+    public void selectQueueItem(Node node){
+        this.priorityQueueController.selectItem(node);
+    }
+
+    public Integer getWeight(){
+        return this.algorithmHandler.getWeight();
+    }
+
 }

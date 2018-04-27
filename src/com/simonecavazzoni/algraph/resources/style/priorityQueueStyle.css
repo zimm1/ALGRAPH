@@ -30,3 +30,7 @@
     -fx-stroke: red;
     -fx-background-color: BLACK;
 }
+
+.selectedQueueItem{
+    -fx-text-fill: yellow;
+}

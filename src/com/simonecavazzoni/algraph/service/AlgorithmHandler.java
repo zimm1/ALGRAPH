@@ -49,6 +49,8 @@ public class AlgorithmHandler {
 
     public void restartAlgorithm() {
         programCounter = 0;
+        u = null;
+        v = null;
         resultDistance = graphController.getGraph().getNodes()
                 .stream().collect(Collectors.toMap(n -> n, n -> n.equals(this.startNode) ? 0 : Integer.MAX_VALUE));
         resultParent = new HashMap<>();
@@ -160,4 +162,19 @@ public class AlgorithmHandler {
         return startNode != null;
     }
 
+    public Node getU() {
+        return u;
+    }
+
+    public Node getV() {
+        return v;
+    }
+
+    public Integer getResultDistance(Node node){
+        return resultDistance.get(node);
+    }
+
+    public Integer getWeight(){
+        return w;
+    }
 }

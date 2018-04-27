@@ -105,4 +105,24 @@ public class PriorityQueue<T> {
         return -1;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("S = { ");
+        int numItems = 0;
+        for(PriorityItem item:list){
+            if(item.getItem() instanceof Node){
+                numItems++;
+                Node node = (Node) item.getItem();
+                stringBuilder.append(node.getLabel());
+                if(numItems < list.size()){
+                    stringBuilder.append(" ,");
+                }
+            }
+        }
+
+        stringBuilder.append(" }");
+
+        return stringBuilder.toString();
+    }
 }

@@ -88,7 +88,9 @@ public class PriorityQueueController extends Controller {
 
         updateLines();
 
-        pane.getChildren().addAll(line,rightArrow,leftArrow);
+        if(!priorityQueue.isEmpty()){
+            pane.getChildren().addAll(line,rightArrow,leftArrow);
+        }
 
         root.getChildren().addAll(selectedNode,pane);
 
@@ -123,4 +125,27 @@ public class PriorityQueueController extends Controller {
         leftArrow.setEndY(startY+offset);
     }
 
+    @Override
+    public String toString() {
+        return priorityQueue.toString();
+    }
+
+    public void selectItem(Node node){
+
+        deselectItem();
+
+        if(node != null){
+            priorityQueue.getAll().stream().filter(n -> n.getItem().equals(node)).findAny()
+                    .ifPresent(nodePriorityItem -> nodePriorityItem.getPriorityItemUI().setSelectedItem(true));
+
+
+            selectedNode.setSelectedItem(false);
+        }
+    }
+
+    private void deselectItem(){
+        priorityQueue.getAll().forEach(priorityItem -> priorityItem.getPriorityItemUI()
+                .setUnselectedItem(true));
+        selectedNode.setUnselectedItem(false);
+    }
 }
