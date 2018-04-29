@@ -1,0 +1,10 @@
+* {
+    -fx-font-family: "Product Sans";
+}
+
+.controllerRoot {
+    -fx-border-color: black;
+    -fx-border-insets: 4;
+    -fx-border-radius: 4;
+    -fx-padding: 8;
+}
