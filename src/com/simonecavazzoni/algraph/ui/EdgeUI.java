@@ -70,10 +70,6 @@ public class EdgeUI extends Group {
         return edge;
     }
 
-    public Line getLine() {
-        return line;
-    }
-
     public Label getLabel() {
         return label;
     }

@@ -17,10 +17,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class GraphController extends Controller implements ControllerEventListener {
+/**
+ * Controller for graph related operations.
+ */
+public class GraphController extends Controller implements Controller.EventListener {
     private Graph graph;
 
     // Events data

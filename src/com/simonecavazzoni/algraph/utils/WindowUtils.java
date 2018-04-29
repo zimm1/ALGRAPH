@@ -19,10 +19,6 @@ public abstract class WindowUtils {
         stage.setTitle(title + " - " + Strings.program_title);
     }
 
-    public static void openNewWindow(String title, Parent root, EventHandler<WindowEvent> onCloseCallback) {
-        openNewWindow(title, root, onCloseCallback, new String[]{});
-    }
-
     public static void openNewWindow(String title, Parent root, EventHandler<WindowEvent> onCloseCallback, String... cssFiles) {
         Stage stage = new Stage();
 

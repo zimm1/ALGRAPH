@@ -9,10 +9,11 @@ public abstract class AsyncUtils {
         void onError(Exception e);
     }
 
-    public static void setTimeout(Runnable runnable, int delay, AsyncCallback callback){
+    public static void setTimeout(Runnable beforeRunnable, int delay, AsyncCallback callback){
+        beforeRunnable.run();
+
         new Thread(() -> {
             try {
-                Platform.runLater(runnable::run);
                 Thread.sleep(delay);
                 Platform.runLater(callback::onComplete);
             }
