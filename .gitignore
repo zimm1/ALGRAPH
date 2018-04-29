@@ -6,6 +6,7 @@
 
 # Build
 /out
+/META-INF
 
 ### Java template
 # Compiled class file

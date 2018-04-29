@@ -1,0 +1,24 @@
+#scrollPane{
+    -fx-background-color: transparent;
+    -fx-padding: 0px;
+}
+
+.labelStyle{
+    -fx-font-size: large;
+}
+
+.nodeLabelStyle{
+    -fx-padding: 20 0 0 0 ;
+    -fx-alignment: TOP_CENTER;
+}
+
+.priorityLabelStyle{
+    -fx-padding: 0 0 20 0;
+    -fx-alignment: BOTTOM_CENTER;
+}
+
+.emptyLabelStyle{
+    -fx-padding: 0 0 0 0;
+    -fx-font-size: x-large;
+    -fx-alignment: CENTER;
+}

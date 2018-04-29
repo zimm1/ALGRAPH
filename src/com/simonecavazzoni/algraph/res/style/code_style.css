@@ -1,0 +1,29 @@
+.selectedItem{
+    -fx-font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+    -fx-font-size: x-large;
+    -fx-font-weight: bold;
+}
+
+.unselectedItem{
+    -fx-font-family: "Arial Black";
+    -fx-font-size: x-large;
+    -fx-font-weight: normal;
+}
+
+.titleStyle{
+    -fx-font-family: 'DejaVu Sans Mono', monospace;
+    -fx-font-size: xx-large;
+    -fx-font-weight: bolder;
+    -fx-alignment: center;
+}
+
+.queueLabel{
+    -fx-font-size: xx-large;
+    -fx-font-weight: bolder;
+    -fx-text-fill: black;
+    -fx-alignment: center;
+}
+
+.textAlignment{
+    -fx-text-alignment: center;
+}

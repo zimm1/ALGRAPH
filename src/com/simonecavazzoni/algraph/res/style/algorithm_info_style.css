@@ -1,0 +1,18 @@
+.algorithmInfoTitle{
+    -fx-alignment: CENTER;
+    -fx-font-size: x-large;
+}
+
+.algorithmInfoDescription{
+    -fx-alignment: CENTER_LEFT;
+    -fx-wrap-text: true;
+    -fx-font-size: large;
+}
+
+#algorithmInfoMainTitle{
+    -fx-font-size: xx-large;
+}
+
+.algorithmInfoTextLarge{
+    -fx-font-size: x-large;
+}
