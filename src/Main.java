@@ -4,17 +4,22 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import resources.Strings;
 import utils.CssUtils;
+import utils.WindowUtils;
+
 
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle(Strings.program_title);
+        WindowUtils.setWindowTitle(primaryStage, Strings.untitled);
 
         Scene mainScene = new Scene(new MainController().get(), 1024, 768);
         try {
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this, "menu"));
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"priorityQueueStyle"));
-            mainScene.getStylesheets().add(CssUtils.getCssFilePaths(this,"labelStyleSheet"));
+            CssUtils.loadFont("Product Sans");
+            CssUtils.loadCss(mainScene, "mainStyle");
+            CssUtils.loadCss(mainScene, "menuStyle");
+            CssUtils.loadCss(mainScene, "priorityQueueStyle");
+            CssUtils.loadCss(mainScene, "labelStyleSheet");
+            CssUtils.loadCss(mainScene,"AlgorithmInfoStyle");
         } catch (NullPointerException e) {
             //
         }

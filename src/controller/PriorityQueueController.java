@@ -29,13 +29,12 @@ public class PriorityQueueController implements ControllerInterface {
     private Line rightArrow;
 
     private static final int DEFAULT_LINE_DIMENSION = 100;
-    private static final Color DEFAULT_LINE_COLOR = Color.BLUE;
 
     public PriorityQueueController(){
 
         root = new HBox();
         scrollPane = new ScrollPane();
-        priorityQueueLayout = new HBox();
+        priorityQueueLayout = new HBox(3);
         pane = new Pane();
         selectedNode = new PriorityItemUI();
 

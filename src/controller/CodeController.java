@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import resources.Strings;
@@ -11,12 +13,15 @@ public class CodeController implements ControllerInterface{
 
     private VBox root;
 
-    private static final int DEFAULT_ROOT_MAX_HEIGHT = 300;
-    private static final int DEFAULT_ROOT_MAX_WIDTH = 400;
-    private static final int DEFAULT_ROOT_MIN_HEIGHT = 300;
-    private static final int DEFAULT_ROOT_MIN_WIDTH = 400;
+    private static final Pos DEFAULT_ROOT_POSITION = Pos.TOP_CENTER;
+
+    private static final String cssTitleStyle = "titleStyle";
+
+    private static final int DEFAULT_ROOT_PREF_HEIGHT = 100;
+    private static final int DEFAULT_ROOT_PREF_WIDTH = 400;
 
     private ArrayList<CodeUI> listCodeUI;
+    private Label title;
 
     private int currentSelected = -1;
 
@@ -25,7 +30,11 @@ public class CodeController implements ControllerInterface{
         listCodeUI = new ArrayList<>();
         root = new VBox();
 
-        setRootDimension();
+        title = new Label(Strings.pseudoCodeTitle);
+        title.getStyleClass().add(cssTitleStyle);
+        setTitleDimension();
+
+        setRootStyle();
 
         initializeControllerUI();
     }
@@ -47,11 +56,19 @@ public class CodeController implements ControllerInterface{
         }
     }
 
+    private void setRootStyle(){
+        this.root.setAlignment(DEFAULT_ROOT_POSITION);
+        setRootDimension();
+    }
+
     private void setRootDimension(){
-        root.setMaxHeight(DEFAULT_ROOT_MAX_HEIGHT);
-        root.setMinHeight(DEFAULT_ROOT_MIN_HEIGHT);
-        root.setMaxWidth(DEFAULT_ROOT_MAX_WIDTH);
-        root.setMinWidth(DEFAULT_ROOT_MIN_WIDTH);
+        root.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
+        root.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
+    }
+
+    private void setTitleDimension(){
+        title.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
+        title.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
     }
 
     private void setListCodeUI(){
@@ -72,6 +89,7 @@ public class CodeController implements ControllerInterface{
 
         setListCodeUI();
 
+        root.getChildren().add(title);
         root.getChildren().addAll(listCodeUI);
     }
 }

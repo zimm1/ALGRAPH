@@ -1,9 +1,13 @@
 package ui;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -38,8 +42,6 @@ public class NodeUI extends Group {
 
         circle = new Circle(centerX, centerY, radius, DEFAULT_CIRCLE_COLOR);
 
-        VBox vBox = new VBox();
-
         label = new Label(node.getLabel());
         label.setTextFill(DEFAULT_LABEL_COLOR);
         label.setAlignment(Pos.CENTER);
@@ -53,13 +55,12 @@ public class NodeUI extends Group {
         distanceLabel.setTextFill(DEFAULT_LABEL_COLOR);
         distanceLabel.setAlignment(Pos.CENTER);
         distanceLabel.translateXProperty().bind(circle.centerXProperty().subtract(circle.radiusProperty()));
-        distanceLabel.translateYProperty().bind(circle.centerYProperty().subtract(circle.radiusProperty()));
+        distanceLabel.translateYProperty().bind(circle.centerYProperty());
         distanceLabel.prefWidthProperty().bind(circle.radiusProperty().multiply(2));
         distanceLabel.prefHeightProperty().bind(circle.radiusProperty());
         distanceLabel.setLabelFor(this);
 
-        vBox.getChildren().addAll(label, distanceLabel);
-        this.getChildren().addAll(circle, vBox);
+        this.getChildren().addAll(circle, label, distanceLabel);
 
         this.setCursor(Cursor.HAND);
     }

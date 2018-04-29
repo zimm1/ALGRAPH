@@ -11,17 +11,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-
 import model.Node;
-import model.Graph;
-
 import resources.Strings;
 import service.AlgorithmHandler;
 import service.FileHandler;
 import service.GraphGenerator;
 import utils.DialogUtils;
+import utils.WindowUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 
 public class MainController implements ControllerInterface {
@@ -52,7 +52,7 @@ public class MainController implements ControllerInterface {
     }
 
     private Pane initGraph() {
-        graphController = new GraphController();
+        graphController = new GraphController(this);
 
         return graphController.get();
     }
@@ -94,11 +94,11 @@ public class MainController implements ControllerInterface {
         menuPane.add(buildButton(
                 Strings.open, Strings.open_file,
                 "/resources/images/ic_folder_open_black_24dp_1x.png",
-                event -> loadGraphFromFile("C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\algr")), 1, 0);
+                event -> loadGraphFromFile()), 1, 0);
         menuPane.add(buildButton(
                 Strings.save, Strings.save_file,
                 "/resources/images/ic_save_black_24dp_1x.png",
-                event -> saveGraphToFile(graphController.getGraph(), "C:\\Users\\Keans\\Desktop\\ALGRAPH\\file\\algr")), 2, 0);
+                event -> saveGraphToFile()), 2, 0);
 
         Label label = new Label(Strings.graph);
         // TODO
@@ -188,49 +188,84 @@ public class MainController implements ControllerInterface {
         return button;
     }
 
-    private void loadGraph() {
-        graphController.getGraph().getNodes().stream().findAny().ifPresent(this::resetExecution);
-    }
-
     private void generateGraph() {
-        graphController.setGraph(GraphGenerator.generateGraph(7, 0, 20, true));
-        loadGraph();
+        try {
+            DialogUtils.GraphGeneratorDialogResult result =
+                    DialogUtils.showGraphGeneratorDialog();
+
+            if (result == null) {
+                return;
+            }
+
+            graphController.setGraph(GraphGenerator.generateGraph(
+                    result.getNumNodes(),
+                    result.getMinWeight(),
+                    result.getMaxWeight(),
+                    result.isDirected()
+            ));
+
+            resetExecution();
+
+        } catch (Exception e) {
+            DialogUtils.showErrorDialog(Strings.error, Strings.generate_graph, Strings.error_generate);
+        }
     }
 
-    private void loadGraphFromFile(String path) {
+    private void loadGraphFromFile() {
         try {
-            Graph graphFromFile = FileHandler.FileReader(path);
-            if (graphFromFile != null) {
-                graphController.setGraph(graphFromFile);
-                loadGraph();
-            } else {
-                DialogUtils.showErrorDialog("The File does not exist", "", "The file you are trying to load does not exist.");
+            File file = DialogUtils.showFileChooserDialog(false);
+            if (file == null) {
+                return;
             }
+
+            graphController.setGraph(FileHandler.loadGraph(file));
+            WindowUtils.setWindowTitle(root, file.getName());
+
+            resetExecution();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void saveGraphToFile(Graph graph, String path) {
+    private void saveGraphToFile() {
         try {
-            if (graph.getAdjacencies().size() != 0) {
-                FileHandler.FileWriter(graph, path);
-                DialogUtils.showSaveMessage("File saved successfully", "", "The file has been saved in the 'file' folder.");
-            } else {
+            if (graphController.getGraph().getAdjacencies().size() == 0) {
                 DialogUtils.showErrorDialog("Error while saving process", "", "The file has not been saved.");
+                return;
             }
 
+            File file = DialogUtils.showFileChooserDialog(true);
+            if (file == null) {
+                return;
+            }
+
+            FileHandler.saveGraph(graphController.getGraph(), file);
+            WindowUtils.setWindowTitle(root, file.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void executeStep() {
+        if (graphController.getGraph().getAdjacencies().size() == 0) {
+            return;
+        }
+
+        if (!algorithmHandler.existRootNode()) {
+            selectRootNode();
+        }
         algorithmHandler.executeStep();
     }
 
     private void executeAll() {
+        if (graphController.getGraph().getAdjacencies().size() == 0) {
+            return;
+        }
+
+        if (!algorithmHandler.existRootNode()) {
+            selectRootNode();
+        }
         algorithmHandler.executeAll();
     }
 
@@ -239,8 +274,38 @@ public class MainController implements ControllerInterface {
     }
 
     private void resetExecution(Node startNode) {
-        algorithmHandler.restartAlgorithm(startNode);
+        if (startNode != null) {
+            algorithmHandler.restartAlgorithm(startNode);
+        } else {
+            algorithmHandler.restartAlgorithm();
+        }
         graphController.resetGraphUI();
         codeController.selectLine(-1);
     }
+
+    private Node getStartNode() {
+        String input = null;
+        try {
+            input = DialogUtils.showTextSpinnerDialog(Strings.chooseRootTitle, Strings.chooseRootHeader, Strings.chooseRootContent,
+                    graphController.getGraph().getNodes().stream().map(Node::getLabel).collect(Collectors.toList()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (input != null) ? graphController.getGraph().getNode(input) : null;
+    }
+
+    private void selectRootNode() {
+        Node node = getStartNode();
+        if (graphController.getGraph().getNode(node) != null) {
+            resetExecution(node);
+        } else {
+            DialogUtils.showErrorDialog(Strings.chooseRootErrorTitle, Strings.chooseRootErrorHeader, Strings.chooseRootErrorContent);
+            resetExecution();
+        }
+    }
+
+    public boolean isAlgoritmHandlerStarted() {
+        return algorithmHandler.isStarted();
+    }
+
 }

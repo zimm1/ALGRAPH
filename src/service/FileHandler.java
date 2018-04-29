@@ -13,25 +13,19 @@ import java.util.Set;
 
 public abstract class FileHandler {
 
-    private static int c = 0;
-    private static ArrayList labels = new ArrayList();
-    private static ArrayList edges = new ArrayList();
-    private static ArrayList N1 = new ArrayList();
-    private static ArrayList N2 = new ArrayList();
-    private static ArrayList weight = new ArrayList();
-    private static int cNode, cEdges, cN1, cN2, cWeght;
+    private static File currentFile = null;
 
-    public static void writeWS(FileWriter fileOut, String s) {
-        try {
-            fileOut.write(s);
-            fileOut.write(" ");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static File getCurrentFile() {
+        return currentFile;
     }
 
-    public static void FileWriter(Graph graph, String path) throws IOException {
-        FileWriter fileout = new FileWriter(path + ".txt");
+    public static void saveGraph(Graph graph, File file) throws IOException {
+        if (file == null) {
+            throw new IOException();
+        }
+        currentFile = file;
+
+        FileWriter fileout = new FileWriter(file);
 
         if (graph.getAdjacencies().size() != 0) {
             writeWS(fileout, graph.isDirected() ? "1" : "0");
@@ -41,65 +35,57 @@ public abstract class FileHandler {
         for (Node n : graph.getNodes()) {
             writeWS(fileout, n.getLabel());
         }
-
         fileout.write("\r\n");
-
 
         for (Edge e : graph.getEdges()) {
             writeWS(fileout, e.getN1().getLabel());
             writeWS(fileout, e.getN2().getLabel());
             writeWS(fileout, String.valueOf(e.getWeight()));
             fileout.write("\r\n");
-
         }
-
 
         fileout.close(); // chiude il file
-
     }
 
-    public static Graph FileReader(String path) throws IOException {
+    public static Graph loadGraph(File file) throws IOException {
+        if (file == null) {
+            throw new IOException();
+        }
+        currentFile = file;
 
-        if (isFile(path)) {
+        BufferedReader fileIn = new BufferedReader(new FileReader(file));
+        String line;
 
-            BufferedReader filein = new BufferedReader(new FileReader(path + ".txt"));
-            String line;
-            if ((line = filein.readLine()) == null) {
-                throw new IOException();
-            }
-            Graph graph = new Graph(line.split(" ")[0].equals("1"));
-            if ((line = filein.readLine()) == null) {
-                throw new IOException();
-            }
+        if ((line = fileIn.readLine()) == null) {
+            throw new IOException();
+        }
+        Graph graph = new Graph(line.split(" ")[0].equals("1"));
 
-            for (String label : line.split(" ")) {
-                graph.addNode(label);
-            }
-
-            while ((line = filein.readLine()) != null) {
-                String[] parts = line.split(" ");
-                Edge edge = graph.addEdge(parts[0], parts[1]);
-                if (edge != null) {
-                    edge.setWeight(Integer.parseInt(parts[2]));
-                }
-            }
-
-            return graph;
-        } else {
-            return null;
+        if ((line = fileIn.readLine()) == null) {
+            throw new IOException();
+        }
+        for (String label : line.split(" ")) {
+            graph.addNode(label);
         }
 
+        while ((line = fileIn.readLine()) != null) {
+            String[] parts = line.split(" ");
+            Edge edge = graph.addEdge(parts[0], parts[1]);
+            if (edge != null) {
+                edge.setWeight(Integer.parseInt(parts[2]));
+            }
+        }
+
+        return graph;
     }
 
-    public static boolean isFile(String path) {
-        File f = new File(path + ".txt");
-
-        if (f.exists() && !f.isDirectory()) {
-            return true;
-        } else {
-            return false;
+    private static void writeWS(FileWriter fileOut, String s) {
+        try {
+            fileOut.write(s);
+            fileOut.write(" ");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 }
 
