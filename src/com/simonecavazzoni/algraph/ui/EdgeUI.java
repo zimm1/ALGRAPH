@@ -162,4 +162,13 @@ public class EdgeUI extends Group {
             arrowRight.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
         }
     }
+
+    public void selectEdge(){
+        label.setTextFill(Colors.OTHER_COLOR_3);
+    }
+
+    public void deselectEdge(){
+        label.setTextFill(Colors.DEFAULT_COLOR);
+    }
+
 }

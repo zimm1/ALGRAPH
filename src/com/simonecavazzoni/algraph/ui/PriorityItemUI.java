@@ -3,7 +3,6 @@ package com.simonecavazzoni.algraph.ui;
 import com.simonecavazzoni.algraph.res.Colors;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
@@ -16,8 +15,8 @@ public class PriorityItemUI<T> extends Group {
     private Label nodeLabel;
     private Label priorityLabel;
     private Label emptyLabel;
-    private static final int height = 100;
-    private static final int width = 100;
+    private static final int height = 80;
+    private static final int width = 80;
     private static final String cssLabelStyle = "labelStyle";
     private static final String cssNodeLabelStyle = "nodeLabelStyle";
     private static final String cssPriorityStyle = "priorityLabelStyle";

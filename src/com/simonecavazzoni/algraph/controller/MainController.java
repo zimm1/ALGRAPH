@@ -1,5 +1,6 @@
 package com.simonecavazzoni.algraph.controller;
 
+import com.simonecavazzoni.algraph.model.Edge;
 import com.simonecavazzoni.algraph.ui.AlgorithmInfoUI;
 import com.simonecavazzoni.algraph.utils.AsyncUtils;
 import javafx.event.ActionEvent;
@@ -484,6 +485,18 @@ public class MainController extends Controller {
 
     public Integer getWeight(){
         return this.algorithmHandler.getWeight();
+    }
+
+    public void selectEdge(Edge edge){
+        this.graphController.selectEdge(edge);
+    }
+
+    public void deselctEdge(Edge edge){
+        this.graphController.deselectEdge(edge);
+    }
+
+    public Edge getE(){
+        return this.algorithmHandler.getE();
     }
 
 }

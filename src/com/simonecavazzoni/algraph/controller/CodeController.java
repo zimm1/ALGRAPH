@@ -100,10 +100,12 @@ public class CodeController extends Controller {
 
         if (currentSelected == 4) {
             mainController.selectQueueItem(mainController.getV());
+            mainController.selectEdge(mainController.getE());
             initTextFlow();
             root.getChildren().add(variableValue);
         } else {
             mainController.selectQueueItem(null);
+            mainController.deselctEdge(mainController.getE());
         }
     }
 
@@ -168,11 +170,12 @@ public class CodeController extends Controller {
         Text text3 = new Text(Integer.toString(weight));
         Text text4 = new Text(" < ");
         Text text5 = new Text((vValue != Integer.MAX_VALUE) ? Integer.toString(vValue) : "\u221e");
+        Text text6 = new Text(" then");
 
         text5.setFill(Colors.OTHER_COLOR_1);
         text1.setFill(Colors.OTHER_COLOR_2);
+        text3.setFill(Colors.OTHER_COLOR_3);
 
-        variableValue.getChildren().addAll(text, text1, text2, text3, text4, text5);
+        variableValue.getChildren().addAll(text, text1, text2, text3, text4, text5,text6);
     }
-
 }

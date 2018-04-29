@@ -411,4 +411,13 @@ public class GraphController extends Controller implements Controller.EventListe
     private void restrictNodesPosition() {
         graph.getNodes().forEach(n -> restrictNodePosition(n.getUi()));
     }
+
+    public void selectEdge(Edge edge){
+        graph.getEdges().stream().filter(e -> e.equals(edge)).findAny().ifPresent(e -> e.getUi().selectEdge());
+    }
+
+    public void deselectEdge(Edge edge){
+        graph.getEdges().stream().filter(e -> e.equals(edge)).findAny().ifPresent(e -> e.getUi().deselectEdge());
+    }
+
 }

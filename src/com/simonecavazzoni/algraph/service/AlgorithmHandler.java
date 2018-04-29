@@ -6,7 +6,6 @@ import com.simonecavazzoni.algraph.controller.PriorityQueueController;
 import com.simonecavazzoni.algraph.model.Edge;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
-import com.simonecavazzoni.algraph.utils.AsyncUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,6 +29,8 @@ public class AlgorithmHandler {
     private Iterator<Edge> adjacencies;
     private Node v;
     private int w;
+
+    private Edge e;
 
 
     public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController,
@@ -96,7 +97,7 @@ public class AlgorithmHandler {
                     adjacencies = null;
                     return;
                 }
-                Edge e = adjacencies.next();
+                e = adjacencies.next();
                 v = e.getN2();
                 w = e.getWeight();
                 break;
@@ -176,5 +177,9 @@ public class AlgorithmHandler {
 
     public Integer getWeight(){
         return w;
+    }
+
+    public Edge getE() {
+        return e;
     }
 }

@@ -11,7 +11,6 @@
 }
 
 .titleStyle{
-    -fx-font-family: 'DejaVu Sans Mono', monospace;
     -fx-font-size: xx-large;
     -fx-font-weight: bolder;
     -fx-alignment: center;
