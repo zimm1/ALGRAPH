@@ -2,6 +2,10 @@ package com.simonecavazzoni.algraph.model;
 
 import com.simonecavazzoni.algraph.ui.PriorityItemUI;
 
+/** This class is an implementation of a generic item of PriorityQueue.
+ *  This class expose the methods to change the attributes of PriorityItem.
+ * @param <T>
+ */
 public class PriorityItem<T> {
 
     private T item;
@@ -22,23 +26,38 @@ public class PriorityItem<T> {
         setItem(object);
     }
 
+    /**
+     * @return  T This returns the generic item
+     */
     public T getItem() {
         return item;
     }
 
+    /**
+     * @param item  This sets the item
+     */
     public void setItem(T item) {
         this.item = item;
     }
 
+    /**
+     * @return This returns the item priority
+     */
     public int getPriority() {
         return priority;
     }
 
+    /**
+     * @param priority  This updates the item priority
+     */
     public void setPriority(int priority) {
         this.priority = priority;
         this.priorityItemUI.updatePriorityLabel();
     }
 
+    /**
+     * @return  PriorityItemUI This returns the object UI
+     */
     public PriorityItemUI<T> getPriorityItemUI(){
         return priorityItemUI;
     }

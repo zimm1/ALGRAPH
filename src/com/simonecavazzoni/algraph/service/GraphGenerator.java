@@ -6,6 +6,9 @@ import com.simonecavazzoni.algraph.model.Node;
 
 import java.util.*;
 
+/**
+ * This class expose two methods to create oriented/unoriented graph.
+ */
 public abstract class GraphGenerator {
 
     public static final int DEFAULT_NUM_NODES = 7;
@@ -15,18 +18,42 @@ public abstract class GraphGenerator {
     private static final int MIN_NODES = 3;
     private static final int MAX_NODES = 15;
 
+    /**
+     * @return  This returns the default unoriented graph
+     * @throws Exception
+     */
     public static Graph generateGraph() throws Exception {
         return generateGraph(DEFAULT_NUM_NODES);
     }
 
+    /**
+     * @param numNodes  This is the maximum number nodes of the graph
+     * @return  Graph   This returns the unoriented graph
+     * @throws Exception
+     */
     public static Graph generateGraph(int numNodes) throws Exception {
         return generateGraph(numNodes, DEFAULT_MIN_WEIGHT, DEFAULT_MAX_WEIGHT);
     }
 
+    /**
+     * @param numNodes  This is the maximum number nodes of the graph
+     * @param minWeight This is the minimum weight of the edge
+     * @param maxWeight This is the maximum weight of the edge
+     * @return  Graph   This returns the oriented graph
+     * @throws Exception
+     */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) throws Exception {
         return generateGraph(numNodes, minWeight, maxWeight,true);
     }
 
+    /**
+     * @param numNodes  This is the maximum number nodes of the graph
+     * @param minWeight This is the minimum weight of the edge
+     * @param maxWeight This is the maximum weight of the edge
+     * @param directed  Is the graph directed?
+     * @return  Graph   This returns the generated graph
+     * @throws Exception
+     */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight, boolean directed) throws Exception {
         if (numNodes > MAX_NODES || numNodes < MIN_NODES) {
             throw new Exception();

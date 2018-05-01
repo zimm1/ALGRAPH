@@ -15,6 +15,14 @@ import java.util.Optional;
 
 public abstract class DialogUtils {
 
+    /**
+     * @param title     This is the title of the ChoiceDialog
+     * @param header    This is the header of the ChoiceDialog
+     * @param content   This is the content of the ChoiceDialog
+     * @param value     This is the list of the choices to show
+     * @return  String  This returns the item selected by user
+     * @throws Exception
+     */
     public static String showTextSpinnerDialog(String title, String header, String content, String... value)
             throws Exception {
 
@@ -31,6 +39,14 @@ public abstract class DialogUtils {
         throw new Exception();
     }
 
+    /**
+     * @param title     This is the title of the TextInputDialog
+     * @param header    This is the header of the TextInputDialog
+     * @param content   This is the content of the TextInputDialog
+     * @param defaultValue  This is the default value of the TextInputDialog
+     * @return  String  This returns the text inserted by user
+     * @throws Exception
+     */
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
             throws Exception {
         TextInputDialog dialog = new TextInputDialog(defaultValue);
@@ -46,6 +62,11 @@ public abstract class DialogUtils {
         throw new Exception();
     }
 
+    /**
+     * @param title     This is the title of the Alert
+     * @param header    This is the header of the Alert
+     * @param content   This is the content of the Alert
+     */
     public static void showErrorDialog(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -55,6 +76,10 @@ public abstract class DialogUtils {
         alert.showAndWait();
     }
 
+    /**
+     * @param save  Is this file to save?
+     * @return  File    This returns the file selected
+     */
     public static File showFileChooserDialog(boolean save) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(save ? Strings.save_file: Strings.open_file);
@@ -73,6 +98,10 @@ public abstract class DialogUtils {
         return save ? fileChooser.showSaveDialog(null) : fileChooser.showOpenDialog(null);
     }
 
+    /**
+     * @return  GraphGeneratorDialogResult This returns the dialog to show when generated a new graph
+     * @throws Exception
+     */
     public static GraphGeneratorDialogResult showGraphGeneratorDialog() throws Exception {
         Dialog<GraphGeneratorDialogResult> dialog = new Dialog<>();
         dialog.setTitle(Strings.generate_graph);

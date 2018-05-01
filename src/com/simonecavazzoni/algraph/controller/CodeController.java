@@ -36,7 +36,6 @@ public class CodeController extends Controller {
 
     private int currentSelected = -1;
 
-
     public CodeController(MainController mainController) {
 
         this.mainController = mainController;
@@ -70,6 +69,9 @@ public class CodeController extends Controller {
         initializeControllerUI();
     }
 
+    /**
+     * @param numLine This is the number of line (number step) that AlgorithmHandler reached
+     */
     public void selectLine(int numLine) {
         if (numLine >= -1 && numLine < listCodeUI.size()) {
             if (currentSelected != -1) {
@@ -85,6 +87,9 @@ public class CodeController extends Controller {
 
     }
 
+    /**
+     * update the nodes shown in the root
+     */
     private void updateVariableUI() {
         container.getChildren().clear();
         variableValue.getChildren().clear();
@@ -109,21 +114,33 @@ public class CodeController extends Controller {
         }
     }
 
+    /**
+     * set the style to the root element
+     */
     private void setRootStyle() {
         ((VBox) this.root).setAlignment(DEFAULT_POSITION);
         setRootDimension();
     }
 
+    /**
+     * set the default dimension to the root element
+     */
     private void setRootDimension() {
         root.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
         root.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
     }
 
+    /**
+     * set the default dimension to the title
+     */
     private void setTitleDimension() {
         title.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
         title.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
     }
 
+    /**
+     * add the pseudo-code lines to the list
+     */
     private void setListCodeUI() {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_add_root));
         listCodeUI.add(new CodeUI(Strings.pseudo_code_while));
@@ -137,6 +154,9 @@ public class CodeController extends Controller {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_update_tree));
     }
 
+    /**
+     * add to the root the element to show
+     */
     private void initializeControllerUI() {
         root.getChildren().clear();
 
@@ -147,6 +167,11 @@ public class CodeController extends Controller {
         root.getChildren().add(uNode);
     }
 
+    /**
+     * @param node  This is the node to show
+     * @param isV   Is This node adjacent to U?
+     * @return  String This returns the string built
+     */
     private String getString(Node node, boolean isV) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((isV) ? 'v' : 'u');
@@ -159,6 +184,9 @@ public class CodeController extends Controller {
         return stringBuilder.toString();
     }
 
+    /**
+     * update the if statement with the current value
+     */
     private void initTextFlow() {
         Integer vValue = mainController.getResultDistance(mainController.getV());
         Integer uValue = mainController.getResultDistance(mainController.getU());

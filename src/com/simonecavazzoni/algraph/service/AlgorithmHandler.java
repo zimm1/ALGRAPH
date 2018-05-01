@@ -159,26 +159,45 @@ public class AlgorithmHandler {
         return programCounter > PROGRAM_COUNTER_END;
     }
 
+    /**
+     * @return  boolean This returns true only if the user inserted the start node
+     */
     public boolean existRootNode(){
         return startNode != null;
     }
 
+    /**
+     * @return  Node    This returns the current node
+     */
     public Node getU() {
         return u;
     }
 
+    /**
+     * @return  Node    This returns the node adjacent to U (current node)
+     */
     public Node getV() {
         return v;
     }
 
+    /**
+     * @param node  This is the node to search in resultDistance list
+     * @return  Integer This returns the distance of the node to the start node
+     */
     public Integer getResultDistance(Node node){
         return resultDistance.get(node);
     }
 
+    /**
+     * @return  Integer This return the weight of the edge
+     */
     public Integer getWeight(){
         return w;
     }
 
+    /**
+     * @return  Edge    This returns the edge (u,v)
+     */
     public Edge getE() {
         return e;
     }

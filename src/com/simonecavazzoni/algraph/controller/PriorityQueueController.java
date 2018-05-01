@@ -69,16 +69,26 @@ public class PriorityQueueController extends Controller {
         updatePriorityItemUI();
     }
 
+    /**
+     * @return PriorityQueue This returns the PriorityQueue list
+     */
     public PriorityQueue<Node> getQueue() {
         return priorityQueue;
     }
 
+    /**
+     * delete all nodes shown in the root
+     */
     public void clear(){
         priorityQueue.clear();
         selectedNode = new PriorityItemUI();
         updatePriorityItemUI();
     }
 
+    /**
+     * @param node  This is the new node to insert in the queue
+     * @param priority  This is the priority of the new node
+     */
     public void push(Node node, int priority){
         if (!priorityQueue.existItem(node)) {
             priorityQueue.push(node, priority);
@@ -86,6 +96,9 @@ public class PriorityQueueController extends Controller {
         }
     }
 
+    /**
+     * @return PriorityItem This returns the PriorityItem with the lower priority
+     */
     public PriorityItem<Node> pop(){
         PriorityItem<Node> itemPopped = priorityQueue.pop();
         if(itemPopped != null){
@@ -95,11 +108,18 @@ public class PriorityQueueController extends Controller {
         return itemPopped;
     }
 
+    /**
+     * @param item  This is the item to search in the PriorityQueue
+     * @param newPriority This is the new priority of the item searched
+     */
     public void update(Node item, int newPriority) {
         priorityQueue.update(item, newPriority);
         updatePriorityItemUI();
     }
 
+    /**
+     * update the nodes shown in the stage
+     */
     private void updatePriorityItemUI(){
         root.getChildren().clear();
         priorityQueueLayout.getChildren().clear();
@@ -124,6 +144,9 @@ public class PriorityQueueController extends Controller {
         root.getChildren().add(container);
     }
 
+    /**
+     * update the arrow coordinates
+     */
     private void updateLines(){
         double startX = 0;
         double endX = DEFAULT_LINE_DIMENSION;
@@ -154,6 +177,9 @@ public class PriorityQueueController extends Controller {
         return priorityQueue.toString();
     }
 
+    /**
+     * @param node This is the node to search in the queue and to change its style
+     */
     public void selectItem(Node node){
 
         deselectItem();
@@ -167,6 +193,9 @@ public class PriorityQueueController extends Controller {
         }
     }
 
+    /**
+     * set to default the style of all items of queue
+     */
     private void deselectItem(){
         priorityQueue.getAll().forEach(priorityItem -> priorityItem.getPriorityItemUI()
                 .setUnselectedItem());

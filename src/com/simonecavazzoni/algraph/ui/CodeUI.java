@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 
+/**
+ * This class extends Group and creates the graphics for the line code to show.
+ * This class expose the methods to change the style of its contents.
+ */
 public class CodeUI extends Group {
 
     private Label lineCode;
@@ -35,6 +39,9 @@ public class CodeUI extends Group {
 
     }
 
+    /**
+     * set the selected label style
+     */
     public void setSelectedLabelStyle(){
         this.lineCode.getStyleClass().remove(cssUnselectedItem);
         this.lineCode.getStyleClass().add(cssSelectedItem);
@@ -42,6 +49,9 @@ public class CodeUI extends Group {
         this.lineCode.setBackground(new Background(new BackgroundFill(Colors.PRIMARY_COLOR, null, null)));
     }
 
+    /**
+     * set the default label style
+     */
     public void setDefaultLabelStyle(){
         this.lineCode.getStyleClass().remove(cssSelectedItem);
         this.lineCode.getStyleClass().add(cssUnselectedItem);
