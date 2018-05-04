@@ -3,30 +3,48 @@ package com.simonecavazzoni.algraph.model;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This is the graph class, every instance of this class is a complete graph
+ */
 public class Graph {
     private Map<Node, Set<Edge>> adjacencies;
 
     private boolean directed;
 
 
+    /**
+     * Void constructor
+     */
     public Graph() {
         this(true);
     }
 
+    /**
+     * @param directed Constructor with orientation parameter
+     */
     public Graph(boolean directed) {
         this.directed = directed;
 
         this.adjacencies = new HashMap<>();
     }
 
+    /**
+     * @return return the adjacencies of the current graph
+     */
     public Map<Node, Set<Edge>> getAdjacencies() {
         return adjacencies;
     }
 
+    /**
+     * @return return the number of the nodes
+     */
     public Set<Node> getNodes() {
         return adjacencies.keySet();
     }
 
+    /**
+     * @return return the number of the edges
+     */
     public Set<Edge> getEdges() {
         List<Set<Edge>> setList = new ArrayList<>(adjacencies.values());
 
@@ -58,6 +76,10 @@ public class Graph {
         this.directed = directed;
     }
 
+    /**
+     * @param label
+     * @return Get a node by label
+     */
     public Node getNode(String label) {
         return getNode(new Node(label));
     }
@@ -67,6 +89,10 @@ public class Graph {
         return optionalNode.orElse(null);
     }
 
+    /**
+     * @param label
+     * @return Add a node with a label
+     */
     public Node addNode(String label) {
         return addNode(new Node(label));
     }
@@ -85,6 +111,10 @@ public class Graph {
         return removeNode(new Node(label));
     }
 
+    /**
+     * @param node
+     * @return Remove a specific node
+     */
     public boolean removeNode(Node node) {
         if (!adjacencies.containsKey(node)) {
             return false;
@@ -99,6 +129,10 @@ public class Graph {
         return true;
     }
 
+    /**
+     * @param edge
+     * @return return inverted edges
+     */
     public Edge getInvertedEdge(Edge edge) {
         return getAdjacencies().get(edge.getN2()).stream()
                 .filter(e -> e.getN2().equals(edge.getN1())).findAny().orElse(null);
@@ -115,6 +149,11 @@ public class Graph {
         return addEdge(node1, node2);
     }
 
+    /**
+     * @param n1
+     * @param n2
+     * @return add two oriented edges
+     */
     public Edge addEdge(Node n1, Node n2) {
         return addEdge(new Edge(n1, n2, Edge.MIN_WEIGHT, isDirected()));
     }

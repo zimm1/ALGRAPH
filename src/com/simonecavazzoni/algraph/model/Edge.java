@@ -4,6 +4,9 @@ import com.simonecavazzoni.algraph.ui.EdgeUI;
 
 import java.util.Objects;
 
+/**
+ * The edge class, every instance of this class represent an edge of the graph
+ */
 public class Edge {
     private static final int DEFAULT_WEIGHT = 1;
     public static final int MIN_WEIGHT = 0;
@@ -24,6 +27,13 @@ public class Edge {
         this(n1, n2, weight, DEFAULT_DIRECTED);
     }
 
+    /**
+     * @param n1 first node
+     * @param n2 second node
+     * @param weight weight of the edge
+     * @param directed directed or not
+     *                 Constructor with parameters
+     */
     public Edge(Node n1, Node n2, int weight, boolean directed) {
         this.n1 = n1;
         this.n2 = n2;
@@ -79,6 +89,10 @@ public class Edge {
                 '}';
     }
 
+    /**
+     * @param o
+     * @return return true if the edges are equal
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
