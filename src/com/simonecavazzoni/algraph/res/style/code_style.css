@@ -1,11 +1,9 @@
 .selectedItem{
-    -fx-font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
     -fx-font-size: x-large;
     -fx-font-weight: bold;
 }
 
 .unselectedItem{
-    -fx-font-family: "Arial Black";
     -fx-font-size: x-large;
     -fx-font-weight: normal;
 }
@@ -19,7 +17,6 @@
 .queueLabel{
     -fx-font-size: xx-large;
     -fx-font-weight: bolder;
-    -fx-text-fill: black;
     -fx-alignment: center;
 }
 

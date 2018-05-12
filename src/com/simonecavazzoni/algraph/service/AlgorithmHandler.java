@@ -12,6 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Dijkstra algorithm operations
+ */
 public class AlgorithmHandler {
 
     private static final int PROGRAM_COUNTER_END = 10;
@@ -33,6 +36,12 @@ public class AlgorithmHandler {
     private Edge e;
 
 
+    /**
+     * Initializes controller with references to other controllers.
+     * @param graphController Current graphController
+     * @param priorityQueueController Current priorityQueueController
+     * @param codeController Current codeController
+     */
     public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController,
                             CodeController codeController) {
         this.graphController = graphController;
@@ -42,12 +51,19 @@ public class AlgorithmHandler {
         restartAlgorithm();
     }
 
+    /**
+     * Sets current starting node and restarts algorithm execution.
+     * @param startNode Starting node
+     */
     public void restartAlgorithm(Node startNode) {
         this.startNode = startNode;
 
         restartAlgorithm();
     }
 
+    /**
+     * Restarts algorithm execution and empties data structures
+     */
     public void restartAlgorithm() {
         programCounter = 0;
         u = null;
@@ -60,12 +76,15 @@ public class AlgorithmHandler {
         adjacencies = null;
     }
 
+    /**
+     * Executes one step of the algorithm based on the program counter.
+     */
     public void executeStep() {
         if (startNode == null || isFinished()) {
             return;
         }
 
-        codeController.selectLine(programCounter == 10 ? -1 : programCounter);
+        codeController.selectLine(programCounter == PROGRAM_COUNTER_END ? -1 : programCounter);
 
         switch (programCounter) {
             // S.add(r)
@@ -141,6 +160,9 @@ public class AlgorithmHandler {
         programCounter++;
     }
 
+    /**
+     * Executes all remaining steps of the algorithm
+     */
     public void executeAll() {
         if (startNode == null || isFinished()) {
             return;
@@ -151,52 +173,66 @@ public class AlgorithmHandler {
         }
     }
 
+    /**
+     * True if algorithm execution is started.
+     * @return Execution started
+     */
     public boolean isStarted() {
         return programCounter > 0;
     }
 
+    /**
+     * True if algorithm execution finished.
+     * @return Execution finished
+     */
     public boolean isFinished() {
         return programCounter > PROGRAM_COUNTER_END;
     }
 
     /**
-     * @return  boolean This returns true only if the user inserted the start node
+     * True if starting node is set.
+     * @return Starting node exists
      */
     public boolean existRootNode(){
         return startNode != null;
     }
 
     /**
-     * @return  Node    This returns the current node
+     * Gets current extracted node.
+     * @return Extracted node
      */
     public Node getU() {
         return u;
     }
 
     /**
-     * @return  Node    This returns the node adjacent to U (current node)
+     * Gets current analyzed node.
+     * @return Analyzed node
      */
     public Node getV() {
         return v;
     }
 
     /**
-     * @param node  This is the node to search in resultDistance list
-     * @return  Integer This returns the distance of the node to the start node
+     * Gets current distance from root to a node.
+     * @param node Node to get distance of
+     * @return Current distance
      */
     public Integer getResultDistance(Node node){
         return resultDistance.get(node);
     }
 
     /**
-     * @return  Integer This return the weight of the edge
+     * Gets current analyzed edge weight.
+     * @return Edge weight
      */
     public Integer getWeight(){
         return w;
     }
 
     /**
-     * @return  Edge    This returns the edge (u,v)
+     * Gets current analyzed edge.
+     * @return Analyzed edge
      */
     public Edge getE() {
         return e;

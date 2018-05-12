@@ -65,14 +65,14 @@ public abstract class GraphGenerator {
 
         Random random = new Random();
 
-        int maxEdges = directed ? numNodes * (numNodes - 1) : numNodes * (numNodes - 1) / 2;
-        int minEdges = directed ? (numNodes - 1) * (numNodes - 2) : numNodes;
+        int minEdges = (numNodes - 1) * (directed ? 2 : 1);
+        int maxEdges = (numNodes - 1) * 3 / (directed ? 1 : 2);
         int numEdges = random.nextInt(maxEdges - minEdges + 1) + minEdges;
 
         Graph graph = new Graph(directed);
 
         for (int i = 0; i < numNodes; i++) {
-            graph.addNode(Integer.toString(i + 1));
+            graph.addNode(String.valueOf((char) (i + 65)));
         }
 
         int i = 0;

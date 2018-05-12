@@ -10,6 +10,10 @@ import javafx.scene.shape.Circle;
 import com.simonecavazzoni.algraph.model.Node;
 
 
+/**
+ * UI component for Node model class
+ * @see Node
+ */
 public class NodeUI extends Group {
 
     private static final double DEFAULT_CENTER_X = 0;
@@ -22,10 +26,23 @@ public class NodeUI extends Group {
     private Label label;
     private Label distanceLabel;
 
+    private Color lastColor = Colors.DEFAULT_COLOR;
+
+    /**
+     * Instantiates the UI component of a node with default values.
+     * @param node Linked node model
+     */
     public NodeUI(Node node) {
         this(node, DEFAULT_CENTER_X, DEFAULT_CENTER_Y, DEFAULT_RADIUS);
     }
 
+    /**
+     * Instantiates the UI component of a node, initializes views.
+     * @param node Linked node model
+     * @param centerX Current node X position
+     * @param centerY Current node Y position
+     * @param radius Current node radius
+     */
     public NodeUI(Node node, double centerX, double centerY, double radius) {
         super();
 
@@ -56,22 +73,59 @@ public class NodeUI extends Group {
         this.setCursor(Cursor.HAND);
     }
 
+    /**
+     * Linked node model.
+     * @return Node model
+     */
     public Node getNode() {
         return node;
     }
 
+    /**
+     * Node circle view.
+     * @return Circle view
+     */
     public Circle getCircle() {
         return circle;
     }
 
+    /**
+     * Node name label.
+     * @return Name label.
+     */
     public Label getLabel() {
         return label;
     }
 
-    public void highlight(boolean highlight) {
-        circle.setFill(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+    /**
+     * Resets highlight state, sets color to default
+     */
+    public void resetHighlight() {
+        lastColor = Colors.DEFAULT_COLOR;
+        highlight(false, Colors.PRIMARY_COLOR);
     }
 
+    /**
+     * Sets highlight state and changes colors accordingly.
+     * @param highlight Current highlight state
+     */
+    public void highlight(boolean highlight, Color color) {
+        Color currentColor = (Color) circle.getFill();
+
+        if (highlight) {
+            if (currentColor.equals(color)) {
+                return;
+            }
+            lastColor = currentColor;
+        }
+
+        circle.setFill(highlight ? color : lastColor);
+    }
+
+    /**
+     * Dijkstra distance label.
+     * @return Distance label
+     */
     public Label getDistanceLabel() {
         return distanceLabel;
     }

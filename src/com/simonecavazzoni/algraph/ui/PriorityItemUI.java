@@ -156,7 +156,7 @@ public class PriorityItemUI<T> extends Group {
      * @param isV   Is This node adjacent to U?
      */
     public void setSelectedItem(boolean isV){
-        priorityLabel.setTextFill(isV ? Colors.OTHER_COLOR_1 : Colors.OTHER_COLOR_2);
+        priorityLabel.setTextFill(isV ? Colors.OTHER_COLOR_1 : Colors.PRIMARY_COLOR);
     }
 
     /**
