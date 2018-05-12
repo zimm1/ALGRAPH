@@ -525,7 +525,7 @@ public class MainController extends Controller {
                 resetExecution(null);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //
         }
     }
 
