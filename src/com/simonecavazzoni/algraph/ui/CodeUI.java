@@ -1,6 +1,7 @@
 package com.simonecavazzoni.algraph.ui;
 
 import com.simonecavazzoni.algraph.res.Colors;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -13,15 +14,15 @@ import javafx.scene.layout.BackgroundFill;
  */
 public class CodeUI extends Group {
 
-    private Label lineCode;
-    private static final int DEFAULT_MAX_HEIGHT = 30;
-    private static final int DEFAULT_MIN_HEIGHT = 30;
-    private static final int DEFAULT_MAX_WIDTH = 400;
-    private static final int DEFAULT_MIN_WIDTH = 400;
+    private static final int DEFAULT_HEIGHT = 30;
+    private static final int DEFAULT_WIDTH = 400;
+    private static final int DEFAULT_MARGIN_LEFT = 30;
 
     private static final Pos DEFAULT_LABEL_POSITION = Pos.CENTER_LEFT;
     private static final String cssSelectedItem = "selectedItem";
     private static final String cssUnselectedItem = "unselectedItem";
+
+    private Label lineCode;
 
     public CodeUI(String codeLine){
         this.lineCode = new Label(codeLine);
@@ -29,11 +30,13 @@ public class CodeUI extends Group {
         lineCode.setAlignment(DEFAULT_LABEL_POSITION);
         setDefaultLabelStyle();
 
-        lineCode.setMaxWidth(DEFAULT_MAX_WIDTH);
-        lineCode.setMinWidth(DEFAULT_MIN_WIDTH);
+        lineCode.setMaxWidth(DEFAULT_WIDTH);
+        lineCode.setMinWidth(DEFAULT_WIDTH);
 
-        lineCode.setMaxHeight(DEFAULT_MAX_HEIGHT);
-        lineCode.setMinHeight(DEFAULT_MIN_HEIGHT);
+        lineCode.setMaxHeight(DEFAULT_HEIGHT);
+        lineCode.setMinHeight(DEFAULT_HEIGHT);
+
+        lineCode.setPadding(new Insets(0 ,0, 0, DEFAULT_MARGIN_LEFT));
 
         this.getChildren().add(lineCode);
 

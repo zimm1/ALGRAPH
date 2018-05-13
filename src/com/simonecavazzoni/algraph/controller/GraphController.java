@@ -229,8 +229,8 @@ public class GraphController extends Controller implements Controller.EventListe
                 item.setDisable(true);
             }
         }
-        contextMenuX = event.getSceneX();
-        contextMenuY = event.getSceneY();
+        contextMenuX = event.getX();
+        contextMenuY = event.getY();
 
 
         this.contextMenu = contextMenu;
@@ -309,6 +309,9 @@ public class GraphController extends Controller implements Controller.EventListe
 
             node.getUi().getCircle().setCenterX(contextMenuX);
             node.getUi().getCircle().setCenterY(contextMenuY);
+
+            restrictNodePosition(node.getUi());
+
             updateGraphUI();
 
         } catch (Exception e) {
@@ -349,9 +352,11 @@ public class GraphController extends Controller implements Controller.EventListe
                 DialogUtils.showErrorDialog(
                         Strings.error, Strings.change_weight, Strings.error_min_weight + Edge.MIN_WEIGHT);
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             DialogUtils.showErrorDialog(
                     Strings.error, Strings.change_weight, Strings.error_change_weight);
+        } catch (Exception e) {
+            // no-op
         }
     }
 
@@ -389,8 +394,7 @@ public class GraphController extends Controller implements Controller.EventListe
 
         creatingEdge = false;
 
-        if (endNode != null) {
-            setGraphDirected();
+        if (endNode != null && setGraphDirected()) {
             addEdge(new Edge(tempEdge.getN1(), endNode, Edge.MIN_WEIGHT, graph.isDirected()));
         }
 
@@ -399,10 +403,11 @@ public class GraphController extends Controller implements Controller.EventListe
 
     /**
      * Shows dialog to choose the directed mode of the graph, if graph doesn't contain edges.
+     * @return Graph mode is set
      */
-    private void setGraphDirected() {
+    private boolean setGraphDirected() {
         if (!graph.getEdges().isEmpty()) {
-            return;
+            return true;
         }
 
         try {
@@ -413,8 +418,9 @@ public class GraphController extends Controller implements Controller.EventListe
                             Strings.type,
                             Strings.directed, Strings.undirected
                     ).equals(Strings.directed));
+            return true;
         } catch (Exception e) {
-            DialogUtils.showErrorDialog(Strings.graph_type, Strings.graph_type_choice, Strings.graph_type_error);
+            return false;
         }
     }
 
@@ -429,9 +435,9 @@ public class GraphController extends Controller implements Controller.EventListe
             return;
         }
 
-        changeWeight(edge);
-
         updateGraphUI();
+
+        changeWeight(edge);
     }
 
     /**

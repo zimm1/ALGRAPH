@@ -76,7 +76,6 @@ public final class Strings {
             type = "Tipo:",
             directed = "Orientato",
             undirected = "Non Orientato",
-            graph_type_error = "Impossibile impostare il tipo di grafo",
             error_file_header = "Salvataggio grafo",
             error_file_content = "Il grafo non esiste, impossibile salvare",
             priority_queue_title = "Coda con priorità";

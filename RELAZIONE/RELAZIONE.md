@@ -1,8 +1,8 @@
-# GOP (Gioco dell'Oca Pazza)
+# ALGRAPH
 
 ## Introduzione
 
-Versione digitale del gioco dell'oca, con alcune rivisitazioni.
+Implementazione visuale dell'algoritmo di Dijkstra.
 
 * Trello (gestione attività): https://trello.com/b/xdQK3W6z
 * GitHub: https://github.com/Zimm1/ALGRAPH
@@ -26,9 +26,26 @@ Versione digitale del gioco dell'oca, con alcune rivisitazioni.
 
 ## Scelte implementative
 
-### Scelta1
+### MVCS - Model View Controller Service
+Il progetto è stato organizzato in package e classi in modo da attenersi il più possibile all'architettura <b>MVCS</b>:<br>
+- <b>Model</b>: classi base di dati, come Node, Edge, Graph...<br>
+- <b>View</b>: classi per la gestione della parte grafica di ogni oggetto
+- <b>Controller</b>: mettono in comunicazione View e Model, gestiscono i vari componenti dell'interfaccia
+e utilizzano i Service per fornire funzionalità aggiuntive
+- <b>Service</b>: hanno lo scopo di effettuare operazioni in background come salvare, aprire o generare un grafo
 
-### Scelta2
+### Strutture dati
+Per la gestione delle informazioni relative al grafo e alla sua rappresentazione visuale,
+si è scelto di utilizzare una <b>HashMap</b> avente come chiavi tutti i nodi del grafo,
+a ognuno dei quali è associato un <b>HashSet</b> contenente gli archi che partono dal suddetto nodo chiave.<br>
+In questo modo, i dati sono stati gestiti in modo semplice e veloce utilizzando la programmazione funzionale
+grazie alla classe <b>Stream</b>, introdotta con <b>Java 8</b>.
+
+### Esecuzione passo-passo temporizzata
+Nelle modalità di esecuzione dell'algoritmo è stata aggiunta la possibilità di seguire l'andamento
+passo-passo in modo automatizzato, tramite uno slider che permette di scegliere la velocità alla quale
+le operazioni si susseguono.<br>
+Se la velocità viene impostata al massimo, l'intera esecuzione viene svolta istantaneamente.
 
 
 ## Strumenti utilizzati
@@ -47,7 +64,7 @@ Durante lo sviluppo il team si è appoggiato ad alcuni fondamentali strumenti:
 * Eccellente strumento per la gestione di attività, incarichi e andamento di un progetto
 * Permette di organizzare lo sviluppo in micro-attività assegnabili a membri differenti del team, con la possibilità di controllarne lo stato di avanzamento e l'effettivo completamento
 
-### Intellij Idea
+### IntelliJ IDEA
 * IDE sviluppato da JetBrains per lo sviluppo in Java e altri linguaggi
 * Fornisce molteplici strumenti, come l'integrazione con Git, l'auto-completamento intelligente e il supporto per linguaggio MarkDown
 * E' stata utilizzata una piattaforma di sviluppo comune per ridurre al minimo i problemi di compatibilità interni al team
@@ -56,7 +73,7 @@ Durante lo sviluppo il team si è appoggiato ad alcuni fondamentali strumenti:
 ### MarkDown
 * Linguaggio di markup con una semplice sintassi che permette la creazione di documenti di testo convertibili facilmente in molteplici formati come HTML, DOC, PDF, TXT, Rich Text Format (RTF)
 * Usato per la creazione del ReadMe e della Relazione
-* Supportato nativamente da GitHub per fornire una descrizione del progetto
+* Supportato in modo nativo da GitHub per fornire una descrizione del progetto
 
 
 ## Note Finali
