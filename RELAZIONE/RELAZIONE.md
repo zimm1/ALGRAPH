@@ -47,6 +47,30 @@ passo-passo in modo automatizzato, tramite uno slider che permette di scegliere 
 le operazioni si susseguono.<br>
 Se la velocità viene impostata al massimo, l'intera esecuzione viene svolta istantaneamente.
 
+## Visualizzazione Coda con Priorità
+
+La coda con priorità è una lista non ordinata contenente i nodi del grafo che non sono ancora stati scoperti.
+Durante l'esecuzione l'algoritmo estrae il nodo con distanza minima.
+Nella visualizzazione della coda con priorità viene mostrato l'elemento estratto dalla coda 
+(Vuoto se non è ancora stato estratto nessun nodo) e la coda.
+Ogni elemento della coda vengono visualizzate le seguenti informazioni:
+* <b>Il nome del nodo</b>
+* <b>La distanza dal nodo di partenza</b>
+
+Durante l'esecuzione viene modificato il colore della distanza:
+
+* <b>![#F44336](https://placehold.it/15/F44336/000000?text=+) : La distanza del nodo estratto dalla coda (u)</b>
+* <b>![#34A853](https://placehold.it/15/34A853/000000?text=+) : La distanza del nodo in coda adiacente al nodo estratto (v)</b>
+* <b>![#4285F4](https://placehold.it/15/4285F4/000000?text=+) : Il peso dell'arco (u,v)</b>
+
+## Visualizzazione pseudo-codice
+
+La visualizzazione del pseudo-codice dell'algoritmo di Dijkstra contiene le righe di codice dell'algoritmo stesso e in aggiunta
+implementa delle animazioni il cui scopo è quello di rendere più chiaro all'utente le scelte che l'algoritmo compie.
+Le animazioni implementate sono:
+* <b>Indicatore della linea in esecuzione: evidenzia in rosso la linea che è stata eseguita</b>
+* <b>Variabili attuali: mostra i nomi dei nodi che si stanno considerando</b>
+* <b>if-statement: visualizza la disequazione con i valori attuali</b>
 
 ## Strumenti utilizzati
 
@@ -74,7 +98,6 @@ Durante lo sviluppo il team si è appoggiato ad alcuni fondamentali strumenti:
 * Linguaggio di markup con una semplice sintassi che permette la creazione di documenti di testo convertibili facilmente in molteplici formati come HTML, DOC, PDF, TXT, Rich Text Format (RTF)
 * Usato per la creazione del ReadMe e della Relazione
 * Supportato in modo nativo da GitHub per fornire una descrizione del progetto
-
 
 ## Note Finali
 

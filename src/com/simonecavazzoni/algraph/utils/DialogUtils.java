@@ -2,11 +2,13 @@ package com.simonecavazzoni.algraph.utils;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import com.simonecavazzoni.algraph.res.Strings;
 import com.simonecavazzoni.algraph.service.FileHandler;
 import com.simonecavazzoni.algraph.service.GraphGenerator;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.Collections;
@@ -31,6 +33,9 @@ public abstract class DialogUtils {
         dialog.setHeaderText(header);
         dialog.setContentText(content);
 
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
+
         Optional<String> result = dialog.showAndWait();
         if(result.isPresent()){
             return result.get();
@@ -54,6 +59,9 @@ public abstract class DialogUtils {
         dialog.setHeaderText(header);
         dialog.setContentText(content);
 
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
+
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             return result.get();
@@ -72,6 +80,9 @@ public abstract class DialogUtils {
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
+
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
 
         alert.showAndWait();
     }
@@ -105,6 +116,9 @@ public abstract class DialogUtils {
     public static GraphGeneratorDialogResult showGraphGeneratorDialog() throws Exception {
         Dialog<GraphGeneratorDialogResult> dialog = new Dialog<>();
         dialog.setTitle(Strings.generate_graph);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
 
         ButtonType generateButtonType = new ButtonType(Strings.generate, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(generateButtonType, ButtonType.CANCEL);
