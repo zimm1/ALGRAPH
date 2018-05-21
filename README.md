@@ -2,58 +2,73 @@
 
 Implementazione visuale dell'algoritmo di Dijkstra.
 
-* Trello (gestione attività): https://trello.com/b/xdQK3W6z
-* GitHub: https://github.com/Zimm1/ALGRAPH
+* <b>Trello</b> (gestione attività): https://trello.com/b/xdQK3W6z
+* <b>GitHub</b>: https://github.com/Zimm1/ALGRAPH
 
 ## Features
 
-* <b>Esecuzione passo a passo</b>
-* <b>Esecuzione automatica</b>
-* <b>Visualizzazione della coda di priorità</b>
-* <b>Indicatore della linea di pseudo-codice in esecuzione</b>
-* <b>Generazione casuale di un Grafo (orientato o non orientato)</b>
-* <b>Salvare Grafo (orientato o non orientato) su file</b>
-* <b>Aprire Grafo (orientato o non orientato) da file</b>
-* <b>Modifiche possibili da apportare al grafo: </b>
-    * <b>Aggiungere nodo</b>
-    * <b>Rimuovere nodo</b>
-    * <b>Aggiungere arco (orientato o non orientato)</b>
-    * <b>Rimuovere arco (orientato o non orientato)</b>
-    * <b>Modificare peso arco</b>
-    * <b>Invertire arco (se orientato)</b>
+* Esecuzione <b>passo - passo</b>
+* Esecuzione <b>automatica</b>
+* Visualizzazione della <b>coda di priorità</b>
+* Indicatore della linea di <b>pseudo-codice</b> eseguita
+* <b>Generazione casuale</b> di un grafo (orientato o non orientato)
+* <b>Salvataggio</b> di un grafo (orientato o non orientato) su <b>file</b>
+* <b>Apertura</b> di un grafo (orientato o non orientato) da <b>file</b>
+* <b>Modifica</b> di un grafo:
+    * <b>Aggiunta e rimozione di un nodo</b>
+    * <b>Aggiunta e rimozione di un arco (orientato o non orientato)</b>
+    * <b>Modifica del peso di un arco</b>
+    * <b>Invertimento della direzione di un arco (se orientato)</b>
     
-## Funzioni disponibili
+## Funzionalità disponibili
 
-* <b>Barra dei menu</b>
+* <b>Barra dei menù</b>
     * <b>Grafo</b>
-        * <b>Genera: genera un grafo (orientato o non orientato) casualmente con i parametri inseriti da utente 
-                    (massimo/minimo peso degli archi, massimo numero di nodi)</b>
-        * <b>Salva: salva il grafo attuale su file</b>
-        * <b>Apri: apre un grafo precedententemente salvato su file</b>
+        * <b>Genera</b>
+            * Genera un grafo (orientato o non orientato) casualmente con i parametri inseriti da utente 
+                    (massimo/minimo peso degli archi, massimo numero di nodi)
+        * <b>Salva</b>
+            * Salva il grafo attuale su file
+        * <b>Apri</b>
+            * Apre un grafo precedentemente salvato su file
     * <b>Esecuzione</b>
-        * <b>Passo: esegue la linea successiva dell'algoritmo di Dijkstra, al primo passo richiede il nodo di partenza</b>
-        * <b>Esegui: esegue automaticamente gli steps dell'algoritmo di Dijkstra a una velocità scelta da utente</b>
-        * <b>Pausa: sospende l'esecuzione automatica dell'algoritmo</b>
+        * <b>Passo</b>
+            * Esegue la linea successiva dell'algoritmo di Dijkstra, al primo passo richiede il nodo di partenza
+        * <b>Esegui</b>
+            * Esegue automaticamente gli steps dell'algoritmo di Dijkstra alla velocità scelta da utente
+        * <b>Pausa</b>
+            * Sospende l'esecuzione automatica dell'algoritmo
+        * <b>Slider</b>
+            * Seleziona la velocità di esecuzione automatica (massimo = istantanea)
     * <b>Aiuto</b>
-        * <b>Info: apre una mini-guida sul funzionamento dell'algoritmo di Dijkstra</b>
-* <b>Click destro del mouse su un nodo</b>
-    * <b>Crea arco da qui: crea un arco che ha come origine il nodo selezionato</b>
-    * <b>Rimuovi nodo: elimina il nodo e gli archi a esso uscenti/entranti</b>
-* <b>Click destro del mouse su un arco</b>
-    * <b>Modifica peso arco: aggiorna il peso dell'arco con il peso inserito da utente</b>
-    * <b>Inverti arco: se il grafo è orientato inverte il nodo di origine con quello di destinazione</b>
-    * <b>Elimina arco: rimuove l'arco</b>
+        * <b>Info</b>
+            * Apre una finestra di informazioni sul funzionamento dell'algoritmo di Dijkstra
+* <b>Click destro sopra un nodo</b>
+    * <b>Crea arco da qui</b>
+        * Crea un arco che ha come origine il nodo selezionato
+    * <b>Rimuovi nodo</b>
+        * Elimina il nodo e gli archi uscenti/entranti
+* <b>Click destro del mouse sopra un arco</b>
+    * <b>Modifica peso arco</b>
+        * Aggiorna il peso dell'arco con il peso inserito da utente
+    * <b>Inverti arco</b>
+        * Ae il grafo è orientato inverte il nodo di origine con quello di destinazione
+    * <b>Elimina arco</b>
+        * Rimuove l'arco
 * <b>Click destro del mouse nella finestra centrale</b>
-    * <b>Crea nodo: crea un nuovo nodo</b>
+    * <b>Crea nodo</b>
+        * Crea un nuovo nodo
+* <b>Click sinistro del mouse sopra un nodo</b>
+    * Sposta il nodo selezionato tramite trascinamento
     
     
 ## Librerie
 
-* <b>JAVAFX incluso nella versione standard di JAVA</b>
+* <b>JavaFX</b> incluso nella versione standard di <b>Java</b>
 
 ##  Requisiti
 
-* <b>[JAVA 8.0](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) o versioni successive</b>
+* <b>[JAVA 8.0](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)</b> o versioni successive
 
 ## Membri del team
 

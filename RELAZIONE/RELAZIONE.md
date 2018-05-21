@@ -4,8 +4,8 @@
 
 Implementazione visuale dell'algoritmo di Dijkstra.
 
-* Trello (gestione attività): https://trello.com/b/xdQK3W6z
-* GitHub: https://github.com/Zimm1/ALGRAPH
+* <b>Trello</b> (gestione attività): https://trello.com/b/xdQK3W6z
+* <b>GitHub</b>: https://github.com/Zimm1/ALGRAPH
 
 ### Caratteristiche
 
@@ -26,30 +26,15 @@ Implementazione visuale dell'algoritmo di Dijkstra.
 
 ## Scelte implementative
 
-### Sinstassi File
-Il file è strutturato nel seguente modo:<br>
-<b>orientato</b><br>
-<b>Nodo(n)</b> <br>
-<b>arcoN1 arcoN2 peso</b><br>
-In questo modo la lettura è semplice e compatta.
-
-### File Picker (caricamento file da schermo)
-Abbiamo scelto di implementare un tool che consentisse il caricamento/salvataggio di un file da schermo in modo dinamico,
-così da evitare di dover modificare il codice ogni volta che volesse utilizzare una sottocartella differente.
-
-### Material Color
-I colori che abbiamo usato sono indicati da google nella guida al material design ufficiale (https://material.io/design/color/the-color-system.html#color-usage-palettes).
-In questo modo la parte grafica del programma risulta più gradevole e fluida alla vista.
-
 ### MVCS - Model View Controller Service
 Il progetto è stato organizzato in package e classi in modo da attenersi il più possibile all'architettura <b>MVCS</b>:<br>
-- <b>Model</b>: classi base di dati, come Node, Edge, Graph...<br>
-- <b>View</b>: classi per la gestione della parte grafica di ogni oggetto
-- <b>Controller</b>: mettono in comunicazione View e Model, gestiscono i vari componenti dell'interfaccia
+* <b>Model</b>: classi base di dati, come Node, Edge, Graph...<br>
+* <b>View</b>: classi per la gestione della parte grafica di ogni oggetto
+* <b>Controller</b>: mettono in comunicazione View e Model, gestiscono i vari componenti dell'interfaccia
 e utilizzano i Service per fornire funzionalità aggiuntive
-- <b>Service</b>: hanno lo scopo di effettuare operazioni in background come salvare, aprire o generare un grafo
+* <b>Service</b>: hanno lo scopo di effettuare operazioni in background come salvare, aprire o generare un grafo
 
-### Strutture dati
+### Struttura dati Grafo
 Per la gestione delle informazioni relative al grafo e alla sua rappresentazione visuale,
 si è scelto di utilizzare una <b>HashMap</b> avente come chiavi tutti i nodi del grafo,
 a ognuno dei quali è associato un <b>HashSet</b> contenente gli archi che partono dal suddetto nodo chiave.<br>
@@ -58,34 +43,64 @@ grazie alla classe <b>Stream</b>, introdotta con <b>Java 8</b>.
 
 ### Esecuzione passo-passo temporizzata
 Nelle modalità di esecuzione dell'algoritmo è stata aggiunta la possibilità di seguire l'andamento
-passo-passo in modo automatizzato, tramite uno slider che permette di scegliere la velocità alla quale
+passo-passo in modo <b>automatizzato</b>, tramite uno <b>slider</b> che permette di scegliere la velocità alla quale
 le operazioni si susseguono.<br>
-Se la velocità viene impostata al massimo, l'intera esecuzione viene svolta istantaneamente.
+Se la velocità viene impostata al massimo, l'intera esecuzione viene svolta <b>istantaneamente</b>.
 
-## Visualizzazione Coda con Priorità
+### Visualizzazione Coda con Priorità
 
-La coda con priorità è una lista non ordinata contenente i nodi del grafo che non sono ancora stati scoperti.
-Durante l'esecuzione l'algoritmo estrae il nodo con distanza minima.
-Nella visualizzazione della coda con priorità viene mostrato l'elemento estratto dalla coda 
-(Vuoto se non è ancora stato estratto nessun nodo) e la coda.
-Ogni elemento della coda vengono visualizzate le seguenti informazioni:
-* <b>Il nome del nodo</b>
-* <b>La distanza dal nodo di partenza</b>
+La coda con priorità è una <b>lista non ordinata</b> contenente i nodi del grafo che non sono ancora stati scoperti.<br>
+Durante l'esecuzione l'algoritmo estrae il nodo con distanza minima.<br>
+Nella visualizzazione della coda con priorità viene mostrato l'elemento correntemente estratto dalla coda 
+(Vuoto se non è ancora stato estratto nessun nodo) e la coda.<br>
+gni elemento della coda vengono visualizzate le seguenti informazioni:
+* <b>Nome del nodo</b>
+* <b>Distanza dal nodo di partenza</b>
 
-Durante l'esecuzione viene modificato il colore della distanza:
+Durante l'esecuzione vengono modificati i colori di distanze e archi:
 
-* <b>![#F44336](https://placehold.it/15/F44336/000000?text=+) : La distanza del nodo estratto dalla coda (u)</b>
-* <b>![#34A853](https://placehold.it/15/34A853/000000?text=+) : La distanza del nodo in coda adiacente al nodo estratto (v)</b>
-* <b>![#4285F4](https://placehold.it/15/4285F4/000000?text=+) : Il peso dell'arco (u,v)</b>
+* <b>![#F44336](https://placehold.it/15/F44336/000000?text=+) Rosso</b>
+    * Distanza del <b>nodo appena estratto</b> dalla coda <b>(u)</b>
+    * Nodi e archi già estratti e utilizzati
+* <b>![#34A853](https://placehold.it/15/34A853/000000?text=+) Verde</b>
+    * <b>Distanza</b> del nodo in coda adiacente al nodo estratto <b>(v)</b>
+* <b>![#4285F4](https://placehold.it/15/4285F4/000000?text=+) Blu</b>
+    * Peso dell'<b>arco (u-v)</b>
+    * <b>Arco correntemente analizzato</b>
 
-## Visualizzazione pseudo-codice
+### Visualizzazione pseudo-codice
 
-La visualizzazione del pseudo-codice dell'algoritmo di Dijkstra contiene le righe di codice dell'algoritmo stesso e in aggiunta
-implementa delle animazioni il cui scopo è quello di rendere più chiaro all'utente le scelte che l'algoritmo compie.
-Le animazioni implementate sono:
-* <b>Indicatore della linea in esecuzione: evidenzia in rosso la linea che è stata eseguita</b>
-* <b>Variabili attuali: mostra i nomi dei nodi che si stanno considerando</b>
-* <b>if-statement: visualizza la disequazione con i valori attuali</b>
+La visualizzazione del pseudo-codice dell'algoritmo di Dijkstra contiene le righe di codice dell'algoritmo stesso, e in aggiunta
+implementa animazioni il cui scopo è quello di rendere più chiaro all'utente le scelte che l'algoritmo compie.<br>
+Animazioni del codice:
+* <b>Indicatore della linea in esecuzione</b>
+    * Evidenzia in <b>![#F44336](https://placehold.it/15/F44336/000000?text=+) rosso</b> la <b>linea</b> che è stata <b>eseguita</b>
+* <b>Variabili attuali</b>
+    * Mostra i nomi dei <b>nodi che si stanno considerando</b>
+* <b>If - Statement</b>
+    * Visualizza la <b>condizione</b> con i <b>valori attuali</b>
+
+### File Picker (caricamento file da schermo)
+E' stato preferito utilizzare un <b>file picker</b> per il caricamento e il salvataggio di file da sistema in modo dinamico,
+così da evitare la modifica del codice ogni qual volta si vuole utilizzare una sotto-cartella differente.
+
+### Sintassi File
+I file utilizzati dal programma sono strutturati nel seguente modo:<br>
+* <b>Prima riga</b>
+    * 1 se il grafo è orientato, 0 altrimenti
+* <b>Seconda riga</b>
+    * N stringhe separate da spazio, rappresentanti i nomi dei nodi che compongono il grafo
+* <b>Successive M righe</b>
+    * contengono il nome del nodo di inizio, quello del nodo di arrivo e il peso di un arco, in questo ordine, separati da spazi
+
+<i><b>Legenda</b>
+* N = Numero di Nodi
+* M = Numero di Archi
+</i>
+
+### Material Color
+I colori usati sono indicati da <b>Google</b> nella <b>[Guida ufficiale di Material Design](https://material.io/design/color/the-color-system.html#color-usage-palettes)</b>.<br>
+In questo modo l'interfaccia grafica del programma risulta all'utente più <b>gradevole</b> e <b>moderna</b>.
 
 ## Strumenti utilizzati
 
