@@ -6,7 +6,7 @@ Implementazione visuale dell'algoritmo di Dijkstra.
 * <b>GitHub</b>: https://github.com/Zimm1/ALGRAPH
 * <b>JavaDoc</b>: https://zimm1.github.io/ALGRAPH
 
-## Features
+## Caratteristiche
 
 * Esecuzione <b>passo - passo</b>
 * Esecuzione <b>automatica</b>
@@ -48,14 +48,14 @@ Implementazione visuale dell'algoritmo di Dijkstra.
     * <b>Crea arco da qui</b>
         * Crea un arco che ha come origine il nodo selezionato
     * <b>Rimuovi nodo</b>
-        * Elimina il nodo e gli archi uscenti/entranti
+        * Elimina il nodo selezionato e gli archi uscenti/entranti
 * <b>Click destro del mouse sopra un arco</b>
     * <b>Modifica peso arco</b>
-        * Aggiorna il peso dell'arco con il peso inserito da utente
+        * Aggiorna il peso dell'arco selezionato con il peso inserito da utente
     * <b>Inverti arco</b>
-        * Ae il grafo è orientato inverte il nodo di origine con quello di destinazione
+        * Se il grafo è orientato inverte il nodo di origine con quello di destinazione
     * <b>Elimina arco</b>
-        * Rimuove l'arco
+        * Rimuove l'arco selezionato
 * <b>Click destro del mouse nella finestra centrale</b>
     * <b>Crea nodo</b>
         * Crea un nuovo nodo
