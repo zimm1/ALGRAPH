@@ -77,8 +77,9 @@ public class Graph {
     }
 
     /**
-     * @param label
-     * @return Get a node by label
+     * Get a node by label
+     * @param label Label of the node
+     * @return Selected node (if exists)
      */
     public Node getNode(String label) {
         return getNode(new Node(label));
@@ -90,8 +91,8 @@ public class Graph {
     }
 
     /**
-     * @param label
-     * @return Add a node with a label
+     * @param label Label of the new node
+     * @return The node has been successfully added
      */
     public Node addNode(String label) {
         return addNode(new Node(label));
@@ -112,8 +113,8 @@ public class Graph {
     }
 
     /**
-     * @param node
-     * @return Remove a specific node
+     * @param node Node to remove
+     * @return The node has been successfully removed
      */
     public boolean removeNode(Node node) {
         if (!adjacencies.containsKey(node)) {
@@ -130,8 +131,8 @@ public class Graph {
     }
 
     /**
-     * @param edge
-     * @return return inverted edges
+     * @param edge Edge to return inverted
+     * @return Inverted edge
      */
     public Edge getInvertedEdge(Edge edge) {
         return getAdjacencies().get(edge.getN2()).stream()
@@ -150,9 +151,10 @@ public class Graph {
     }
 
     /**
-     * @param n1
-     * @param n2
-     * @return add two oriented edges
+     * Add a new edge from first to second node
+     * @param n1 First node
+     * @param n2 Second node
+     * @return The edge has been successfully added
      */
     public Edge addEdge(Node n1, Node n2) {
         return addEdge(new Edge(n1, n2, Edge.MIN_WEIGHT, isDirected()));

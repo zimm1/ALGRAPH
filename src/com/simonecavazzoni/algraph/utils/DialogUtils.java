@@ -18,12 +18,12 @@ import java.util.Optional;
 public abstract class DialogUtils {
 
     /**
-     * @param title     This is the title of the ChoiceDialog
-     * @param header    This is the header of the ChoiceDialog
-     * @param content   This is the content of the ChoiceDialog
-     * @param value     This is the list of the choices to show
-     * @return  String  This returns the item selected by user
-     * @throws Exception
+     * @param title This is the title of the ChoiceDialog
+     * @param header This is the header of the ChoiceDialog
+     * @param content This is the content of the ChoiceDialog
+     * @param value This is the list of the choices to show
+     * @return This returns the item selected by user
+     * @throws Exception Error during dialog usage
      */
     public static String showTextSpinnerDialog(String title, String header, String content, String... value)
             throws Exception {
@@ -45,12 +45,12 @@ public abstract class DialogUtils {
     }
 
     /**
-     * @param title     This is the title of the TextInputDialog
-     * @param header    This is the header of the TextInputDialog
-     * @param content   This is the content of the TextInputDialog
-     * @param defaultValue  This is the default value of the TextInputDialog
-     * @return  String  This returns the text inserted by user
-     * @throws Exception
+     * @param title This is the title of the TextInputDialog
+     * @param header This is the header of the TextInputDialog
+     * @param content This is the content of the TextInputDialog
+     * @param defaultValue This is the default value of the TextInputDialog
+     * @return This returns the text inserted by user
+     * @throws Exception Error during dialog usage
      */
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
             throws Exception {
@@ -71,9 +71,9 @@ public abstract class DialogUtils {
     }
 
     /**
-     * @param title     This is the title of the Alert
-     * @param header    This is the header of the Alert
-     * @param content   This is the content of the Alert
+     * @param title This is the title of the Alert
+     * @param header This is the header of the Alert
+     * @param content This is the content of the Alert
      */
     public static void showErrorDialog(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -88,8 +88,8 @@ public abstract class DialogUtils {
     }
 
     /**
-     * @param save  Is this file to save?
-     * @return  File    This returns the file selected
+     * @param save Save the file
+     * @return This returns the file selected
      */
     public static File showFileChooserDialog(boolean save) {
         FileChooser fileChooser = new FileChooser();
@@ -110,8 +110,8 @@ public abstract class DialogUtils {
     }
 
     /**
-     * @return  GraphGeneratorDialogResult This returns the dialog to show when generated a new graph
-     * @throws Exception
+     * @return GraphGeneratorDialogResult This returns the dialog to show when generated a new graph
+     * @throws Exception Error during dialog usage
      */
     public static GraphGeneratorDialogResult showGraphGeneratorDialog() throws Exception {
         Dialog<GraphGeneratorDialogResult> dialog = new Dialog<>();
@@ -177,6 +177,9 @@ public abstract class DialogUtils {
         return null;
     }
 
+    /**
+     * Result of a graph generator dialog
+     */
     public static class GraphGeneratorDialogResult {
         private boolean directed;
         private int numNodes;
@@ -185,17 +188,28 @@ public abstract class DialogUtils {
 
         private Exception exception;
 
+        /**
+         * Initializes result with an error
+         * @param exception Exception threw by dialog
+         */
         public GraphGeneratorDialogResult(Exception exception) {
             this.exception = exception;
         }
 
+        /**
+         * Initializes result with a correct result
+         * @param numNodes Number of nodes to generate
+         * @param minWeight Minimum weight of graph edges
+         * @param maxWeight Maximum weight of graph edges
+         * @param directed Graph directed
+         */
         public GraphGeneratorDialogResult(int numNodes, int minWeight, int maxWeight, boolean directed) {
             this.numNodes = numNodes;
             this.minWeight = minWeight;
             this.maxWeight = maxWeight;
             this.directed = directed;
         }
-
+        
         public int getNumNodes() {
             return numNodes;
         }

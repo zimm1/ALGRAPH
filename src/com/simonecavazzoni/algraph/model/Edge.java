@@ -90,7 +90,7 @@ public class Edge {
     }
 
     /**
-     * @param o
+     * @param o Object to compare
      * @return return true if the edges are equal
      */
     @Override
