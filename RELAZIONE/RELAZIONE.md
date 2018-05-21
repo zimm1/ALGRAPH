@@ -26,6 +26,21 @@ Implementazione visuale dell'algoritmo di Dijkstra.
 
 ## Scelte implementative
 
+### Sinstassi File
+Il file è strutturato nel seguente modo:<br>
+<b>orientato</b><br>
+<b>Nodo(n)</b> <br>
+<b>arcoN1 arcoN2 peso</b><br>
+In questo modo la lettura è semplice e compatta.
+
+### File Picker (caricamento file da schermo)
+Abbiamo scelto di implementare un tool che consentisse il caricamento/salvataggio di un file da schermo in modo dinamico,
+così da evitare di dover modificare il codice ogni volta che volesse utilizzare una sottocartella differente.
+
+### Material Color
+I colori che abbiamo usato sono indicati da google nella guida al material design ufficiale (https://material.io/design/color/the-color-system.html#color-usage-palettes).
+In questo modo la parte grafica del programma risulta più gradevole e fluida alla vista.
+
 ### MVCS - Model View Controller Service
 Il progetto è stato organizzato in package e classi in modo da attenersi il più possibile all'architettura <b>MVCS</b>:<br>
 - <b>Model</b>: classi base di dati, come Node, Edge, Graph...<br>
