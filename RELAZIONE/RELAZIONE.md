@@ -6,6 +6,7 @@ Implementazione visuale dell'algoritmo di Dijkstra.
 
 * <b>Trello</b> (gestione attività): https://trello.com/b/xdQK3W6z
 * <b>GitHub</b>: https://github.com/Zimm1/ALGRAPH
+* <b>JavaDoc</b>: https://zimm1.github.io/ALGRAPH
 
 ### Caratteristiche
 
