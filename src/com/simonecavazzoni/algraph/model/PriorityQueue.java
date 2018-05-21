@@ -2,9 +2,10 @@ package com.simonecavazzoni.algraph.model;
 
 import java.util.ArrayList;
 
-/** This class is a PriorityQueue implemented with unordered ArrayList.
- *  This class expose the methods to insert/delete/update/search PriorityItem&ltT&gt
- * @param <T>
+/**
+ * This class is a PriorityQueue implemented with unordered ArrayList.
+ * This class exposes the methods to insert/delete/update/search PriorityItem.
+ * @param <T> Type of PriorityItem
  */
 public class PriorityQueue<T> {
 
@@ -15,8 +16,8 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param object    This is the generic item to insert in the queue
-     * @param priority   This is the priority of the new item
+     * @param object This is the generic item to insert in the queue
+     * @param priority This is the priority of the new item
      */
     public void push(T object,int priority){
         PriorityItem<T> priorityItem = new PriorityItem<>(object,priority);
@@ -24,7 +25,7 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @return  PriorityItem&ltT&gt  This returns the PriorityItem with the lower priority
+     * @return This returns the PriorityItem with the lower priority
      */
     public PriorityItem<T> pop(){
         PriorityItem<T> min = searchMin();
@@ -34,7 +35,7 @@ public class PriorityQueue<T> {
 
     /**
      * @param item  This is the item to search in the queue
-     * @return  PriorityItem&ltT&gt    This is the object searched
+     * @return This is the object searched
      */
     public PriorityItem<T> read(T item){
         PriorityItem<T> priorityItem = new PriorityItem<>(item);
@@ -42,8 +43,8 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param item  This is the item to search in the queue
-     * @return  boolean This returns true only if the item is in the queue
+     * @param item This is the item to search in the queue
+     * @return This returns true only if the item is in the queue
      */
     public boolean existItem(T item){
         PriorityItem<T> priorityItem = new PriorityItem<>(item);
@@ -51,7 +52,7 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param priorityItem  The priorityItem to remove in the queue
+     * @param priorityItem The priorityItem to remove in the queue
      */
     public void remove(PriorityItem<T> priorityItem){
         if(priorityItem != null){
@@ -60,7 +61,7 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param item  The item to remove in the queue
+     * @param item The item to remove in the queue
      */
     public void remove(T item){
         PriorityItem<T> deleteItem = read(item);
@@ -70,7 +71,7 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @return  boolean This returns true only if the queue isn't empty
+     * @return This returns true only if the queue isn't empty
      */
     public boolean isEmpty(){
         return this.list.isEmpty();
@@ -84,8 +85,8 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param item  This is the item to search in the queue
-     * @param priority  This is the new priority of the item searched
+     * @param item This is the item to search in the queue
+     * @param priority This is the new priority of the item searched
      */
     public void update(T item, int priority){
         PriorityItem<T> newItem = new PriorityItem<>(item);
@@ -96,21 +97,21 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @return  ArrayList&ltPriorityItem&ltT&gt&gt  This returns the queue
+     * @return This returns the queue
      */
     public ArrayList<PriorityItem<T>> getAll(){
         return this.list;
     }
 
     /**
-     * This remove all PriorityItem&ltT&gt in queue
+     * This remove all PriorityItem in queue
      */
     public void clear() {
         list.clear();
     }
 
     /**
-     * @return  PriorityItem&ltT&gt This returns the PriorityItem&ltT&gt with the lower priority
+     * @return This returns the PriorityItem with the lower priority
      */
     private PriorityItem<T> searchMin(){
         PriorityItem<T> min = null;
@@ -123,8 +124,8 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param priorityItem  This is the item to search in the queue
-     * @return  PriorityItem&ltT&gt This returns the PriorityItem searched
+     * @param priorityItem This is the item to search in the queue
+     * @return This returns the PriorityItem searched
      */
     private PriorityItem<T> searchItem(PriorityItem<T> priorityItem){
         PriorityItem<T> searched = null;
@@ -137,8 +138,8 @@ public class PriorityQueue<T> {
     }
 
     /**
-     * @param priorityItem  This is the item to search in the queue
-     * @return  int This returns the position in the queue of the item searched
+     * @param priorityItem This is the item to search in the queue
+     * @return This returns the position in the queue of the item searched
      */
     private int searchPosItem(PriorityItem<T> priorityItem){
         for(int i = 0; i < this.list.size(); i++){

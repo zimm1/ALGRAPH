@@ -185,6 +185,7 @@ public class EdgeUI extends Group {
     /**
      * Sets highlight state and changes colors accordingly.
      * @param highlight Current highlight state
+     * @param color Color to apply
      */
     public void highlight(boolean highlight, Color color) {
         if (line == null) {

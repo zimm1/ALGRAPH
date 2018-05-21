@@ -19,40 +19,40 @@ public abstract class GraphGenerator {
     private static final int MAX_NODES = 15;
 
     /**
-     * @return  This returns the default unoriented graph
-     * @throws Exception
+     * @return  This returns the default undirected graph
+     * @throws Exception Error during node generation
      */
     public static Graph generateGraph() throws Exception {
         return generateGraph(DEFAULT_NUM_NODES);
     }
 
     /**
-     * @param numNodes  This is the maximum number nodes of the graph
-     * @return  Graph   This returns the unoriented graph
-     * @throws Exception
+     * @param numNodes This is the maximum number nodes of the graph
+     * @return This returns the undirected graph
+     * @throws Exception Error during node generation
      */
     public static Graph generateGraph(int numNodes) throws Exception {
         return generateGraph(numNodes, DEFAULT_MIN_WEIGHT, DEFAULT_MAX_WEIGHT);
     }
 
     /**
-     * @param numNodes  This is the maximum number nodes of the graph
+     * @param numNodes This is the maximum number nodes of the graph
      * @param minWeight This is the minimum weight of the edge
      * @param maxWeight This is the maximum weight of the edge
-     * @return  Graph   This returns the oriented graph
-     * @throws Exception
+     * @return This returns the oriented graph
+     * @throws Exception Error during node generation
      */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) throws Exception {
         return generateGraph(numNodes, minWeight, maxWeight,true);
     }
 
     /**
-     * @param numNodes  This is the maximum number nodes of the graph
+     * @param numNodes This is the maximum number nodes of the graph
      * @param minWeight This is the minimum weight of the edge
      * @param maxWeight This is the maximum weight of the edge
-     * @param directed  Is the graph directed?
-     * @return  Graph   This returns the generated graph
-     * @throws Exception
+     * @param directed Is the graph directed?
+     * @return This returns the generated graph
+     * @throws Exception Error during node generation
      */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight, boolean directed) throws Exception {
         if (numNodes > MAX_NODES || numNodes < MIN_NODES) {

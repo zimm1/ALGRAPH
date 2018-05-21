@@ -4,7 +4,7 @@ import com.simonecavazzoni.algraph.ui.PriorityItemUI;
 
 /** This class is an implementation of a generic item of PriorityQueue.
  *  This class expose the methods to change the attributes of PriorityItem.
- * @param <T>
+ * @param <T> Object type contained inside PriorityItem
  */
 public class PriorityItem<T> {
 

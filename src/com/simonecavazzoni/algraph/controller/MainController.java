@@ -264,6 +264,10 @@ public class MainController extends Controller {
 
     /**
      * Initializes a menu button.
+     * @param title Button title
+     * @param tooltip Button tooltip
+     * @param imagePath Background image path
+     * @param onAction Handler called on button click
      * @return Menu button
      */
     private Button buildButton(String title, String tooltip, String imagePath, EventHandler<ActionEvent> onAction) {
@@ -461,6 +465,7 @@ public class MainController extends Controller {
 
     /**
      * Resets the execution of the algorithm
+     * @param startNode Node to set as new starting node
      */
     private void resetExecution(Node startNode) {
         if (pendingExecution) {

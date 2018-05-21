@@ -8,9 +8,10 @@ import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
 import com.simonecavazzoni.algraph.res.Strings;
 
-/** This class extends Group and creates the graphics for PriorityItem&ltT&gt to show.
- *  This class expose the methods to change the style of its contents.
- * @param <T>
+/**
+ * This class extends Group and creates the graphics for PriorityItem to show.
+ * This class expose the methods to change the style of its contents.
+ * @param <T> Type of object inside PriorityItem
  */
 public class PriorityItemUI<T> extends Group {
 
@@ -118,42 +119,42 @@ public class PriorityItemUI<T> extends Group {
     }
 
     /**
-     * @return  PriorityItem&ltT&gt This returns the priorityItem
+     * @return This returns the priorityItem
      */
     public PriorityItem<T> getPriorityItem() {
         return priorityItem;
     }
 
     /**
-     * @return  Rectangle   This returns the rectangle object
+     * @return This returns the rectangle object
      */
     public Rectangle getRectangle() {
         return rectangle;
     }
 
     /**
-     * @return  int This returns the height of the rectangle
+     * @return This returns the height of the rectangle
      */
     public static int getHeight() {
         return height;
     }
 
     /**
-     * @return  int This returns the width of the rectangle
+     * @return This returns the width of the rectangle
      */
     public static int getWidth() {
         return width;
     }
 
     /**
-     * @return  String  This returns the empty queue text
+     * @return This returns the empty queue text
      */
     private String getEmptyQueueText(){
         return Strings.emptyQueue;
     }
 
     /**
-     * @param isV   Is This node adjacent to U?
+     * @param isV The node is adjacent to U
      */
     public void setSelectedItem(boolean isV){
         priorityLabel.setTextFill(isV ? Colors.OTHER_COLOR_1 : Colors.PRIMARY_COLOR);
