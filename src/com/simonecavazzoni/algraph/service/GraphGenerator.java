@@ -6,6 +6,9 @@ import com.simonecavazzoni.algraph.model.Node;
 
 import java.util.*;
 
+/**
+ * This class expose two methods to create oriented/unoriented graph.
+ */
 public abstract class GraphGenerator {
 
     public static final int DEFAULT_NUM_NODES = 7;
@@ -15,18 +18,42 @@ public abstract class GraphGenerator {
     private static final int MIN_NODES = 3;
     private static final int MAX_NODES = 15;
 
+    /**
+     * @return  This returns the default undirected graph
+     * @throws Exception Error during node generation
+     */
     public static Graph generateGraph() throws Exception {
         return generateGraph(DEFAULT_NUM_NODES);
     }
 
+    /**
+     * @param numNodes This is the maximum number nodes of the graph
+     * @return This returns the undirected graph
+     * @throws Exception Error during node generation
+     */
     public static Graph generateGraph(int numNodes) throws Exception {
         return generateGraph(numNodes, DEFAULT_MIN_WEIGHT, DEFAULT_MAX_WEIGHT);
     }
 
+    /**
+     * @param numNodes This is the maximum number nodes of the graph
+     * @param minWeight This is the minimum weight of the edge
+     * @param maxWeight This is the maximum weight of the edge
+     * @return This returns the oriented graph
+     * @throws Exception Error during node generation
+     */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight) throws Exception {
         return generateGraph(numNodes, minWeight, maxWeight,true);
     }
 
+    /**
+     * @param numNodes This is the maximum number nodes of the graph
+     * @param minWeight This is the minimum weight of the edge
+     * @param maxWeight This is the maximum weight of the edge
+     * @param directed Is the graph directed?
+     * @return This returns the generated graph
+     * @throws Exception Error during node generation
+     */
     public static Graph generateGraph(int numNodes, int minWeight, int maxWeight, boolean directed) throws Exception {
         if (numNodes > MAX_NODES || numNodes < MIN_NODES) {
             throw new Exception();
@@ -38,14 +65,14 @@ public abstract class GraphGenerator {
 
         Random random = new Random();
 
-        int maxEdges = directed ? numNodes * (numNodes - 1) : numNodes * (numNodes - 1) / 2;
-        int minEdges = directed ? (numNodes - 1) * (numNodes - 2) : numNodes;
+        int minEdges = (numNodes - 1) * (directed ? 2 : 1);
+        int maxEdges = (numNodes - 1) * 3 / (directed ? 1 : 2);
         int numEdges = random.nextInt(maxEdges - minEdges + 1) + minEdges;
 
         Graph graph = new Graph(directed);
 
         for (int i = 0; i < numNodes; i++) {
-            graph.addNode(Integer.toString(i + 1));
+            graph.addNode(String.valueOf((char) (i + 65)));
         }
 
         int i = 0;

@@ -4,16 +4,16 @@
 }
 
 .labelStyle{
-    -fx-font-size: large;
+    -fx-font-size: xx-large;
 }
 
 .nodeLabelStyle{
-    -fx-padding: 20 0 0 0 ;
+    -fx-padding: 5 0 0 0 ;
     -fx-alignment: TOP_CENTER;
 }
 
 .priorityLabelStyle{
-    -fx-padding: 0 0 20 0;
+    -fx-padding: 0 0 5 0;
     -fx-alignment: BOTTOM_CENTER;
 }
 

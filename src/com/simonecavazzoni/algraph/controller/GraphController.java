@@ -3,6 +3,7 @@ package com.simonecavazzoni.algraph.controller;
 import com.simonecavazzoni.algraph.model.Edge;
 import com.simonecavazzoni.algraph.model.Graph;
 import com.simonecavazzoni.algraph.model.Node;
+import com.simonecavazzoni.algraph.res.Colors;
 import com.simonecavazzoni.algraph.res.Strings;
 import com.simonecavazzoni.algraph.ui.EdgeUI;
 import com.simonecavazzoni.algraph.ui.NodeUI;
@@ -15,6 +16,7 @@ import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.stream.Collectors;
@@ -35,6 +37,11 @@ public class GraphController extends Controller implements Controller.EventListe
 
     private MainController mainController;
 
+    /**
+     * Instantiates with a reference to its parent MainController.
+     * @see MainController
+     * @param mainController Parent main controller
+     */
     public GraphController(MainController mainController) {
         setRoot(new Pane());
 
@@ -45,15 +52,26 @@ public class GraphController extends Controller implements Controller.EventListe
         initEventHandlers();
     }
 
+    /**
+     * Current generated, loaded or created graph.
+     * @return Current graph
+     */
     public Graph getGraph() {
         return graph;
     }
 
+    /**
+     * Set current graph.
+     * @param graph Current graph.
+     */
     public void setGraph(Graph graph) {
         this.graph = graph;
         initGraphUi();
     }
 
+    /**
+     * Initializes event handlers for context menu, click, drag and release
+     */
     private void initEventHandlers() {
         root.setOnContextMenuRequested(event -> {
             if (creatingEdge) {
@@ -144,6 +162,11 @@ public class GraphController extends Controller implements Controller.EventListe
         root.heightProperty().addListener((observable, oldValue, newValue) -> restrictNodesPosition());
     }
 
+    /**
+     * Generates new context menu for a node.
+     * @param node Selected node
+     * @return Context menu for selected node
+     */
     private ContextMenu createNodeContextMenu(Node node) {
         ContextMenu nodeContextMenu = new ContextMenu();
 
@@ -157,6 +180,11 @@ public class GraphController extends Controller implements Controller.EventListe
         return nodeContextMenu;
     }
 
+    /**
+     * Generates new context menu for an edge.
+     * @param edge Selected edge
+     * @return Context menu for selected edge
+     */
     private ContextMenu createEdgeContextMenu(Edge edge) {
         ContextMenu edgeContextMenu = new ContextMenu();
 
@@ -176,6 +204,10 @@ public class GraphController extends Controller implements Controller.EventListe
         return edgeContextMenu;
     }
 
+    /**
+     * Generates new context menu for pane click
+     * @return Context menu for pane
+     */
     private ContextMenu createMainContextMenu() {
         ContextMenu mainContextMenu = new ContextMenu();
 
@@ -186,20 +218,28 @@ public class GraphController extends Controller implements Controller.EventListe
         return mainContextMenu;
     }
 
+    /**
+     * Shows context menu in a ContextMenuEvent click position.
+     * @param contextMenu Context menu to show
+     * @param event Event that generated the context menu
+     */
     private void showContextMenu(ContextMenu contextMenu, ContextMenuEvent event) {
         for (MenuItem item : contextMenu.getItems()) {
             if (!mainController.isGraphEditable()) {
-                item.setDisable(false);
+                item.setDisable(true);
             }
         }
-        contextMenuX = event.getSceneX();
-        contextMenuY = event.getSceneY();
+        contextMenuX = event.getX();
+        contextMenuY = event.getY();
 
 
         this.contextMenu = contextMenu;
         this.contextMenu.show((Pane) event.getSource(), event.getScreenX(), event.getScreenY());
     }
 
+    /**
+     * Hides current context menu, if present
+     */
     private void hideContextMenu() {
         if (contextMenu != null) {
             contextMenu.hide();
@@ -207,6 +247,9 @@ public class GraphController extends Controller implements Controller.EventListe
         }
     }
 
+    /**
+     * Arranges graph nodes in a regular polygon shape
+     */
     private void initGraphUi() {
         if (graph == null) {
             return;
@@ -229,6 +272,9 @@ public class GraphController extends Controller implements Controller.EventListe
         updateGraphUI();
     }
 
+    /**
+     * Removes all graph related UI, adds edges and adds nodes.
+     */
     private void updateGraphUI() {
         root.getChildren().clear();
 
@@ -236,14 +282,20 @@ public class GraphController extends Controller implements Controller.EventListe
         root.getChildren().addAll(graph.getNodes().stream().map(Node::getUi).collect(Collectors.toSet()));
     }
 
+    /**
+     * Resets all highlights and Dijkstra node distance labels
+     */
     public void resetGraphUI() {
         graph.getNodes().forEach(n -> {
-            n.getUi().highlight(false);
+            n.getUi().resetHighlight();
             n.getUi().getDistanceLabel().setText("");
         });
-        graph.getEdges().forEach(n -> n.getUi().highlight(false));
+        graph.getEdges().forEach(n -> n.getUi().resetHighlight());
     }
 
+    /**
+     * Shows node creation dialog and adds a the node to the graph.
+     */
     private void addNode() {
         try {
             Node node = graph.addNode(DialogUtils.showTextInputDialog(
@@ -257,6 +309,9 @@ public class GraphController extends Controller implements Controller.EventListe
 
             node.getUi().getCircle().setCenterX(contextMenuX);
             node.getUi().getCircle().setCenterY(contextMenuY);
+
+            restrictNodePosition(node.getUi());
+
             updateGraphUI();
 
         } catch (Exception e) {
@@ -264,18 +319,30 @@ public class GraphController extends Controller implements Controller.EventListe
         }
     }
 
+    /**
+     * Removes a node from graph and updates the UI.
+     * @param node Node to remove
+     */
     private void removeNode(Node node) {
         if (graph.removeNode(node)) {
             updateGraphUI();
         }
     }
 
+    /**
+     * Removes an edge from graph and updates the UI.
+     * @param edge Edge to remove
+     */
     private void removeEdge(Edge edge) {
         if (graph.removeEdge(edge)) {
             updateGraphUI();
         }
     }
 
+    /**
+     * Shows weight modify dialog and updates the edge weight.
+     * @param edge Edge to modify weight to
+     */
     private void changeWeight(Edge edge) {
         try {
             int weight = Integer.valueOf(DialogUtils.showTextInputDialog(
@@ -285,49 +352,62 @@ public class GraphController extends Controller implements Controller.EventListe
                 DialogUtils.showErrorDialog(
                         Strings.error, Strings.change_weight, Strings.error_min_weight + Edge.MIN_WEIGHT);
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             DialogUtils.showErrorDialog(
                     Strings.error, Strings.change_weight, Strings.error_change_weight);
+        } catch (Exception e) {
+            // no-op
         }
     }
 
-    private void startEdgeCreation(Node node) {
+    /**
+     * Shows animation for edge creation.
+     * @param startNode Node where the edge starts from
+     */
+    private void startEdgeCreation(Node startNode) {
         creatingEdge = true;
 
         Node tempNode = new Node();
         tempNode.getUi().getCircle().setRadius(0);
 
-        tempNode.getUi().getCircle().setCenterX(node.getUi().getCircle().getCenterX());
-        tempNode.getUi().getCircle().setCenterY(node.getUi().getCircle().getCenterY());
+        tempNode.getUi().getCircle().setCenterX(startNode.getUi().getCircle().getCenterX());
+        tempNode.getUi().getCircle().setCenterY(startNode.getUi().getCircle().getCenterY());
 
         root.setOnMouseMoved(event -> {
             tempNode.getUi().getCircle().setCenterX(event.getX());
             tempNode.getUi().getCircle().setCenterY(event.getY());
         });
 
-        tempEdge = new Edge(node, tempNode, Edge.MIN_WEIGHT, false);
+        tempEdge = new Edge(startNode, tempNode, Edge.MIN_WEIGHT, false);
         tempEdge.getUi().getLabel().setVisible(false);
 
         root.getChildren().add(0, tempEdge.getUi());
     }
 
-    private void stopEdgeCreation(Node node) {
+    /**
+     * Stops animation for edge creation, creates edge if possible.
+     * @param endNode Node where the edge ends
+     */
+    private void stopEdgeCreation(Node endNode) {
         root.setOnMouseMoved(null);
         root.getChildren().remove(tempEdge.getUi());
 
         creatingEdge = false;
 
-        if (node != null) {
-            setGraphDirected();
-            addEdge(new Edge(tempEdge.getN1(), node, Edge.MIN_WEIGHT, graph.isDirected()));
+        if (endNode != null && setGraphDirected()) {
+            addEdge(new Edge(tempEdge.getN1(), endNode, Edge.MIN_WEIGHT, graph.isDirected()));
         }
 
         tempEdge = null;
     }
 
-    private void setGraphDirected() {
+    /**
+     * Shows dialog to choose the directed mode of the graph, if graph doesn't contain edges.
+     * @return Graph mode is set
+     */
+    private boolean setGraphDirected() {
         if (!graph.getEdges().isEmpty()) {
-            return;
+            return true;
         }
 
         try {
@@ -338,11 +418,16 @@ public class GraphController extends Controller implements Controller.EventListe
                             Strings.type,
                             Strings.directed, Strings.undirected
                     ).equals(Strings.directed));
+            return true;
         } catch (Exception e) {
-            DialogUtils.showErrorDialog(Strings.graph_type, Strings.graph_type_choice, Strings.graph_type_error);
+            return false;
         }
     }
 
+    /**
+     * Adds an edge to the graph, shows weight change dialog and updates UI
+     * @param edge Edge to add to the graph
+     */
     private void addEdge(Edge edge) {
         if (graph.addEdge(edge) == null) {
             DialogUtils.showErrorDialog(
@@ -350,17 +435,26 @@ public class GraphController extends Controller implements Controller.EventListe
             return;
         }
 
-        changeWeight(edge);
-
         updateGraphUI();
+
+        changeWeight(edge);
     }
 
+    /**
+     * Changes direction of an edge.
+     * @param edge Edge to modify direction of
+     */
     private void changeDirection(Edge edge) {
         graph.removeEdge(edge);
         graph.addEdge(edge.getInverted());
         updateGraphUI();
     }
 
+
+    /**
+     * Stops edge creation if ESCAPE key is pressed in the window.
+     * @param event Event generated by keypress
+     */
     @Override
     public void onKeyPressed(KeyEvent event) {
         if (creatingEdge && event.getCode() == KeyCode.ESCAPE) {
@@ -369,8 +463,17 @@ public class GraphController extends Controller implements Controller.EventListe
         }
     }
 
+    /**
+     * Highlights a node and the edge from the parent to the node.
+     * @param node Node to highlight
+     * @param parent Parent of the node
+     */
     public void highlight(Node node, Node parent) {
-        node.getUi().highlight(true);
+        highlight(node, parent, true, Colors.PRIMARY_COLOR);
+    }
+
+    public void highlight(Node node, Node parent, boolean highlight, Color color) {
+        node.getUi().highlight(highlight, color);
 
         if (parent == null) {
             return;
@@ -379,16 +482,20 @@ public class GraphController extends Controller implements Controller.EventListe
         graph.getAdjacencies().get(parent).stream()
                 .filter(e -> e.getN2().equals(node))
                 .findAny()
-                .ifPresent(e -> e.getUi().highlight(true));
+                .ifPresent(e -> e.getUi().highlight(highlight, color));
 
         if (!graph.isDirected()) {
             graph.getAdjacencies().get(node).stream()
                     .filter(e -> e.getN2().equals(parent))
                     .findAny()
-                    .ifPresent(e -> e.getUi().highlight(true));
+                    .ifPresent(e -> e.getUi().highlight(highlight, color));
         }
     }
 
+    /**
+     * Restricts a node position to stay inside pane borders.
+     * @param node Node to check position of
+     */
     private void restrictNodePosition(NodeUI node) {
         Circle c = node.getCircle();
 
@@ -408,7 +515,26 @@ public class GraphController extends Controller implements Controller.EventListe
         }
     }
 
+    /**
+     * Restricts all nodes positions to stay inside pane borders.
+     */
     private void restrictNodesPosition() {
         graph.getNodes().forEach(n -> restrictNodePosition(n.getUi()));
+    }
+
+    /**
+     * Visually select an edge of the graph.
+     * @param edge Edge to select
+     */
+    public void selectEdge(Edge edge){
+        highlight(edge.getN2(), edge.getN1(), true, Colors.OTHER_COLOR_3);
+    }
+
+    /**
+     * Visually deselect an edge of the graph.
+     * @param edge Edge to deselect
+     */
+    public void deselectEdge(Edge edge){
+        highlight(edge.getN2(), edge.getN1(), false, Colors.OTHER_COLOR_3);
     }
 }

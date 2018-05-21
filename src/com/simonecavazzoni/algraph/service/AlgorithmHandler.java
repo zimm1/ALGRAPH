@@ -6,13 +6,15 @@ import com.simonecavazzoni.algraph.controller.PriorityQueueController;
 import com.simonecavazzoni.algraph.model.Edge;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.model.PriorityItem;
-import com.simonecavazzoni.algraph.utils.AsyncUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Dijkstra algorithm operations
+ */
 public class AlgorithmHandler {
 
     private static final int PROGRAM_COUNTER_END = 10;
@@ -31,7 +33,15 @@ public class AlgorithmHandler {
     private Node v;
     private int w;
 
+    private Edge e;
 
+
+    /**
+     * Initializes controller with references to other controllers.
+     * @param graphController Current graphController
+     * @param priorityQueueController Current priorityQueueController
+     * @param codeController Current codeController
+     */
     public AlgorithmHandler(GraphController graphController, PriorityQueueController priorityQueueController,
                             CodeController codeController) {
         this.graphController = graphController;
@@ -41,12 +51,19 @@ public class AlgorithmHandler {
         restartAlgorithm();
     }
 
+    /**
+     * Sets current starting node and restarts algorithm execution.
+     * @param startNode Starting node
+     */
     public void restartAlgorithm(Node startNode) {
         this.startNode = startNode;
 
         restartAlgorithm();
     }
 
+    /**
+     * Restarts algorithm execution and empties data structures
+     */
     public void restartAlgorithm() {
         programCounter = 0;
         u = null;
@@ -59,12 +76,15 @@ public class AlgorithmHandler {
         adjacencies = null;
     }
 
+    /**
+     * Executes one step of the algorithm based on the program counter.
+     */
     public void executeStep() {
         if (startNode == null || isFinished()) {
             return;
         }
 
-        codeController.selectLine(programCounter == 10 ? -1 : programCounter);
+        codeController.selectLine(programCounter == PROGRAM_COUNTER_END ? -1 : programCounter);
 
         switch (programCounter) {
             // S.add(r)
@@ -96,7 +116,7 @@ public class AlgorithmHandler {
                     adjacencies = null;
                     return;
                 }
-                Edge e = adjacencies.next();
+                e = adjacencies.next();
                 v = e.getN2();
                 w = e.getWeight();
                 break;
@@ -140,6 +160,9 @@ public class AlgorithmHandler {
         programCounter++;
     }
 
+    /**
+     * Executes all remaining steps of the algorithm
+     */
     public void executeAll() {
         if (startNode == null || isFinished()) {
             return;
@@ -150,31 +173,68 @@ public class AlgorithmHandler {
         }
     }
 
+    /**
+     * True if algorithm execution is started.
+     * @return Execution started
+     */
     public boolean isStarted() {
         return programCounter > 0;
     }
 
+    /**
+     * True if algorithm execution finished.
+     * @return Execution finished
+     */
     public boolean isFinished() {
         return programCounter > PROGRAM_COUNTER_END;
     }
 
+    /**
+     * True if starting node is set.
+     * @return Starting node exists
+     */
     public boolean existRootNode(){
         return startNode != null;
     }
 
+    /**
+     * Gets current extracted node.
+     * @return Extracted node
+     */
     public Node getU() {
         return u;
     }
 
+    /**
+     * Gets current analyzed node.
+     * @return Analyzed node
+     */
     public Node getV() {
         return v;
     }
 
+    /**
+     * Gets current distance from root to a node.
+     * @param node Node to get distance of
+     * @return Current distance
+     */
     public Integer getResultDistance(Node node){
         return resultDistance.get(node);
     }
 
+    /**
+     * Gets current analyzed edge weight.
+     * @return Edge weight
+     */
     public Integer getWeight(){
         return w;
+    }
+
+    /**
+     * Gets current analyzed edge.
+     * @return Analyzed edge
+     */
+    public Edge getE() {
+        return e;
     }
 }

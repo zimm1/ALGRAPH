@@ -2,11 +2,13 @@ package com.simonecavazzoni.algraph.utils;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import com.simonecavazzoni.algraph.res.Strings;
 import com.simonecavazzoni.algraph.service.FileHandler;
 import com.simonecavazzoni.algraph.service.GraphGenerator;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,6 +17,14 @@ import java.util.Optional;
 
 public abstract class DialogUtils {
 
+    /**
+     * @param title This is the title of the ChoiceDialog
+     * @param header This is the header of the ChoiceDialog
+     * @param content This is the content of the ChoiceDialog
+     * @param value This is the list of the choices to show
+     * @return This returns the item selected by user
+     * @throws Exception Error during dialog usage
+     */
     public static String showTextSpinnerDialog(String title, String header, String content, String... value)
             throws Exception {
 
@@ -22,6 +32,9 @@ public abstract class DialogUtils {
         dialog.setTitle(title);
         dialog.setHeaderText(header);
         dialog.setContentText(content);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
 
         Optional<String> result = dialog.showAndWait();
         if(result.isPresent()){
@@ -31,12 +44,23 @@ public abstract class DialogUtils {
         throw new Exception();
     }
 
+    /**
+     * @param title This is the title of the TextInputDialog
+     * @param header This is the header of the TextInputDialog
+     * @param content This is the content of the TextInputDialog
+     * @param defaultValue This is the default value of the TextInputDialog
+     * @return This returns the text inserted by user
+     * @throws Exception Error during dialog usage
+     */
     public static String showTextInputDialog(String title, String header, String content, String defaultValue)
             throws Exception {
         TextInputDialog dialog = new TextInputDialog(defaultValue);
         dialog.setTitle(title);
         dialog.setHeaderText(header);
         dialog.setContentText(content);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
 
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
@@ -46,15 +70,27 @@ public abstract class DialogUtils {
         throw new Exception();
     }
 
+    /**
+     * @param title This is the title of the Alert
+     * @param header This is the header of the Alert
+     * @param content This is the content of the Alert
+     */
     public static void showErrorDialog(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
 
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
+
         alert.showAndWait();
     }
 
+    /**
+     * @param save Save the file
+     * @return This returns the file selected
+     */
     public static File showFileChooserDialog(boolean save) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(save ? Strings.save_file: Strings.open_file);
@@ -73,9 +109,16 @@ public abstract class DialogUtils {
         return save ? fileChooser.showSaveDialog(null) : fileChooser.showOpenDialog(null);
     }
 
+    /**
+     * @return GraphGeneratorDialogResult This returns the dialog to show when generated a new graph
+     * @throws Exception Error during dialog usage
+     */
     public static GraphGeneratorDialogResult showGraphGeneratorDialog() throws Exception {
         Dialog<GraphGeneratorDialogResult> dialog = new Dialog<>();
         dialog.setTitle(Strings.generate_graph);
+
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
 
         ButtonType generateButtonType = new ButtonType(Strings.generate, ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(generateButtonType, ButtonType.CANCEL);
@@ -134,6 +177,9 @@ public abstract class DialogUtils {
         return null;
     }
 
+    /**
+     * Result of a graph generator dialog
+     */
     public static class GraphGeneratorDialogResult {
         private boolean directed;
         private int numNodes;
@@ -142,17 +188,28 @@ public abstract class DialogUtils {
 
         private Exception exception;
 
+        /**
+         * Initializes result with an error
+         * @param exception Exception threw by dialog
+         */
         public GraphGeneratorDialogResult(Exception exception) {
             this.exception = exception;
         }
 
+        /**
+         * Initializes result with a correct result
+         * @param numNodes Number of nodes to generate
+         * @param minWeight Minimum weight of graph edges
+         * @param maxWeight Maximum weight of graph edges
+         * @param directed Graph directed
+         */
         public GraphGeneratorDialogResult(int numNodes, int minWeight, int maxWeight, boolean directed) {
             this.numNodes = numNodes;
             this.minWeight = minWeight;
             this.maxWeight = maxWeight;
             this.directed = directed;
         }
-
+        
         public int getNumNodes() {
             return numNodes;
         }

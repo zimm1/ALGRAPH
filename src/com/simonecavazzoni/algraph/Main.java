@@ -12,6 +12,15 @@ import com.simonecavazzoni.algraph.utils.WindowUtils;
 
 
 public class Main extends Application {
+
+    private static final int DEFAULT_WIDTH = 1024;
+    private static final int DEFAULT_HEIGHT = 768;
+
+    /**
+     * Adds MainController, font, css and icon to the stage and shows it.
+     * @see Application
+     * @param primaryStage Main stage to show
+     */
     @Override
     public void start(Stage primaryStage) {
         WindowUtils.setWindowTitle(primaryStage, Strings.untitled);
@@ -29,8 +38,10 @@ public class Main extends Application {
 
         primaryStage.getIcons().add(new Image("/com/simonecavazzoni/algraph/res/images/program_icon.png"));
         primaryStage.setScene(mainScene);
-        primaryStage.setMinWidth(1024);
-        primaryStage.setMinHeight(768);
+        primaryStage.setMinWidth(DEFAULT_WIDTH);
+        primaryStage.setMinHeight(DEFAULT_HEIGHT);
+        primaryStage.setWidth(DEFAULT_WIDTH);
+        primaryStage.setWidth(DEFAULT_HEIGHT);
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(event -> Platform.exit());

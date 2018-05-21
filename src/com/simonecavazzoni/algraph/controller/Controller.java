@@ -3,6 +3,9 @@ package com.simonecavazzoni.algraph.controller;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
+/**
+ * Super class for program controllers.
+ */
 public abstract class Controller {
 
     /**
@@ -21,10 +24,18 @@ public abstract class Controller {
      */
     protected Pane root;
 
+    /**
+     * Returns controller root view.
+     * @return Controller root pane
+     */
     public final Pane get() {
         return this.root;
     }
 
+    /**
+     * Sets a new pane as root and adds css to it.
+     * @param root Pane to set as root
+     */
     protected void setRoot(Pane root) {
         this.root = root;
         this.root.getStyleClass().add("controllerRoot");

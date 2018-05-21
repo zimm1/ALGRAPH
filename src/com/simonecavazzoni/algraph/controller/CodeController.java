@@ -1,5 +1,6 @@
 package com.simonecavazzoni.algraph.controller;
 
+import com.simonecavazzoni.algraph.model.Edge;
 import com.simonecavazzoni.algraph.model.Node;
 import com.simonecavazzoni.algraph.res.Colors;
 import com.simonecavazzoni.algraph.res.Strings;
@@ -35,7 +36,7 @@ public class CodeController extends Controller {
     private MainController mainController;
 
     private int currentSelected = -1;
-
+    private Edge lastSelectedEdge;
 
     public CodeController(MainController mainController) {
 
@@ -47,11 +48,13 @@ public class CodeController extends Controller {
         uNode.getStyleClass().add(CSS_QUEUE_LABEL);
         uNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH / 2);
         uNode.setPadding(new Insets(10, 0, 10, 0));
+        uNode.setTextFill(Colors.PRIMARY_COLOR);
 
         vNode = new Label();
         vNode.getStyleClass().add(CSS_QUEUE_LABEL);
         vNode.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH / 2);
         vNode.setPadding(new Insets(10, 0, 10, 0));
+        vNode.setTextFill(Colors.OTHER_COLOR_3);
 
         title = new Label(Strings.pseudo_code_title);
         title.getStyleClass().add(CSS_TITLE_STYLE);
@@ -70,6 +73,9 @@ public class CodeController extends Controller {
         initializeControllerUI();
     }
 
+    /**
+     * @param numLine This is the number of line (number step) that AlgorithmHandler reached
+     */
     public void selectLine(int numLine) {
         if (numLine >= -1 && numLine < listCodeUI.size()) {
             if (currentSelected != -1) {
@@ -82,46 +88,67 @@ public class CodeController extends Controller {
         }
 
         updateVariableUI();
-
     }
 
+    /**
+     * update the nodes shown in the root
+     */
     private void updateVariableUI() {
-        container.getChildren().clear();
         variableValue.getChildren().clear();
 
-        root.getChildren().remove(container);
-        root.getChildren().remove(variableValue);
+        uNode.setText(getString((currentSelected != -1) ? mainController.getU() : null, false));
+        vNode.setText(getString((currentSelected != -1) ? mainController.getV() : null, true));
 
-        uNode.setText(getString((currentSelected != -1) ? mainController.getU() : null, true));
-        vNode.setText(getString((currentSelected != -1) ? mainController.getV() : null, false));
+        switch (currentSelected) {
+            case 1:
+                if (lastSelectedEdge != null) {
+                    mainController.deselectEdge(lastSelectedEdge);
+                    lastSelectedEdge = null;
+                }
+                mainController.selectQueueItem(null);
+                break;
+            case 4:
+                mainController.selectQueueItem(mainController.getV());
 
-        container.getChildren().addAll(uNode, vNode);
-        root.getChildren().add(container);
+                if (lastSelectedEdge != null) {
+                    mainController.deselectEdge(lastSelectedEdge);
+                }
 
-        if (currentSelected == 4) {
-            mainController.selectQueueItem(mainController.getV());
-            initTextFlow();
-            root.getChildren().add(variableValue);
-        } else {
-            mainController.selectQueueItem(null);
+                lastSelectedEdge = mainController.getE();
+                mainController.selectEdge(mainController.getE());
+
+                initTextFlow();
+                break;
         }
     }
 
+    /**
+     * set the style to the root element
+     */
     private void setRootStyle() {
         ((VBox) this.root).setAlignment(DEFAULT_POSITION);
         setRootDimension();
     }
 
+    /**
+     * set the default dimension to the root element
+     */
     private void setRootDimension() {
         root.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
         root.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
     }
 
+    /**
+     * set the default dimension to the title
+     */
     private void setTitleDimension() {
         title.setPrefWidth(DEFAULT_ROOT_PREF_WIDTH);
         title.setPrefHeight(DEFAULT_ROOT_PREF_HEIGHT);
     }
 
+    /**
+     * add the pseudo-code lines to the list
+     */
     private void setListCodeUI() {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_add_root));
         listCodeUI.add(new CodeUI(Strings.pseudo_code_while));
@@ -135,16 +162,28 @@ public class CodeController extends Controller {
         listCodeUI.add(new CodeUI(Strings.pseudo_code_update_tree));
     }
 
+    /**
+     * add to the root the element to show
+     */
     private void initializeControllerUI() {
         root.getChildren().clear();
 
         setListCodeUI();
 
-        root.getChildren().add(title);
+        root.getChildren().addAll(title);
         root.getChildren().addAll(listCodeUI);
-        root.getChildren().add(uNode);
+
+        container.getChildren().addAll(uNode, vNode);
+        root.getChildren().add(container);
+
+        root.getChildren().add(variableValue);
     }
 
+    /**
+     * @param node  This is the node to show
+     * @param isV   Is This node adjacent to U?
+     * @return  String This returns the string built
+     */
     private String getString(Node node, boolean isV) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append((isV) ? 'v' : 'u');
@@ -152,11 +191,14 @@ public class CodeController extends Controller {
         if (node == null) {
             stringBuilder.append('\u2205');
         } else {
-            stringBuilder.append(node.toString());
+            stringBuilder.append(node.getLabel());
         }
         return stringBuilder.toString();
     }
 
+    /**
+     * update the if statement with the current value
+     */
     private void initTextFlow() {
         Integer vValue = mainController.getResultDistance(mainController.getV());
         Integer uValue = mainController.getResultDistance(mainController.getU());
@@ -168,11 +210,12 @@ public class CodeController extends Controller {
         Text text3 = new Text(Integer.toString(weight));
         Text text4 = new Text(" < ");
         Text text5 = new Text((vValue != Integer.MAX_VALUE) ? Integer.toString(vValue) : "\u221e");
+        Text text6 = new Text(" then");
 
         text5.setFill(Colors.OTHER_COLOR_1);
-        text1.setFill(Colors.OTHER_COLOR_2);
+        text1.setFill(Colors.PRIMARY_COLOR);
+        text3.setFill(Colors.OTHER_COLOR_3);
 
-        variableValue.getChildren().addAll(text, text1, text2, text3, text4, text5);
+        variableValue.getChildren().addAll(text, text1, text2, text3, text4, text5,text6);
     }
-
 }

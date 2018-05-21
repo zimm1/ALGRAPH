@@ -1,7 +1,7 @@
 com.simonecavazzoni.algraph
 com.simonecavazzoni.algraph.controller
 com.simonecavazzoni.algraph.model
-com.simonecavazzoni.algraph.resources
+com.simonecavazzoni.algraph.res
 com.simonecavazzoni.algraph.service
 com.simonecavazzoni.algraph.ui
 com.simonecavazzoni.algraph.utils

@@ -11,6 +11,10 @@ import javafx.scene.text.Font;
 import com.simonecavazzoni.algraph.model.Edge;
 
 
+/**
+ * UI component for Edge model class
+ * @see Edge
+ */
 public class EdgeUI extends Group {
 
     private static final double DEFAULT_ARROW_LENGTH = 10;
@@ -27,6 +31,12 @@ public class EdgeUI extends Group {
     private Label label;
     private boolean disabled = false;
 
+    private Color lastColor = Colors.DEFAULT_COLOR;
+
+    /**
+     * Instantiates the UI component of an edge, initializes views and updater.
+     * @param edge Linked edge model
+     */
     public EdgeUI(Edge edge) {
         super();
 
@@ -66,14 +76,25 @@ public class EdgeUI extends Group {
         }
     }
 
+    /**
+     * Linked edge model.
+     * @return Edge model
+     */
     public Edge getEdge() {
         return edge;
     }
 
+    /**
+     * Weight label.
+     * @return Weight label
+     */
     public Label getLabel() {
         return label;
     }
 
+    /**
+     * Updater callback, called when ui needs a refresh.
+     */
     private InvalidationListener updater = o -> {
         double margin = getEdge().getN2().getUi().getCircle().getRadius();
 
@@ -141,6 +162,10 @@ public class EdgeUI extends Group {
         }
     };
 
+    /**
+     * Sets current weight UI.
+     * @param weight Current weight
+     */
     public void setWeight(int weight) {
         if (disabled) {
             return;
@@ -149,17 +174,38 @@ public class EdgeUI extends Group {
         label.setText(String.valueOf(weight));
     }
 
-    public void highlight(boolean highlight) {
-        if (disabled) {
+    /**
+     * Resets highlight state, sets color to default
+     */
+    public void resetHighlight() {
+        lastColor = Colors.DEFAULT_COLOR;
+        highlight(false, Colors.PRIMARY_COLOR);
+    }
+
+    /**
+     * Sets highlight state and changes colors accordingly.
+     * @param highlight Current highlight state
+     * @param color Color to apply
+     */
+    public void highlight(boolean highlight, Color color) {
+        if (line == null) {
             return;
         }
+        Color currentColor = (Color)line.getStroke();
 
-        line.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
-        label.setTextFill(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+        if (highlight) {
+            if (currentColor.equals(color)) {
+                return;
+            }
+            lastColor = currentColor;
+        }
+
+        line.setStroke(highlight ? color : lastColor);
+        label.setTextFill(highlight ? color : lastColor);
 
         if (edge.isDirected()) {
-            arrowLeft.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
-            arrowRight.setStroke(highlight ? Colors.PRIMARY_COLOR : Colors.DEFAULT_COLOR);
+            arrowLeft.setStroke(highlight ? color : lastColor);
+            arrowRight.setStroke(highlight ? color : lastColor);
         }
     }
 }

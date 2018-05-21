@@ -10,6 +10,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * This class contains information about Dijkstra algorithm, it explain the data structure
+ * used by Dijkstra and the hypothesis that the algorithm require.
+ */
 public class AlgorithmInfoUI extends Group {
 
     private static final String CSS_ALGORITHM_INFO_TITLE = "algorithmInfoTitle";
@@ -62,6 +66,11 @@ public class AlgorithmInfoUI extends Group {
         this.getChildren().add(root);
     }
 
+    /**
+     * @param message   This is the message to set to the label
+     * @param isMainTitle   Is this message the main title?
+     * @return  Label   This returns the label
+     */
     private Label createLabel(String message, boolean isMainTitle){
         Label label = new Label(message);
         label.getStyleClass().add(CSS_ALGORITHM_INFO_TITLE);
@@ -70,6 +79,10 @@ public class AlgorithmInfoUI extends Group {
         return label;
     }
 
+    /**
+     * @param message   This is the message to set to the label
+     * @return  Label   This returns the label
+     */
     private Label createLabelDescription(String message){
         Label label = new Label(message);
         label.getStyleClass().add(CSS_ALGORITHM_INFO_DESCRIPTION);
